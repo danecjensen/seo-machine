@@ -42,6 +42,7 @@ defaults:
       path: products
     values:
       cta_title: Want this with your logo? Get ideas and tips by email.
+      signup_form: true   # show the email signup form, not just a button
 
 # Cloudflare Pages project gohappyclub-com. Both domains are attached on production deploys;
 # www is redirected to the bare domain with a Cloudflare Redirect Rule (see README).

@@ -230,5 +230,6 @@ Before launch, set `contact.form_action` in `sites/gohappyclub.com/_config.yml` 
 form handler that stores email signups (Mailchimp, ConvertKit, Formspree or similar), and have it
 send people to `https://gohappyclub.com/thanks/` afterwards. The form posts `email` and an
 optional `interest` (hats, tote bags, blankets, socks or something else). Until it's set, the
-signup page shows a yellow "[Placeholder]" note and every other page links to the signup page
-instead of showing the form.
+signup page shows a yellow "[Placeholder]" note. Once it's set, the signup page and each product
+page show the form (`signup_form: true`, set for `products/` in `_config.yml` defaults); other
+pages link to the signup page.

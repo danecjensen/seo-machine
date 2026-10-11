@@ -26,4 +26,4 @@ Natural canvas shows off a dark logo, while a colored bag with a light print mak
 
 Conference and event bags, welcome kits for new employees, retail shopping bags, fundraising merch, wedding and party favors, and client gift bags. A tote can also hold the rest of your swag, so it works as the packaging for a whole welcome kit or event bundle.
 
-[Request a quote for custom tote bags](/quote/) with your logo, the quantity and when you need them.
+[Sign up for ideas](/signup/) on custom tote bags and other custom products, sent by email.

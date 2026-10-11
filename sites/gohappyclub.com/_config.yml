@@ -1,5 +1,5 @@
 # Happy Club: custom promotional wearables (hats, tote bags, blankets, socks).
-# Goal: quote requests from businesses, schools, teams and event organizers.
+# Goal: email signups from people interested in creating custom products.
 title: Happy Club
 description: "Custom promotional wearables with your logo: embroidered hats, printed tote bags, woven blankets and custom socks for teams, brands and events."
 url: https://gohappyclub.com
@@ -15,24 +15,24 @@ colors:
   brand: "#c2410c"
 
 goals:
-  primary: Quote requests for custom branded wearables
+  primary: Email signups from people interested in creating custom products
   audience: Businesses, schools, teams, nonprofits and event organizers ordering branded merch
   keywords: [custom promotional products, custom hats with logo, custom tote bags, custom blankets with logo, custom socks with logo]
   cta:
-    text: Get a quote
-    title: Tell us what you need and we'll put together a quote.
-    url: /quote/
+    text: Get ideas by email
+    title: Thinking about custom products? Get ideas and tips by email.
+    url: /signup/
 
 # PLACEHOLDERS: fill these in before launch. Nothing here has been invented.
 # Leave a value empty and the site shows a visible "[placeholder]" note instead.
 contact:
-  email: ""          # e.g. quotes@gohappyclub.com: where quote requests go
-  phone: ""          # e.g. "+1-555-555-5555"
-  form_action: ""    # URL of a form handler (Formspree, Basin, a Pages Function...). Empty = no form shown.
+  form_action: ""    # URL of the form handler that stores signups (Mailchimp, ConvertKit, Formspree...).
+                     # Empty = the signup page shows a placeholder and other pages link to it.
+                     # Set the handler to send people to https://gohappyclub.com/thanks/ afterwards.
 
 # Add telephone, email and address here once they're confirmed, e.g.
 #   telephone: "+1-555-555-5555"
-#   email: quotes@gohappyclub.com
+#   email: hello@gohappyclub.com
 #   address: { streetAddress: ..., addressLocality: ..., addressRegion: ..., postalCode: ..., addressCountry: US }
 organization:
   type: Organization
@@ -41,7 +41,7 @@ defaults:
   - scope:
       path: products
     values:
-      cta_title: Want this with your logo? Send us the details for a quote.
+      cta_title: Want this with your logo? Get ideas and tips by email.
 
 # Cloudflare Pages project gohappyclub-com. Both domains are attached on production deploys;
 # www is redirected to the bare domain with a Cloudflare Redirect Rule (see README).

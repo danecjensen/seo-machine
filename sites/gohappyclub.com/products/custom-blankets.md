@@ -26,4 +26,4 @@ Holiday and client gifts, employee anniversaries, donor and fundraiser thank-you
 
 Most promotional items are used for a moment. A blanket gets used every cold evening, and people tend to remember who gave it to them. That makes it a good choice when you want a gift that feels personal rather than promotional.
 
-[Request a quote for custom blankets](/quote/) with your design, the quantity and your deadline.
+[Sign up for ideas](/signup/) on custom blankets and other custom products, sent by email.

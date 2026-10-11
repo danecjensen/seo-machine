@@ -27,4 +27,4 @@ Pick a hat color that matches your brand, or mix colors across an order for diff
 
 Staff uniforms, team gear, trade show giveaways, company retreats, golf outings, school spirit wear and merch to sell at events.
 
-[Request a quote for custom hats](/quote/) with your logo, quantity and the date you need them by.
+[Sign up for ideas](/signup/) on custom hats and other custom products, sent by email.

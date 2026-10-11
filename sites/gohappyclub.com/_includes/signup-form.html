@@ -1,0 +1,10 @@
+{% comment %}Email signup form, used by the closing call to action and the /signup/ page.
+Pass id="..." so each form on a page gets unique field ids. Posts to contact.form_action in _config.yml.{% endcomment %}
+<form class="signup-form" action="{{ site.contact.form_action }}" method="post">
+  <p><label for="{{ include.id }}-email">Email</label><br><input id="{{ include.id }}-email" name="email" type="email" autocomplete="email" required></p>
+  <p><label for="{{ include.id }}-interest">What would you like to make? (optional)</label><br>
+    <select id="{{ include.id }}-interest" name="interest">
+      <option value="">Choose one</option><option>Hats</option><option>Tote bags</option><option>Blankets</option><option>Socks</option><option>Something else</option>
+    </select></p>
+  <p><button class="btn btn-lg" type="submit">{{ site.goals.cta.text }}</button></p>
+</form>

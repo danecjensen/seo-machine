@@ -17,7 +17,7 @@ sites/
     assets/                      images, copied as-is
     lighthouse.json              optional Lighthouse budget overrides
   plumbing.example/              a local business site; goal: phone calls and bookings
-  gohappyclub.com/               Happy Club, custom promotional wearables; goal: quote requests
+  gohappyclub.com/               Happy Club, custom promotional wearables; goal: email signups
 theme/                           shared _layouts, _includes, CSS, sitemap, robots, feed, 404
 lib/                             the Eleventy config, SEO tag and SEO check
 scripts/                         build, deploy and new-site commands
@@ -226,8 +226,9 @@ to Cloudflare while the registration stays at Namecheap.
    Check it with `curl -sI https://www.gohappyclub.com/products/`, which should return a 301
    to `https://gohappyclub.com/products/`.
 
-Before launch, fill in the placeholders in `sites/gohappyclub.com/_config.yml`: `contact.email`
-(where quotes go), `contact.form_action` (a form handler such as Formspree, Basin or a Pages
-Function; until it's set the quote page shows a placeholder instead of the form) and, if wanted,
-`contact.phone` and the organization's address. Until then the pages show a yellow
-"[Placeholder]" note.
+Before launch, set `contact.form_action` in `sites/gohappyclub.com/_config.yml` to the URL of a
+form handler that stores email signups (Mailchimp, ConvertKit, Formspree or similar), and have it
+send people to `https://gohappyclub.com/thanks/` afterwards. The form posts `email` and an
+optional `interest` (hats, tote bags, blankets, socks or something else). Until it's set, the
+signup page shows a yellow "[Placeholder]" note and every other page links to the signup page
+instead of showing the form.

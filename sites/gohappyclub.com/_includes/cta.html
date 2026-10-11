@@ -1,0 +1,13 @@
+{% comment %}Happy Club's closing call to action: the email signup form on every page (replaces the theme's button).
+Until contact.form_action is set in _config.yml it falls back to a button linking to the signup page.{% endcomment %}
+{% assign cta_goal = site.goals.cta %}
+{% if cta != false and page.url != cta_goal.url %}
+<aside class="cta" aria-label="{{ cta_goal.text }}">
+  <p class="cta-title">{{ cta_title | default: cta_goal.title }}</p>
+  {% if site.contact.form_action != "" and site.contact.form_action %}
+  {% include signup-form.html id="cta" %}
+  {% else %}
+  <a class="btn btn-lg" href="{{ cta_goal.url }}">{{ cta_goal.text }}</a>
+  {% endif %}
+</aside>
+{% endif %}

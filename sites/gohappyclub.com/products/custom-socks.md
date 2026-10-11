@@ -25,6 +25,6 @@ Use your logo, a repeating pattern, your team colors or your mascot. Add a messa
 
 ## Good uses for custom socks
 
-Race and fun-run swag, team uniforms, employee gifts, trade show giveaways that stand out, school spirit gear, and merch for bands, brands and creators. Socks also pack flat and weigh very little, which makes them easy to mail to remote teams or tuck into a welcome box.
+Race and fun-run swag, team uniforms, employee gifts, trade show giveaways that stand out, school spirit gear, and merch for bands, brands and creators. Socks also pack flat and travel well and weigh very little, which makes them easy to mail to remote teams or tuck into a welcome box.
 
-[Request a quote for custom socks](/quote/) with your design, the quantity and the date you need them.
+[Sign up for ideas](/signup/) on custom socks and other custom products, sent by email.

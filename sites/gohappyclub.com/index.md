@@ -24,10 +24,10 @@ Companies use our custom wearables for employee welcome kits, client gifts and t
 ## How ordering works
 
 1. **Tell us what you need.** Pick a product, a rough quantity and the date you need it by, and send your logo.
-2. **Get a quote and a proof.** We'll come back with pricing and a digital mockup showing your logo on the product.
+2. **See a proof.** We'll come back with pricing and a digital mockup showing your logo on the product.
 3. **Approve and relax.** Once you sign off on the proof, we make your order and ship it to you.
 
-Read more about the process on [how it works](/how-it-works/), or [request a quote](/quote/) now. There's no obligation, and a quote is free.
+Read more about the process on [how it works](/how-it-works/), or [sign up for ideas by email](/signup/) and tell us what you'd like to make.
 
 ## Why promotional wearables work
 

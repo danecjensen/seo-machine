@@ -15,9 +15,9 @@ faq:
 
 Ordering custom promotional products from Happy Club takes three steps, and you'll see exactly what you're getting before anything is made.
 
-## 1. Send your request
+## 1. Tell us what you want to make
 
-[Request a quote](/quote/) and tell us which product you want, roughly how many, the colors you have in mind and the date you need everything by. Attach your logo or artwork if you have it. The more detail you give, the more accurate the quote will be.
+[Sign up](/signup/) and tell us what you'd like to make. When you're ready to order, let us know which product you want, roughly how many, the colors you have in mind and the date you need everything by, and send your logo or artwork if you have it. The more detail you give, the more accurate the quote will be.
 
 ## 2. Get your quote and proof
 

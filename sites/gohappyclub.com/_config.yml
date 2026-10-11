@@ -1,0 +1,51 @@
+# Happy Club: custom promotional wearables (hats, tote bags, blankets, socks).
+# Goal: quote requests from businesses, schools, teams and event organizers.
+title: Happy Club
+description: "Custom promotional wearables with your logo: embroidered hats, printed tote bags, woven blankets and custom socks for teams, brands and events."
+url: https://gohappyclub.com
+lang: en
+locale: en_US
+title_format: "{title} | {site}"
+logo: /assets/logo.png
+image:
+  path: /assets/og.png
+  alt: Happy Club custom hats, tote bags, blankets and socks
+theme_color: "#c2410c"
+colors:
+  brand: "#c2410c"
+
+goals:
+  primary: Quote requests for custom branded wearables
+  audience: Businesses, schools, teams, nonprofits and event organizers ordering branded merch
+  keywords: [custom promotional products, custom hats with logo, custom tote bags, custom blankets with logo, custom socks with logo]
+  cta:
+    text: Get a quote
+    title: Tell us what you need and we'll put together a quote.
+    url: /quote/
+
+# PLACEHOLDERS: fill these in before launch. Nothing here has been invented.
+# Leave a value empty and the site shows a visible "[placeholder]" note instead.
+contact:
+  email: ""          # e.g. quotes@gohappyclub.com: where quote requests go
+  phone: ""          # e.g. "+1-555-555-5555"
+  form_action: ""    # URL of a form handler (Formspree, Basin, a Pages Function...). Empty = no form shown.
+
+# Add telephone, email and address here once they're confirmed, e.g.
+#   telephone: "+1-555-555-5555"
+#   email: quotes@gohappyclub.com
+#   address: { streetAddress: ..., addressLocality: ..., addressRegion: ..., postalCode: ..., addressCountry: US }
+organization:
+  type: Organization
+
+defaults:
+  - scope:
+      path: products
+    values:
+      cta_title: Want this with your logo? Send us the details for a quote.
+
+# Cloudflare Pages project gohappyclub-com. Both domains are attached on production deploys;
+# www is redirected to the bare domain with a Cloudflare Redirect Rule (see README).
+cloudflare:
+  project: gohappyclub-com
+  productionBranch: main
+  domains: [gohappyclub.com, www.gohappyclub.com]

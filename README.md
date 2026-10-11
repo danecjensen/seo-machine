@@ -17,6 +17,7 @@ sites/
     assets/                      images, copied as-is
     lighthouse.json              optional Lighthouse budget overrides
   plumbing.example/              a local business site; goal: phone calls and bookings
+  gohappyclub.com/               Happy Club, custom promotional wearables; goal: quote requests
 theme/                           shared _layouts, _includes, CSS, sitemap, robots, feed, 404
 lib/                             the Eleventy config, SEO tag and SEO check
 scripts/                         build, deploy and new-site commands
@@ -189,3 +190,41 @@ that builds and SEO-checks the site, runs Lighthouse, and deploys only if both p
 DNS is created automatically when the domain's zone is on the same Cloudflare account. Otherwise,
 point a CNAME at `<project>.pages.dev`. Pages can't redirect `www` to the apex with `_redirects`;
 use a Cloudflare Bulk Redirect or Redirect Rule for that.
+
+### Going live with a domain registered at Namecheap (gohappyclub.com)
+
+`sites/gohappyclub.com` deploys to the Pages project `gohappyclub-com`, and production deploys
+attach both `gohappyclub.com` and `www.gohappyclub.com`. A bare domain like `gohappyclub.com`
+can only point at Pages when Cloudflare runs its DNS, so the domain moves its nameservers
+to Cloudflare while the registration stays at Namecheap.
+
+1. **Add the site to Cloudflare.** In the Cloudflare dashboard choose *Add a domain*, enter
+   `gohappyclub.com`, and pick the **Free** plan.
+2. **Check the copied DNS records.** Cloudflare scans the existing records. Compare them with
+   Namecheap's *Advanced DNS* tab and add anything missing, above all the **MX** and **TXT**
+   (SPF, DKIM, DMARC, verification) records, or email will stop working. Delete any old `A` or
+   `CNAME` records for `@` and `www` that point at a previous host (such as Namecheap's parking
+   page); Pages adds its own in step 5.
+3. **Switch nameservers at Namecheap.** In Namecheap go to *Domain List → Manage →
+   Nameservers*, choose *Custom DNS*, and enter the two nameservers Cloudflare shows. If DNSSEC
+   is on at Namecheap, turn it off first (you can turn it on again in Cloudflare later).
+4. **Wait for Cloudflare to say the domain is Active.** This usually takes minutes, sometimes
+   up to a day.
+5. **Deploy.** Once the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` secrets are set, a
+   push to `main` deploys the site and attaches both domains; because the zone is on the same
+   account, Cloudflare creates the DNS records and certificates. (To do it by hand instead:
+   *Workers & Pages → gohappyclub-com → Custom domains → Set up a domain*, once for each name.)
+6. **Redirect www to the bare domain.** In the `gohappyclub.com` zone, open *Rules → Redirect
+   Rules → Create rule* (or use the *Redirect from WWW to root* template):
+   - When: *Hostname* equals `www.gohappyclub.com`
+   - Then: *Dynamic* redirect to `concat("https://gohappyclub.com", http.request.uri.path)`,
+     status **301**, with *Preserve query string* on.
+
+   Check it with `curl -sI https://www.gohappyclub.com/products/`, which should return a 301
+   to `https://gohappyclub.com/products/`.
+
+Before launch, fill in the placeholders in `sites/gohappyclub.com/_config.yml`: `contact.email`
+(where quotes go), `contact.form_action` (a form handler such as Formspree, Basin or a Pages
+Function; until it's set the quote page shows a placeholder instead of the form) and, if wanted,
+`contact.phone` and the organization's address. Until then the pages show a yellow
+"[Placeholder]" note.

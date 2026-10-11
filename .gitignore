@@ -3,3 +3,4 @@ dist/
 .astro/
 *.staging/
 lighthouse-reports/
+lighthouse/node_modules/

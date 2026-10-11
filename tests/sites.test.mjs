@@ -12,7 +12,7 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 function sandbox(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "seo-machine-"));
   t?.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-  for (const item of ["package.json", "scripts", "sites"]) {
+  for (const item of ["package.json", "scripts", "sites", "packages"]) {
     fs.cpSync(path.join(ROOT, item), path.join(dir, item), {
       recursive: true,
       filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}.astro`),
@@ -119,5 +119,38 @@ describe("output", () => {
     assert.ok(!sitemap.includes("/thank-you/"), "noindex pages stay out of the sitemap");
     assert.match(read(dir, "ledger.example/feed.xml"), /<item><title>Quarterly Estimated Taxes/);
     assert.ok(!fs.existsSync(path.join(dir, "dist/plumbing.example/feed.xml")), "no posts, no feed");
+  });
+});
+
+describe("cloudflare pages", () => {
+  let dir;
+  before(() => {
+    dir = sandbox();
+    assert.equal(build(dir).status, 0);
+  });
+  after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  test("every site gets _headers that keep pages.dev out of search", () => {
+    for (const domain of ["ledger.example", "plumbing.example"]) {
+      const headers = read(dir, `${domain}/_headers`);
+      assert.match(headers, /https:\/\/:project\.pages\.dev\/\*\n  X-Robots-Tag: noindex/);
+      assert.match(headers, /X-Content-Type-Options: nosniff/);
+    }
+  });
+
+  test("redirects cover both /old/ and /old", () => {
+    const lines = read(dir, "plumbing.example/_redirects").trim().split("\n");
+    assert.ok(lines.includes("/water-heaters/ /services/water-heater-repair/ 301"));
+    assert.ok(lines.includes("/water-heaters /services/water-heater-repair/ 301"));
+    assert.ok(!fs.existsSync(path.join(dir, "dist/ledger.example/_redirects")), "no redirects, no file");
+  });
+
+  test("deploy targets one Pages project per domain", () => {
+    const run = spawnSync("node", ["scripts/deploy.mjs", "--site", "ledger.example", "--site", "plumbing.example",
+      "--branch", "main", "--dry-run"], { cwd: dir, encoding: "utf8", env: { ...process.env, GITHUB_SHA: "abc" } });
+    assert.equal(run.status, 0, run.stderr);
+    assert.match(run.stdout, /pages deploy dist\/ledger\.example --project-name=ledger-example --branch=main/);
+    assert.match(run.stdout, /pages deploy dist\/plumbing\.example --project-name=plumbing-example --branch=main/);
+    assert.match(run.stdout, /would attach custom domain plumbing\.example/);
   });
 });

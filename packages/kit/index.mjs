@@ -2,20 +2,13 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { headersFile, pagesProject, redirectLines } from "./lib/cloudflare.mjs";
 import { seoCheck, formatIssues } from "./lib/lint.mjs";
+
+export { pagesProject };
 
 const DOMAIN_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/;
 const VIRTUAL = "virtual:seo-machine/site";
-
-const HEADERS = `/*
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: strict-origin-when-cross-origin
-  X-Frame-Options: SAMEORIGIN
-  Cache-Control: public, max-age=0, must-revalidate
-
-/_astro/*
-  Cache-Control: public, max-age=31536000, immutable
-`;
 
 function validate(site, root) {
   const folder = path.basename(root);
@@ -24,6 +17,10 @@ function validate(site, root) {
   }
   if (site.domain !== folder) throw new Error(`${folder}: site.config.mjs says domain "${site.domain}"; the folder name must match`);
   if (!DOMAIN_RE.test(site.domain)) throw new Error(`${folder}: folder name must be a bare lowercase domain like example.com`);
+  const project = pagesProject(site);
+  if (!/^[a-z0-9][a-z0-9-]{0,56}[a-z0-9]$/.test(project)) {
+    throw new Error(`${folder}: Cloudflare Pages project name "${project}" must be 2-58 lowercase letters, digits or hyphens`);
+  }
   // Sites may not pull files from each other: no symlinks out of the site folder.
   for (const sub of ["src", "public"]) {
     const dir = path.join(root, sub);
@@ -61,7 +58,8 @@ export function seoMachine(site, { routes = true } = {}) {
       },
       "astro:build:done": async ({ dir }) => {
         const out = fileURLToPath(dir);
-        fs.writeFileSync(path.join(out, "_headers"), HEADERS);
+        fs.writeFileSync(path.join(out, "_headers"), headersFile());
+        if (site.redirects?.length) fs.writeFileSync(path.join(out, "_redirects"), redirectLines(site).join("\n") + "\n");
         const issues = seoCheck(site, out, site.root);
         const errors = issues.filter((i) => i.level === "error");
         const verbose = process.env.SEO_VERBOSE === "1";

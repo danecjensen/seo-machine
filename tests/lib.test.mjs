@@ -26,3 +26,11 @@ test("titles follow the site template", () => {
   assert.equal(pageTitle(site, { url: "/", data: { title: "Widgets" } }), "Acme: Widgets");
   assert.equal(pageTitle(site, { url: "/x/", data: { title: "P", seo_title: "Custom" } }), "Custom");
 });
+
+test("redirect sources get a slashless twin, wildcards don't", async () => {
+  const { redirectLines, pagesProject } = await import("../packages/kit/lib/cloudflare.mjs");
+  assert.deepEqual(redirectLines({ redirects: [{ from: "/a/", to: "/b/" }, { from: "/blog/*", to: "/news/:splat", status: 302 }] }),
+    ["/a/ /b/ 301", "/a /b/ 301", "/blog/* /news/:splat 302"]);
+  assert.equal(pagesProject({ domain: "shop.acme.com" }), "shop-acme-com");
+  assert.equal(pagesProject({ domain: "x.com", cloudflare: { project: "custom" } }), "custom");
+});

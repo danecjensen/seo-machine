@@ -42,6 +42,19 @@ export default {
 
   theme: { brand: "#b42318" },
 
+  // Old URLs that moved. Written to _redirects for Cloudflare Pages.
+  redirects: [
+    { from: "/water-heaters/", to: "/services/water-heater-repair/", status: 301 },
+    { from: "/drains/", to: "/services/drain-cleaning/", status: 301 },
+  ],
+
+  // Cloudflare Pages: one project per domain. These are the defaults, shown for reference.
+  cloudflare: {
+    project: "plumbing-example",
+    productionBranch: "main",
+    domains: ["plumbing.example"], // add "www.plumbing.example" and redirect it to the apex in Cloudflare
+  },
+
   // Keep noindex pages crawlable: a robots.txt block hides their noindex tag.
   // Use disallow for areas that should never be fetched, blockAgents to opt out of specific bots.
   robots: { disallow: [], blockAgents: [] },

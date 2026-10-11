@@ -1,0 +1,11 @@
+{
+  "name": "seo-machine-lighthouse",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lighthouse": "node run-lighthouse.mjs"
+  },
+  "devDependencies": {
+    "@lhci/cli": "0.15.1"
+  }
+}

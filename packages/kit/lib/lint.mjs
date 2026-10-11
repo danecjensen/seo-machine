@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parse } from "node-html-parser";
 import YAML from "yaml";
+import { redirectLines } from "./cloudflare.mjs";
 import { urlFor } from "./pages.mjs";
 
 const SLUG = /^\/([a-z0-9]+(-[a-z0-9]+)*\/)*$/;
@@ -105,6 +106,18 @@ export function seoCheck(site, out, root) {
 
   for (const [title, where] of titles) if (where.length > 1) add("error", where.join(", "), `duplicate title "${title}"`);
   for (const [, where] of descriptions) if (where.length > 1) add("error", where.join(", "), "duplicate meta description");
+  // Cloudflare Pages limits: 2,000 static + 100 dynamic redirects, 100 header rules.
+  const redirects = site.redirects ?? [];
+  const lines = redirectLines(site);
+  const dynamic = lines.filter((l) => /[*:]/.test(l.split(" ")[0])).length;
+  if (lines.length - dynamic > 2000 || dynamic > 100) add("error", "/_redirects", "over Cloudflare Pages' redirect limits (2,000 static, 100 dynamic)");
+  for (const r of redirects) {
+    if (!r.from?.startsWith("/")) add("error", "/_redirects", `redirect source "${r.from}" must start with /`);
+    if (![301, 302, 303, 307, 308, undefined].includes(r.status)) add("error", "/_redirects", `redirect ${r.from} has status ${r.status}`);
+    if (r.to?.startsWith("/") && !/[*:]/.test(r.to) && !urls.has(r.to.split("#")[0])) add("error", "/_redirects", `redirect ${r.from} points to missing page ${r.to}`);
+    if (urls.has(r.from)) add("warning", "/_redirects", `redirect ${r.from} shadows a page that still exists`);
+    if (r.status === 302 || r.status === 307) add("warning", "/_redirects", `redirect ${r.from} is temporary (${r.status}); use 301 to pass ranking to the new URL`);
+  }
   if (!site.defaultImage) add("warning", "/", "no defaultImage; social shares will have no preview");
   return issues;
 }

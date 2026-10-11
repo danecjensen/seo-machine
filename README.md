@@ -17,6 +17,8 @@ sites/
   plumbing.example/            a local business site; goal: phone calls and bookings
 packages/kit/                  shared layout, routes, styles, SEO and checks
 scripts/build.mjs              builds each site into dist/<domain>/
+scripts/deploy.mjs             deploys dist/<domain>/ to its own Cloudflare Pages project
+lighthouse/                    Lighthouse runner and default budgets
 dist/<domain>/                 static output, one folder per site, ready to upload
 ```
 
@@ -30,6 +32,7 @@ npm run build                                   # every site -> dist/<domain>/
 npm run build -- --site ledger.example --strict --verbose
 npm run new-site -- mysite.com "My Site"        # scaffold a site, then npm install
 npm test                                        # isolation, output and unit tests
+node scripts/deploy.mjs --site ledger.example --dry-run   # show what a deploy would do
 
 cd sites/ledger.example && npx astro dev        # live preview of one site
 ```
@@ -63,8 +66,7 @@ Every page gets:
 
 Every site gets `sitemap.xml` (indexable pages only, with `<lastmod>` from front matter or the
 file's last git commit), `robots.txt` pointing at the sitemap, `feed.xml` when it has dated posts,
-a `404.html`, and a `_headers` file with security and caching headers for Cloudflare Pages or
-Netlify.
+a `404.html`, and the Cloudflare Pages files described below.
 
 Pages ship no JavaScript, use a system font stack, and inline their one small stylesheet, so
 nothing blocks rendering. A typical page is about 9 KB. Images placed next to the Markdown

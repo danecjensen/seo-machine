@@ -1,0 +1,53 @@
+name: sites
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      sites: ${{ steps.list.outputs.sites }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        run: echo "sites=$(node scripts/build.mjs --list)" >> "$GITHUB_OUTPUT"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  # One job per site: a failing site never blocks or changes another.
+  build:
+    needs: discover
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        site: ${{ fromJson(needs.discover.outputs.sites) }}
+    name: build (${{ matrix.site }})
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history gives the sitemap real <lastmod> dates
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build and SEO check (fails on SEO errors)
+        run: npm run build -- --site "${{ matrix.site }}" --strict --verbose
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ matrix.site }}
+          path: dist/${{ matrix.site }}

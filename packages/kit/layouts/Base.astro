@@ -1,0 +1,79 @@
+---
+// Every page's <head> and frame. The SEO tags come from lib/seo.mjs via `seo`.
+import "../styles/base.css";
+import site from "virtual:seo-machine/site";
+
+const { seo, url, hasFeed = false } = Astro.props;
+const goals = site.goals ?? {};
+const cta = goals.cta;
+const org = site.organization ?? {};
+const brandVars = Object.entries(site.theme ?? {}).map(([k, v]) => `--${k}:${v};`).join("");
+---
+<!doctype html>
+<html lang={site.language ?? "en"}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{seo.title}</title>
+<meta name="description" content={seo.description}>
+<link rel="canonical" href={seo.canonical}>
+<meta name="robots" content={seo.noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"}>
+<meta property="og:type" content={seo.ogType}>
+<meta property="og:site_name" content={site.name}>
+<meta property="og:title" content={seo.ogTitle}>
+<meta property="og:description" content={seo.description}>
+<meta property="og:url" content={seo.canonical}>
+<meta property="og:locale" content={site.locale ?? "en_US"}>
+{seo.image && <meta property="og:image" content={seo.image}>}
+{seo.image && <meta property="og:image:alt" content={seo.imageAlt}>}
+{seo.published && <meta property="article:published_time" content={seo.published}>}
+{seo.modified && <meta property="article:modified_time" content={seo.modified}>}
+<meta name="twitter:card" content={seo.image ? "summary_large_image" : "summary"}>
+{site.twitter && <meta name="twitter:site" content={site.twitter}>}
+<meta name="theme-color" content={site.themeColor ?? "#ffffff"}>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{hasFeed && <link rel="alternate" type="application/rss+xml" title={site.name} href="/feed.xml">}
+{/* html:root outranks the theme's :root, which Astro inlines later in <head> */}
+{brandVars && <style is:inline set:html={`html:root{${brandVars}}`}></style>}
+<script is:inline type="application/ld+json" set:html={seo.jsonld}></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">{site.name}</a>
+    <nav aria-label="Main">
+      <ul>
+        {(site.nav ?? []).map((item) => (
+          <li><a href={item.url} aria-current={item.url === url ? "page" : undefined}>{item.title}</a></li>
+        ))}
+        {cta && <li><a class="btn" href={cta.url}>{cta.text}</a></li>}
+      </ul>
+    </nav>
+  </div>
+</header>
+{seo.breadcrumbs.length > 0 && (
+  <nav class="wrap crumbs" aria-label="Breadcrumb">
+    <ol>
+      {seo.breadcrumbs.map((c, i) => (
+        <li>{i === seo.breadcrumbs.length - 1 ? <span aria-current="page">{c.name}</span> : <a href={c.url}>{c.name}</a>}</li>
+      ))}
+    </ol>
+  </nav>
+)}
+<main id="main" class="wrap">
+  <slot />
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    {org.address && (
+      <p>
+        {org.name ?? site.name}, {org.address.streetAddress}, {org.address.addressLocality}, {org.address.addressRegion} {org.address.postalCode}
+        {org.telephone && <> · <a href={`tel:${org.telephone}`}>{org.telephone}</a></>}
+      </p>
+    )}
+    <p>&copy; {new Date().getFullYear()} {site.name}{hasFeed && <> · <a href="/feed.xml">RSS</a></>} · <a href="/sitemap.xml">Sitemap</a></p>
+  </div>
+</footer>
+</body>
+</html>

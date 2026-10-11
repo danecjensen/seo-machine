@@ -1,0 +1,64 @@
+---
+// Every Markdown file in the site's src/content/ becomes a page here.
+import { getCollection, render } from "astro:content";
+import site from "virtual:seo-machine/site";
+import Base from "../layouts/Base.astro";
+import Cta from "../components/Cta.astro";
+import Faq from "../components/Faq.astro";
+import { longDate, isoDate } from "../lib/format.mjs";
+import { buildPages } from "../lib/pages.mjs";
+import { head } from "../lib/seo.mjs";
+
+export async function getStaticPaths() {
+  const pages = buildPages(await getCollection("pages"), site.root);
+  const byUrl = new Map(pages.map((p) => [p.url, p]));
+  const hasFeed = pages.some((p) => p.kind === "post" && p.indexable && p.published);
+  return pages.map((page) => ({
+    params: { slug: page.url === "/" ? undefined : page.url.slice(1, -1) },
+    props: { page, byUrl, hasFeed },
+  }));
+}
+
+const { page, byUrl, hasFeed } = Astro.props;
+const d = page.data;
+const { Content, headings } = await render(page.entry);
+const toc = page.kind === "post" && d.toc ? headings.filter((h) => h.depth === 2) : [];
+const cta = site.goals?.cta;
+const author = d.author ?? site.author;
+---
+<Base seo={head(site, page, byUrl)} url={page.url} hasFeed={hasFeed}>
+  <article>
+    <header class:list={["page-head", { hero: page.url === "/" }]}>
+      <h1>{d.heading ?? d.title}</h1>
+      {d.lede && <p class="lede">{d.lede}</p>}
+      {page.kind === "post" && (
+        <p class="meta">
+          {author && <>By {author} · </>}
+          {page.published && <time datetime={isoDate(page.published)}>{longDate(page.published)}</time>}
+          {d.updated && <> · Updated <time datetime={isoDate(d.updated)}>{longDate(d.updated)}</time></>}
+        </p>
+      )}
+      {page.url === "/" && cta && <p><a class="btn btn-lg" href={cta.url}>{cta.text}</a></p>}
+    </header>
+    {toc.length > 1 && (
+      <nav class="toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ul>
+      </nav>
+    )}
+    <div class="prose"><Content /></div>
+    {page.kind === "list" && (
+      <ul class="cards">
+        {page.children.filter((c) => c.indexable).map((c) => (
+          <li class="card">
+            <h2><a href={c.url}>{c.data.title}</a></h2>
+            {c.published && <time datetime={isoDate(c.published)}>{longDate(c.published)}</time>}
+            <p>{c.data.description}</p>
+          </li>
+        ))}
+      </ul>
+    )}
+    <Faq items={d.faq} />
+    <Cta page={page} />
+  </article>
+</Base>

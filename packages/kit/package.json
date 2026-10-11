@@ -1,0 +1,23 @@
+{
+  "name": "@seo-machine/kit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared layout, SEO and checks for every seo-machine site.",
+  "exports": {
+    ".": "./index.mjs",
+    "./content": "./content.mjs",
+    "./lib/*": "./lib/*",
+    "./layouts/*": "./layouts/*",
+    "./components/*": "./components/*",
+    "./routes/*": "./routes/*",
+    "./styles/*": "./styles/*"
+  },
+  "peerDependencies": {
+    "astro": "7.3.5"
+  },
+  "dependencies": {
+    "node-html-parser": "^9.0.4",
+    "yaml": "^2.9.1"
+  }
+}

@@ -1,0 +1,12 @@
+---
+import site from "virtual:seo-machine/site";
+const { page } = Astro.props;
+const cta = site.goals?.cta;
+const show = cta && page.data.cta && page.url !== cta.url;
+---
+{show && (
+  <aside class="cta" aria-label={cta.text}>
+    <p class="cta-title">{page.data.cta_title ?? cta.title ?? "Ready when you are."}</p>
+    <a class="btn btn-lg" href={cta.url}>{cta.text}</a>
+  </aside>
+)}

@@ -1,0 +1,75 @@
+/* Default theme. Inlined into every page, so keep it small. Sites override the
+   custom properties from [theme] in site.toml (brand = "#..." -> --brand). */
+:root {
+  --brand: #1d4ed8;
+  --brand-ink: #ffffff;
+  --ink: #111827;
+  --muted: #4b5563;
+  --bg: #ffffff;
+  --soft: #f3f4f6;
+  --line: #e5e7eb;
+  --radius: 10px;
+  --measure: 68ch;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font: 1.0625rem/1.65 var(--font); color: var(--ink); background: var(--bg); }
+img { max-width: 100%; height: auto; }
+a { color: var(--brand); text-underline-offset: 2px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+.wrap { max-width: 72rem; margin: 0 auto; padding: 0 1.25rem; }
+.skip { position: absolute; left: -999px; top: 0; padding: .5rem 1rem; background: var(--ink); color: #fff; z-index: 10; }
+.skip:focus { left: 0; }
+
+.site-header { border-bottom: 1px solid var(--line); }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; min-height: 4rem; }
+.brand { font-weight: 700; font-size: 1.15rem; color: var(--ink); text-decoration: none; }
+.site-header ul { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1.25rem; list-style: none; margin: 0; padding: .5rem 0; }
+.site-header a:not(.btn) { color: var(--ink); text-decoration: none; padding: .5rem 0; display: inline-block; }
+.site-header a[aria-current] { color: var(--brand); font-weight: 600; }
+
+.btn { display: inline-block; background: var(--brand); color: var(--brand-ink); padding: .6rem 1rem; border-radius: var(--radius); font-weight: 600; text-decoration: none; }
+.btn:hover { filter: brightness(1.1); }
+.btn-lg { padding: .85rem 1.4rem; font-size: 1.05rem; }
+
+.crumbs ol { display: flex; flex-wrap: wrap; list-style: none; margin: 1rem 0 0; padding: 0; font-size: .9rem; color: var(--muted); }
+.crumbs li + li::before { content: "/"; margin: 0 .5rem; }
+.crumbs a { color: var(--muted); }
+
+main { padding-bottom: 3rem; }
+.page-head { padding: 2.5rem 0 1rem; max-width: var(--measure); }
+.hero { padding: 4rem 0 2rem; }
+h1 { font-size: clamp(2rem, 4vw + 1rem, 3.1rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 1rem; }
+h2 { font-size: 1.6rem; line-height: 1.25; margin: 2.5rem 0 .75rem; }
+h3 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
+.lede { font-size: 1.25rem; color: var(--muted); margin: 0 0 1.5rem; }
+.meta { color: var(--muted); font-size: .95rem; }
+.prose { max-width: var(--measure); }
+.prose table { border-collapse: collapse; width: 100%; margin: 1.5rem 0; font-size: .95rem; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: .6rem .5rem; text-align: left; }
+.prose blockquote { margin: 1.5rem 0; padding: .25rem 1.25rem; border-left: 4px solid var(--brand); color: var(--muted); }
+.prose pre { background: var(--soft); padding: 1rem; border-radius: var(--radius); overflow-x: auto; }
+
+.toc { max-width: var(--measure); background: var(--soft); border-radius: var(--radius); padding: 1rem 1.25rem; margin: 1rem 0; }
+.toc p { margin: 0 0 .25rem; font-weight: 600; }
+.toc ul { margin: 0; padding-left: 1.1rem; }
+
+.cards { list-style: none; padding: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); }
+.card { border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem; }
+.card h2 { font-size: 1.2rem; margin: 0 0 .25rem; }
+.card time { color: var(--muted); font-size: .9rem; }
+
+.faq { max-width: var(--measure); margin-top: 3rem; }
+.faq details { border-bottom: 1px solid var(--line); padding: .9rem 0; }
+.faq summary { cursor: pointer; font-weight: 600; }
+.faq details p { margin: .5rem 0 0; color: var(--muted); }
+
+.cta { margin: 3rem 0 0; padding: 2rem; border-radius: var(--radius); background: var(--soft); max-width: var(--measure); }
+.cta-title { font-size: 1.35rem; font-weight: 700; margin: 0 0 1rem; }
+
+.site-footer { border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; padding: 1.5rem 0; }
+.site-footer a { color: var(--muted); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

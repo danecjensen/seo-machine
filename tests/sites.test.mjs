@@ -12,10 +12,10 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 function sandbox(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "seo-machine-"));
   t?.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-  for (const item of ["package.json", "scripts", "sites", "packages"]) {
+  for (const item of ["package.json", "scripts", "sites", "lib", "theme"]) {
     fs.cpSync(path.join(ROOT, item), path.join(dir, item), {
       recursive: true,
-      filter: (src) => !src.includes(`${path.sep}node_modules`) && !src.includes(`${path.sep}.astro`),
+      filter: (src) => !src.includes(`${path.sep}node_modules`),
     });
   }
   fs.symlinkSync(path.join(ROOT, "node_modules"), path.join(dir, "node_modules"));
@@ -25,8 +25,9 @@ function sandbox(t) {
 const build = (dir, ...args) =>
   spawnSync("node", ["scripts/build.mjs", ...args], { cwd: dir, encoding: "utf8" });
 const read = (dir, file) => fs.readFileSync(path.join(dir, "dist", file), "utf8");
+// A Liquid syntax error fails the build outright, as it would in Jekyll.
 const breakPage = (dir) =>
-  fs.writeFileSync(path.join(dir, "sites/plumbing.example/src/content/about.md"), "---\ntitle: No description\n---\nHi\n");
+  fs.writeFileSync(path.join(dir, "sites/plumbing.example/about.md"), "---\ntitle: Broken\n---\n{% if %}\n");
 
 describe("isolation", () => {
   test("a broken site does not stop the others", (t) => {
@@ -50,8 +51,8 @@ describe("isolation", () => {
 
   test("the folder name must match the configured domain", (t) => {
     const dir = sandbox(t);
-    const cfg = path.join(dir, "sites/ledger.example/site.config.mjs");
-    fs.writeFileSync(cfg, fs.readFileSync(cfg, "utf8").replace('domain: "ledger.example"', 'domain: "plumbing.example"'));
+    const cfg = path.join(dir, "sites/ledger.example/_config.yml");
+    fs.writeFileSync(cfg, fs.readFileSync(cfg, "utf8").replace("url: https://ledger.example", "url: https://plumbing.example"));
     const run = build(dir, "--site", "ledger.example");
     assert.equal(run.status, 1);
     assert.match(run.stdout + run.stderr, /folder name must match/);
@@ -60,8 +61,8 @@ describe("isolation", () => {
   test("a site cannot link to another site's files", (t) => {
     const dir = sandbox(t);
     fs.symlinkSync(
-      path.join(dir, "sites/plumbing.example/src/content/about.md"),
-      path.join(dir, "sites/ledger.example/src/content/stolen.md"),
+      path.join(dir, "sites/plumbing.example/about.md"),
+      path.join(dir, "sites/ledger.example/stolen.md"),
     );
     const run = build(dir, "--site", "ledger.example");
     assert.equal(run.status, 1);
@@ -70,7 +71,7 @@ describe("isolation", () => {
 
   test("--strict fails a site with SEO errors", (t) => {
     const dir = sandbox(t);
-    const page = path.join(dir, "sites/ledger.example/src/content/features.md");
+    const page = path.join(dir, "sites/ledger.example/features.md");
     fs.writeFileSync(page, fs.readFileSync(page, "utf8").replace("[pricing page](/pricing/)", "[pricing page](/nope/)"));
     assert.equal(build(dir, "--site", "ledger.example").status, 0);
     const strict = build(dir, "--site", "ledger.example", "--strict");
@@ -119,6 +120,7 @@ describe("output", () => {
     assert.ok(!sitemap.includes("/thank-you/"), "noindex pages stay out of the sitemap");
     assert.match(read(dir, "ledger.example/feed.xml"), /<item><title>Quarterly Estimated Taxes/);
     assert.ok(!fs.existsSync(path.join(dir, "dist/plumbing.example/feed.xml")), "no posts, no feed");
+    assert.match(read(dir, "ledger.example/sitemap.xml"), /blog\/quarterly-estimated-taxes\/<\/loc><lastmod>2026-10-01/);
   });
 });
 

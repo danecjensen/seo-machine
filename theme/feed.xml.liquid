@@ -1,0 +1,11 @@
+---
+permalink: /feed.xml   # removed after the build when the site has no posts
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
+<title>{{ site.title | xml_escape }}</title><link>{{ "/" | absolute_url }}</link>
+<description>{{ site.description | xml_escape }}</description>
+<atom:link href="{{ "/feed.xml" | absolute_url }}" rel="self" type="application/rss+xml"/>
+{% for post in collections.posts limit: 20 %}{% unless post.data.noindex %}<item><title>{{ post.data.title | xml_escape }}</title><link>{{ post.url | absolute_url }}</link><guid>{{ post.url | absolute_url }}</guid><pubDate>{{ post.date | date_to_rfc822 }}</pubDate><description>{{ post.data.description | xml_escape }}</description></item>
+{% endunless %}{% endfor %}</channel></rss>

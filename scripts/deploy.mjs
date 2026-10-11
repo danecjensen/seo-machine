@@ -8,9 +8,9 @@
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { pathToFileURL } from "node:url";
 import { parseArgs } from "node:util";
-import { pagesProject } from "../packages/kit/lib/cloudflare.mjs";
+import { pagesProject, validProject } from "../lib/cloudflare.mjs";
+import { loadConfig, seoSite } from "../lib/site.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const WRANGLER = path.join(ROOT, "node_modules", ".bin", "wrangler");
@@ -31,7 +31,7 @@ if (!values.site?.length) {
 
 const git = (...args) => spawnSync("git", args, { cwd: ROOT, encoding: "utf8" }).stdout?.trim() || undefined;
 const branch = values.branch ?? process.env.GITHUB_HEAD_REF ?? process.env.GITHUB_REF_NAME ?? git("rev-parse", "--abbrev-ref", "HEAD");
-const commit = process.env.GITHUB_SHA ?? git("rev-parse", "HEAD");
+const commit = [process.env.GITHUB_SHA, git("rev-parse", "HEAD")].find((c) => /^[0-9a-f]{40}$/.test(c ?? ""));
 const { CLOUDFLARE_API_TOKEN: token, CLOUDFLARE_ACCOUNT_ID: account } = process.env;
 if (!dryRun && (!token || !account)) {
   console.error("Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID (GitHub repo secrets in CI).");
@@ -56,10 +56,9 @@ function wrangler(args) {
 }
 
 async function deploy(domain) {
-  const configFile = path.join(ROOT, "sites", domain, "site.config.mjs");
-  if (!fs.existsSync(configFile)) throw new Error(`no sites/${domain}/site.config.mjs`);
-  const site = (await import(pathToFileURL(configFile))).default;
+  const site = seoSite(loadConfig(path.join(ROOT, "sites", domain)));
   const project = pagesProject(site);
+  if (!validProject(project)) throw new Error(`Pages project name "${project}" must be 2-58 lowercase letters, digits or hyphens`);
   const production = site.cloudflare?.productionBranch ?? "main";
   const domains = site.cloudflare?.domains ?? [site.domain];
   const out = path.join(ROOT, "dist", domain);

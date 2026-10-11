@@ -1,0 +1,15 @@
+---
+layout: default
+---
+<article>
+  <header class="page-head{% if page.url == '/' %} hero{% endif %}">
+    <h1>{{ heading | default: title }}</h1>
+    {% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+    {% if page.url == '/' and site.goals.cta %}<p><a class="btn btn-lg" href="{{ site.goals.cta.url }}">{{ site.goals.cta.text }}</a></p>{% endif %}
+  </header>
+  <div class="prose">
+    {{ content }}
+  </div>
+  {% include faq.html %}
+  {% include cta.html %}
+</article>

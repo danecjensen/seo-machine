@@ -1,0 +1,19 @@
+---
+layout: default
+type: list
+---
+<header class="page-head">
+  <h1>{{ heading | default: title }}</h1>
+  {% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+</header>
+<div class="prose">{{ content }}</div>
+{% assign items = page.url | children: collections.all %}
+<ul class="cards">
+  {% for item in items %}
+  <li class="card">
+    <h2><a href="{{ item.url }}">{{ item.data.title }}</a></h2>
+    {% if item.inputPath contains "/_posts/" %}<time datetime="{{ item.date | iso_date }}">{{ item.date | date_to_long_string }}</time>{% endif %}
+    <p>{{ item.data.description }}</p>
+  </li>
+  {% endfor %}
+</ul>

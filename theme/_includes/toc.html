@@ -1,0 +1,7 @@
+{% assign toc_items = include.html | toc %}
+{% if toc_items.size > 1 %}
+<nav class="toc" aria-label="On this page">
+  <p>On this page</p>
+  <ul>{% for h in toc_items %}<li><a href="#{{ h.slug }}">{{ h.text }}</a></li>{% endfor %}</ul>
+</nav>
+{% endif %}

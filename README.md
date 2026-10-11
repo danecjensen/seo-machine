@@ -1,26 +1,54 @@
 # seo machine
 
-One repo that builds many static marketing sites with [Astro](https://astro.build), one per
-domain. Each site has its own content goals, config, content and output folder, and none of
-them can see the others. A shared kit gives every page the SEO essentials and checks them on
-every build.
+One repo that builds many static marketing sites, one per domain, with
+[Eleventy](https://www.11ty.dev) set up to work like Jekyll. Each site has its own
+`_config.yml`, content and output folder, and none of them can see the others. A shared
+theme gives every page the SEO essentials and checks them on every build. Each domain
+deploys to its own Cloudflare Pages project.
 
 ```
 sites/
-  ledger.example/              a SaaS site; goal: free-trial signups
-    site.config.mjs            name, goals, keywords, organization, nav, brand colors
-    astro.config.mjs           one line: defineSite(import.meta.url, site)
-    src/content/**/*.md        pages, as Markdown with YAML front matter
-    src/content.config.mjs     one line: re-exports the kit's content schema
-    public/                    favicon, og.png, images (copied as-is)
-    lighthouse.json            optional Lighthouse budget overrides
-  plumbing.example/            a local business site; goal: phone calls and bookings
-packages/kit/                  shared layout, routes, styles, SEO and checks
-scripts/build.mjs              builds each site into dist/<domain>/
-scripts/deploy.mjs             deploys dist/<domain>/ to its own Cloudflare Pages project
-lighthouse/                    Lighthouse runner and default budgets
-dist/<domain>/                 static output, one folder per site, ready to upload
+  ledger.example/                a SaaS site; goal: free-trial signups
+    _config.yml                  title, url, description, goals, organization, colors...
+    _data/navigation.yml         the header menu
+    _posts/2026-09-02-title.md   blog posts, dated by file name
+    blog/index.md                the blog's list page (layout: list)
+    index.md, pricing.md, ...    pages
+    assets/                      images, copied as-is
+    lighthouse.json              optional Lighthouse budget overrides
+  plumbing.example/              a local business site; goal: phone calls and bookings
+theme/                           shared _layouts, _includes, CSS, sitemap, robots, feed, 404
+lib/                             the Eleventy config, SEO tag and SEO check
+scripts/                         build, deploy and new-site commands
+lighthouse/                      Lighthouse runner and default budgets
+dist/<domain>/                   static output, one folder per site
 ```
+
+## Coming from Jekyll
+
+Most of it is what you know. These are the differences.
+
+| Jekyll | Here |
+|---|---|
+| `_config.yml` | `sites/<domain>/_config.yml`, one per site. `url` must match the folder name. |
+| `_layouts/`, `_includes/` | Same. The shared ones live in `theme/`, like a theme gem. A file with the same path in a site folder replaces the theme's. |
+| `_posts/YYYY-MM-DD-title.md` | Same. URL comes from `permalink:` in `_config.yml` (default `/blog/:title/`; `:year`, `:month`, `:day` also work). |
+| `_data/navigation.yml` → `site.data.navigation` | Same file, but use `navigation` in templates. |
+| `_drafts/`, `published: false` | Same: not built. |
+| `defaults:` in `_config.yml` | Same, with `scope.path` and `scope.type` (`posts` or `pages`). Markdown pages default to `layout: page`. |
+| `{{ page.title }}`, `{{ page.description }}` | `{{ title }}`, `{{ description }}`. Front matter is top-level. `page.url` and `page.date` still work. |
+| `{{ content }}` in layouts | Same. |
+| `{% include file.html key="value" %}` and `include.key` | Same. |
+| `site.posts` | `collections.posts` (newest first). |
+| `site.pages` | `collections.all` |
+| `{% seo %}` (jekyll-seo-tag) | Same tag, with richer JSON-LD (see below). |
+| jekyll-sitemap, jekyll-feed | Built in: `sitemap.xml` and `feed.xml`. Use `sitemap: false` to leave a page out. |
+| `redirect_from:` (jekyll-redirect-from) | Same front matter. It becomes a 301 in Cloudflare's `_redirects` file. |
+| `last_modified_at:` | Same. It's used for "Updated" dates, `dateModified` and the sitemap. |
+| Filters: `absolute_url`, `relative_url`, `date_to_xmlschema`, `date_to_string`, `date_to_long_string`, `xml_escape`, `jsonify` | Same. |
+| `bundle exec jekyll build` | `npm run build` (every site) or `npm run build -- --site <domain>`. |
+| `bundle exec jekyll serve` | `npm run serve -- --site <domain>` |
+| kramdown | markdown-it with kramdown-style heading ids and smart quotes. |
 
 ## Use it
 
@@ -30,78 +58,78 @@ Needs Node 22.12 or newer.
 npm install
 npm run build                                   # every site -> dist/<domain>/
 npm run build -- --site ledger.example --strict --verbose
-npm run new-site -- mysite.com "My Site"        # scaffold a site, then npm install
+npm run serve -- --site ledger.example          # preview at http://localhost:4000, rebuilds on save
+npm run new-site -- mysite.com "My Site"        # scaffold a site
 npm test                                        # isolation, output and unit tests
 node scripts/deploy.mjs --site ledger.example --dry-run   # show what a deploy would do
-
-cd sites/ledger.example && npx astro dev        # live preview of one site
 ```
 
 `--strict` fails a site that has SEO errors. `--verbose` also prints warnings.
 
 ## How sites stay isolated
 
-- Each site is its own Astro project in its own folder, and the folder name must equal `domain`
-  in `site.config.mjs`.
-- Content comes only from the site's own `src/content/`. A file or symlink in `src/` or `public/`
-  that points outside the site folder fails the build.
+- Each site is its own folder with its own `_config.yml`, and its `url` must match the folder name.
+- A file or symlink in a site folder that points outside it fails the build.
+- Each site builds separately: `theme/` plus that one site folder are combined in `.build/<domain>/`,
+  so a site can only see the shared theme and its own files.
 - Each site builds to its own `dist/<domain>/` through a staging folder that only replaces the
   previous output when the build succeeds, so a broken site keeps its last good build.
-- `npm run build` builds sites one at a time and carries on past failures; one site's error never
-  stops another.
+- `npm run build` carries on past failures; one site's error never stops another.
 - CI runs one job per site with `fail-fast: false`, so each site passes or fails on its own.
 
 ## SEO built in
 
-Every page gets:
+`{% seo %}` in `theme/_layouts/default.html` writes:
 
-- A `<title>` from the site's `titleTemplate`, a meta description, a canonical URL and a robots tag.
-- Clean trailing-slash URLs (`src/content/pricing.md` becomes `/pricing/`).
-- Open Graph and Twitter card tags, with a per-page or site-wide share image.
-- JSON-LD in one `@graph`: the Organization (or any LocalBusiness type such as `Plumber`, with
-  address, geo, hours and service area), WebSite, WebPage, and BreadcrumbList. It also adds
-  BlogPosting for dated posts, FAQPage when the page has `faq` (also shown on the page, as Google
+- The `<title>` (from `title_format`, or `seo_title` in front matter), meta description, canonical
+  URL and robots tag.
+- Open Graph and Twitter card tags, with a per-page `image` or the site's default.
+- JSON-LD in one `@graph`: the organization (or any LocalBusiness type such as `Plumber`, with
+  address, geo, hours and service area), WebSite, WebPage and BreadcrumbList. It also adds
+  BlogPosting for posts, FAQPage when the page has `faq` (also shown on the page, as Google
   requires), and Service with an Offer when it has `service`.
-- Visible breadcrumbs, one `<h1>`, and a table of contents on long posts.
 
-Every site gets `sitemap.xml` (indexable pages only, with `<lastmod>` from front matter or the
-file's last git commit), `robots.txt` pointing at the sitemap, `feed.xml` when it has dated posts,
-a `404.html`, and the Cloudflare Pages files described below.
+The theme also adds visible breadcrumbs, one `<h1>` per page, a table of contents on long posts,
+clean trailing-slash URLs, `sitemap.xml` (with `<lastmod>` from `last_modified_at`, the post
+date or the file's last git commit), `robots.txt`, `feed.xml` when the site has posts, and a
+`404.html`.
 
-Pages ship no JavaScript, use a system font stack, and inline their one small stylesheet, so
-nothing blocks rendering. A typical page is about 9 KB. Images placed next to the Markdown
-(`![alt](./photo.jpg)`) are resized, converted and given dimensions by Astro.
+Pages ship no JavaScript, use a system font stack, and inline one small stylesheet, so nothing
+blocks rendering. Images with a `/path` get their `width` and `height` filled in from the file,
+plus `loading="lazy"`. A typical page is about 9 KB.
 
 ## The SEO check
 
-After each build, the kit checks the rendered HTML of every page and reports:
+After each build, every page's HTML is checked:
 
 - **Errors** (these fail with `--strict`): a missing title, description or canonical; anything
   other than exactly one `<h1>`; images without alt text; broken internal links; duplicate titles
-  or descriptions.
+  or descriptions; redirects to pages that don't exist.
 - **Warnings**: titles over 60 characters; descriptions outside 50 to 160 characters; skipped
   heading levels; images without dimensions; URLs that aren't lowercase-hyphenated; thin pages
-  (under `lint.minWords`, 250 by default); and a page's target `keyword` missing from its title,
-  description, `<h1>` or first 150 words.
+  (under `lint.minWords`, 250 by default); temporary redirects; and a page's target `keyword`
+  missing from its title, description, `<h1>` or first 150 words.
 
 ## Front matter
 
 ```yaml
 ---
-title: "Water Heater Repair in Austin"   # required; also the og:title
-description: "..."                        # required; 50-160 characters
+title: "Water Heater Repair in Austin"   # also the og:title
+description: "..."                        # 50-160 characters
 keyword: "water heater repair"            # target phrase the SEO check looks for
+layout: page                              # page (default), post, list, or your own
 seo_title: "..."                          # replaces the templated <title>
 heading: "..."                            # replaces the <h1> when it should differ from title
 nav_title: "..."                          # shorter name for breadcrumbs
 lede: "..."                               # intro line under the heading
-date: 2026-09-02                          # makes a nested page a dated post (BlogPosting, RSS)
-updated: 2026-10-01
 author: "Maya Chen"
-image: "/hero.png"                        # share image for this page
+last_modified_at: 2026-10-01
+image: /assets/hero.png                   # or { path: ..., alt: ... }
 noindex: true                             # adds noindex and leaves it out of the sitemap
-draft: true                               # not built at all
-canonical: "https://..."                  # points at another URL (also leaves the sitemap)
+sitemap: false                            # just leaves it out of the sitemap
+canonical_url: "https://..."              # points at another URL
+redirect_from: [/old-url/]
+published: false                          # not built at all
 cta: false                                # hides the closing call to action
 service:                                  # Service + Offer schema
   name: "Drain cleaning"
@@ -112,11 +140,52 @@ faq:                                      # visible FAQ + FAQPage schema
 ---
 ```
 
-`src/content/blog/index.md` makes `/blog/` a list page that shows every page in that folder.
-Front matter is validated, so a typo in a field name fails the build.
+`layout: list` shows every page one level below it: put `services/index.md` with
+`layout: list` next to `services/drain-cleaning.md` and the list builds itself.
 
 ## Lighthouse
 
-The Lighthouse checks run against `dist/<domain>/`, with default budgets plus optional per-site
-overrides in `sites/<domain>/lighthouse.json`. Every indexable page of both sample sites
-scores 100 for Performance, Accessibility, Best Practices and SEO on mobile.
+The Lighthouse checks run against `dist/<domain>/`, using the pages in each site's sitemap.
+Default budgets apply, with optional per-site overrides in `sites/<domain>/lighthouse.json`.
+Every page of both sample sites scores 100 for Performance, Accessibility, Best Practices and
+SEO on mobile. See `lighthouse/README.md`.
+
+## Cloudflare Pages
+
+Every domain deploys to its own Cloudflare Pages project, named after the domain
+(`ledger.example` becomes `ledger-example`). To change that, add to `_config.yml`:
+
+```yaml
+cloudflare:
+  project: ledger-example
+  productionBranch: main
+  domains: [ledger.example]   # custom domains attached on production deploys
+```
+
+Each build writes the files Pages reads from the output root:
+
+- `_headers`: security headers, caching for `/assets/`, and `X-Robots-Tag: noindex` on every
+  `*.pages.dev` hostname, so preview and default URLs never compete with the real domain in search.
+- `_redirects`: from `redirect_from` front matter (or `redirects:` in `_config.yml`), only when
+  there are any. A source like `/old/` also gets an `/old` line, because Pages matches paths exactly.
+- `404.html`, which Pages serves with a 404 status for unknown paths.
+
+Pages already redirects `/about` to `/about/`, which matches the site's URLs.
+
+### Deploying
+
+`node scripts/deploy.mjs --site <domain>` creates the Pages project if it doesn't exist, uploads
+`dist/<domain>/`, and on the production branch attaches each custom domain. It needs two
+environment variables:
+
+- `CLOUDFLARE_API_TOKEN`: an API token with the Account > Cloudflare Pages > Edit permission.
+- `CLOUDFLARE_ACCOUNT_ID`: the account ID from the Cloudflare dashboard.
+
+In CI, add both as repository secrets. `.github/workflows/sites.yml` runs one job per domain
+that builds and SEO-checks the site, runs Lighthouse, and deploys only if both pass. Pushes to
+`main` go to production; pull requests from this repo get a preview at
+`<branch>.<project>.pages.dev`. Without the secrets, every step except the deploy still runs.
+
+DNS is created automatically when the domain's zone is on the same Cloudflare account. Otherwise,
+point a CNAME at `<project>.pages.dev`. Pages can't redirect `www` to the apex with `_redirects`;
+use a Cloudflare Bulk Redirect or Redirect Rule for that.

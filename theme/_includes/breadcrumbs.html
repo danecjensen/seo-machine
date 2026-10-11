@@ -1,0 +1,10 @@
+{% if page.url != '/' and page.url != '/404.html' %}
+{% assign trail = page.url | breadcrumbs: collections.all %}
+<nav class="wrap crumbs" aria-label="Breadcrumb">
+  <ol>
+    {% for crumb in trail %}
+    <li>{% if forloop.last %}<span aria-current="page">{{ crumb.name }}</span>{% else %}<a href="{{ crumb.url }}">{{ crumb.name }}</a>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</nav>
+{% endif %}

@@ -1,0 +1,40 @@
+# Ledgerly: a SaaS product site. Goal: free-trial signups from organic search.
+# Same idea as Jekyll's _config.yml; keys follow jekyll-seo-tag where one exists.
+title: Ledgerly
+description: "Bookkeeping software for freelancers: track income, expenses and quarterly taxes in one place."
+url: https://ledger.example
+lang: en
+locale: en_US
+title_format: "{title} | {site}"
+author: The Ledgerly team
+twitter:
+  username: ledgerly
+logo: /assets/logo.png
+image:
+  path: /assets/og.png          # 1200x630 share image used when a page has none
+  alt: Ledgerly bookkeeping for freelancers
+theme_color: "#0f766e"
+colors:
+  brand: "#0f766e"              # CSS custom properties: --brand
+
+permalink: /blog/:title/        # for _posts
+
+# What the site is for. The CTA shows in the header and at the end of pages.
+goals:
+  primary: Free trial signups
+  audience: US freelancers and solo consultants
+  keywords: [bookkeeping for freelancers, freelancer expense tracker, quarterly estimated taxes]
+  cta:
+    text: Start free trial
+    title: Get your books in order this week.
+    url: /signup/
+
+# schema.org Organization; any extra keys pass straight into the JSON-LD.
+organization:
+  type: Organization
+  sameAs:
+    - https://x.com/ledgerly
+    - https://www.linkedin.com/company/ledgerly
+
+lint:
+  minWords: 250

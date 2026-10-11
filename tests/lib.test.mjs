@@ -1,36 +1,39 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { buildPages, urlFor } from "../packages/kit/lib/pages.mjs";
-import { breadcrumbs, pageTitle } from "../packages/kit/lib/seo.mjs";
+import { pagesProject, redirectLines } from "../lib/cloudflare.mjs";
+import { imageSize, minifyCss } from "../lib/html.mjs";
+import { breadcrumbs, pageTitle } from "../lib/seo.mjs";
+import { seoSite } from "../lib/site.mjs";
 
-test("clean URLs from file paths", () => {
-  assert.deepEqual(urlFor("index"), { url: "/", kind: "page" });
-  assert.deepEqual(urlFor("pricing"), { url: "/pricing/", kind: "page" });
-  assert.deepEqual(urlFor("blog/index"), { url: "/blog/", kind: "list" });
-  assert.deepEqual(urlFor("blog/first-post"), { url: "/blog/first-post/", kind: "post" });
-});
-
-test("nested pages are posts only when dated; lists collect their children", () => {
-  const e = (id, data) => ({ id, data: { title: id, description: "d", ...data } });
-  const pages = buildPages([e("blog/index"), e("blog/a", { date: new Date("2026-01-01") }), e("blog/b")], "/nonexistent");
-  const by = Object.fromEntries(pages.map((p) => [p.url, p]));
-  assert.equal(by["/blog/a/"].kind, "post");
-  assert.equal(by["/blog/b/"].kind, "page");
-  assert.deepEqual(by["/blog/"].children.map((c) => c.url), ["/blog/a/", "/blog/b/"]);
-  assert.deepEqual(breadcrumbs(by["/blog/a/"], new Map(pages.map((p) => [p.url, p]))).map((c) => c.url), ["/", "/blog/", "/blog/a/"]);
-});
-
-test("titles follow the site template", () => {
+test("titles follow the site's title_format", () => {
   const site = { name: "Acme", titleTemplate: "{title} | {site}" };
   assert.equal(pageTitle(site, { url: "/x/", data: { title: "Pricing" } }), "Pricing | Acme");
   assert.equal(pageTitle(site, { url: "/", data: { title: "Widgets" } }), "Acme: Widgets");
   assert.equal(pageTitle(site, { url: "/x/", data: { title: "P", seo_title: "Custom" } }), "Custom");
 });
 
-test("redirect sources get a slashless twin, wildcards don't", async () => {
-  const { redirectLines, pagesProject } = await import("../packages/kit/lib/cloudflare.mjs");
-  assert.deepEqual(redirectLines({ redirects: [{ from: "/a/", to: "/b/" }, { from: "/blog/*", to: "/news/:splat", status: 302 }] }),
+test("breadcrumbs use page titles and fall back to the URL", () => {
+  const byUrl = new Map([["/blog/", { url: "/blog/", data: { title: "Guides", nav_title: "Blog" } }]]);
+  assert.deepEqual(breadcrumbs({ url: "/blog/a-post/" }, byUrl).map((c) => c.name), ["Home", "Blog", "a post"]);
+});
+
+test("jekyll-seo-tag style config keys map onto the SEO settings", () => {
+  const site = seoSite({ title: "Acme", description: "d", url: "https://acme.com/", twitter: { username: "acme" },
+    image: { path: "/og.png", alt: "Acme" }, logo: "/logo.png" });
+  assert.equal(site.baseUrl, "https://acme.com");
+  assert.equal(site.twitter, "@acme");
+  assert.equal(site.defaultImage, "/og.png");
+  assert.equal(site.organization.logo, "/logo.png");
+});
+
+test("redirect sources get a slashless twin, wildcards don't", () => {
+  assert.deepEqual(redirectLines([{ from: "/a/", to: "/b/" }, { from: "/blog/*", to: "/news/:splat", status: 302 }]),
     ["/a/ /b/ 301", "/a /b/ 301", "/blog/* /news/:splat 302"]);
   assert.equal(pagesProject({ domain: "shop.acme.com" }), "shop-acme-com");
   assert.equal(pagesProject({ domain: "x.com", cloudflare: { project: "custom" } }), "custom");
+});
+
+test("helpers: CSS minify and image sizes", () => {
+  assert.equal(minifyCss("a { color : red ; }\n/* x */ b{margin:0}"), "a{color:red}b{margin:0}");
+  assert.deepEqual(imageSize(new URL("../sites/ledger.example/assets/og.png", import.meta.url).pathname), [1200, 630]);
 });

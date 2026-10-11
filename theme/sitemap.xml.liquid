@@ -1,0 +1,8 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{% assign pages = collections.all | in_sitemap %}{% for p in pages %}{% assign mod = p | lastmod %}<url><loc>{{ p.url | absolute_url | xml_escape }}</loc>{% if mod != "" %}<lastmod>{{ mod }}</lastmod>{% endif %}</url>
+{% endfor %}</urlset>

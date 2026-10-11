@@ -1,0 +1,9 @@
+{% assign org = site.organization %}
+<footer class="site-footer">
+  <div class="wrap">
+    {% if org.address %}
+    <p>{{ site.title }}, {{ org.address.streetAddress }}, {{ org.address.addressLocality }}, {{ org.address.addressRegion }} {{ org.address.postalCode }}{% if org.telephone %} · <a href="tel:{{ org.telephone }}">{{ org.telephone }}</a>{% endif %}</p>
+    {% endif %}
+    <p>&copy; {{ "now" | date: "%Y" }} {{ site.title }}{% if collections.posts.size > 0 %} · <a href="/feed.xml">RSS</a>{% endif %} · <a href="/sitemap.xml">Sitemap</a></p>
+  </div>
+</footer>

@@ -1,0 +1,7 @@
+{% assign cta_goal = site.goals.cta %}
+{% if cta_goal and cta != false and page.url != cta_goal.url %}
+<aside class="cta" aria-label="{{ cta_goal.text }}">
+  <p class="cta-title">{{ cta_title | default: cta_goal.title | default: "Ready when you are." }}</p>
+  <a class="btn btn-lg" href="{{ cta_goal.url }}">{{ cta_goal.text }}</a>
+</aside>
+{% endif %}

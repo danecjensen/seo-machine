@@ -1,0 +1,12 @@
+{% comment %}Visible FAQ: Google only honors FAQPage markup when the answers are on the page.{% endcomment %}
+{% if faq %}
+<section class="faq" aria-labelledby="faq-heading">
+  <h2 id="faq-heading">{{ faq_heading | default: "Frequently asked questions" }}</h2>
+  {% for item in faq %}
+  <details>
+    <summary>{{ item.q }}</summary>
+    <p>{{ item.a }}</p>
+  </details>
+  {% endfor %}
+</section>
+{% endif %}

@@ -1,0 +1,20 @@
+---
+layout: default
+---
+{% assign post_author = author | default: site.author %}
+<article>
+  <header class="page-head">
+    <h1>{{ title }}</h1>
+    <p class="meta">
+      {% if post_author %}By {{ post_author }} · {% endif %}
+      <time datetime="{{ page.date | iso_date }}">{{ page.date | date_to_long_string }}</time>
+      {% if last_modified_at %} · Updated <time datetime="{{ last_modified_at | iso_date }}">{{ last_modified_at | date_to_long_string }}</time>{% endif %}
+    </p>
+  </header>
+  {% unless toc == false %}{% include toc.html html=content %}{% endunless %}
+  <div class="prose">
+    {{ content }}
+  </div>
+  {% include faq.html %}
+  {% include cta.html %}
+</article>

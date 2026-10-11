@@ -1,6 +1,7 @@
 node_modules/
 dist/
-.astro/
 *.staging/
 lighthouse-reports/
 lighthouse/node_modules/
+.build/
+.wrangler/

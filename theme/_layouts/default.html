@@ -8,7 +8,7 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 {% if collections.posts.size > 0 %}<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="/feed.xml">{% endif %}
 {% capture css %}{% include css/base.css %}{% endcapture %}
-<style>{{ css | cssmin }}{% if site.colors %}:root{ {{- site.colors | css_vars -}} }{% endif %}</style>
+<style>{{ css | cssmin }}{% if site.colors %}:root{ {{- site.colors | css_vars -}} }{% endif %}{{ design.css }}</style>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>

@@ -92,7 +92,10 @@ async function deploy(domain) {
     }
     const existing = await api("GET", `/pages/projects/${project}/domains/${name}`);
     if (existing.success) {
-      console.log(`  custom domain ${name}: ${existing.result?.status ?? "attached"}`);
+      const r = existing.result ?? {};
+      // Explain domains that haven't gone active, e.g. a conflicting DNS record or a pending certificate.
+      const why = [r.verification_data?.error_message, r.validation_data?.error_message].filter(Boolean).join("; ");
+      console.log(`  custom domain ${name}: ${r.status ?? "attached"}${why ? ` (${why})` : ""}`);
       continue;
     }
     const added = await api("POST", `/pages/projects/${project}/domains`, { name });

@@ -6,5 +6,7 @@ Pass id="..." so each form on a page gets unique field ids. Posts to contact.for
     <select id="{{ include.id }}-interest" name="interest">
       <option value="">Choose one</option><option>Hats</option><option>Tote bags</option><option>Blankets</option><option>Socks</option><option>Something else</option>
     </select></p>
+  <input type="hidden" name="_subject" value="New gohappyclub.com signup">
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
   <p><button class="btn btn-lg" type="submit">{{ site.goals.cta.text }}</button></p>
 </form>

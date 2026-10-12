@@ -26,9 +26,9 @@ goals:
 # PLACEHOLDERS: fill these in before launch. Nothing here has been invented.
 # Leave a value empty and the site shows a visible "[placeholder]" note instead.
 contact:
-  form_action: ""    # URL of the form handler that stores signups (Mailchimp, ConvertKit, Formspree...).
+  form_action: https://formspree.io/f/xojvgbjq   # Formspree form that stores signups.
                      # Empty = the signup page shows a placeholder and other pages link to it.
-                     # Set the handler to send people to https://gohappyclub.com/thanks/ afterwards.
+                     # In Formspree's form settings, send people to https://gohappyclub.com/thanks/ afterwards.
 
 # Add telephone, email and address here once they're confirmed, e.g.
 #   telephone: "+1-555-555-5555"

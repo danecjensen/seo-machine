@@ -319,9 +319,9 @@ to Cloudflare while the registration stays at Namecheap.
    Check it with `curl -sI https://www.gohappyclub.com/products/`, which should return a 301
    to `https://gohappyclub.com/products/`.
 
-Before launch, set `contact.form_action` in `sites/gohappyclub.com/_config.yml` to the URL of a
-form handler that stores email signups (Mailchimp, ConvertKit, Formspree or similar), and have it
-send people to `https://gohappyclub.com/thanks/` afterwards. The form posts `email` and an
+Signups go to a Formspree form: `contact.form_action` in `sites/gohappyclub.com/_config.yml` is
+its endpoint. The form is plain HTML (no JavaScript), with Formspree's `_gotcha` spam trap and a
+`_subject` line; set the form's redirect in Formspree to `https://gohappyclub.com/thanks/`. The form posts `email` and an
 optional `interest` (hats, tote bags, blankets, socks or something else). Until it's set, the
 signup page shows a yellow "[Placeholder]" note. Once it's set, the signup page and each product
 page show the form (`signup_form: true`, set for `products/` in `_config.yml` defaults); other

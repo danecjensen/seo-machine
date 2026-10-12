@@ -8,6 +8,7 @@ import http from "node:http";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { assertSelfContained, loadConfig } from "../lib/site.mjs";
+import { readSkeleton, toLayout } from "../lib/wireframe.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const SITES = path.join(ROOT, "sites");
@@ -43,7 +44,26 @@ function assemble(domain) {
   fs.rmSync(work, { recursive: true, force: true });
   fs.cpSync(path.join(ROOT, "theme"), work, { recursive: true });
   fs.cpSync(siteDir, work, { recursive: true, filter: (src) => path.basename(src) !== "lighthouse.json" });
+  buildArchetypes(work);
   return { siteDir, work };
+}
+
+/** _archetypes/<name>.html skeletons -> _layouts/<name>.html (see lib/wireframe.mjs). The folder isn't published. */
+function buildArchetypes(work) {
+  const dir = path.join(work, "_archetypes");
+  if (!fs.existsSync(dir)) return;
+  for (const f of fs.readdirSync(dir).filter((f) => f.endsWith(".html"))) {
+    const name = f.slice(0, -5);
+    let tree;
+    try {
+      tree = readSkeleton(fs.readFileSync(path.join(dir, f), "utf8"));
+    } catch (e) {
+      throw new Error(`_archetypes/${f}: ${e.message}`);
+    }
+    fs.mkdirSync(path.join(work, "_layouts"), { recursive: true });
+    fs.writeFileSync(path.join(work, "_layouts", f), toLayout(tree, name));
+  }
+  fs.rmSync(dir, { recursive: true });
 }
 
 function run(domain, out) {

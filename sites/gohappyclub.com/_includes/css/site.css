@@ -1,0 +1,56 @@
+/* Happy Club's page archetypes: home (_layouts/home.html), product (_layouts/product.html) and
+   collection (_layouts/collection.html). Layout only: colors, fonts and corners come from the theme's
+   custom properties, so a Claude Design import restyles these pages too. */
+.section { margin-top: 3.5rem; }
+.section > h2:first-child { margin-top: 0; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; margin: 1.5rem 0 0; }
+.link-arrow { font-weight: 600; }
+.link-arrow::after { content: " →"; }
+
+/* Image slot: a fixed shape so the page never shifts, with a visible box until a photo is added. */
+.media { margin: 0; aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; background: var(--soft); }
+.media-wide { aspect-ratio: 4 / 3; }
+.media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.media-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; padding: 1rem;
+  border: 2px dashed var(--line); border-radius: inherit; color: var(--muted); font-size: .9rem; text-align: center; }
+
+/* Hero: copy beside a photo on wide screens, stacked on phones. */
+.home-hero, .product-hero { display: grid; gap: 2rem; align-items: center; padding: 2.5rem 0 0; }
+.home-hero { padding-top: 3.5rem; }
+@media (min-width: 48rem) {
+  .home-hero { grid-template-columns: 1.1fr 1fr; gap: 3rem; }
+  .product-hero { grid-template-columns: 1fr 1fr; gap: 3rem; }
+}
+.hero-copy .lede, .product-summary .lede { margin-bottom: 0; }
+.highlights { margin: 1.25rem 0 0; padding-left: 1.2rem; }
+.highlights li + li { margin-top: .35rem; }
+
+/* Product cards: two across on phones, four on wide screens; the whole card is the link. */
+.product-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem 1.25rem; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 48rem) { .product-grid { grid-template-columns: repeat(4, 1fr); } }
+.collection .product-grid { margin-top: 1rem; }
+.product-card { position: relative; }
+.product-card h2, .product-card h3 { font-size: 1.1rem; margin: .75rem 0 .25rem; }
+.product-card a { color: var(--ink); text-decoration: none; }
+.product-card a::after { content: ""; position: absolute; inset: 0; }
+.product-card:hover a, .product-card a:focus-visible { color: var(--brand); text-decoration: underline; }
+.product-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+/* Tiles: styles on product pages, audiences on the home page. */
+.tiles { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.tiles li { background: var(--soft); border-radius: var(--radius); padding: 1.25rem; }
+.tiles h3 { font-size: 1.1rem; margin: 0 0 .35rem; }
+.tiles p { margin: 0; color: var(--muted); }
+
+.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.tags li { border: 1px solid var(--line); border-radius: 999px; padding: .35rem .9rem; font-size: .95rem; }
+
+/* Steps: numbered, side by side on wide screens. */
+.step-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; counter-reset: step; }
+@media (min-width: 48rem) { .step-list { grid-template-columns: repeat(3, 1fr); } }
+.step-list li { counter-increment: step; border-top: 3px solid var(--brand); padding-top: 1rem; }
+.step-list li::before { content: counter(step); display: block; font-weight: 700; font-size: 1.5rem; color: var(--brand); }
+.step-list h3 { margin: .25rem 0 .35rem; font-size: 1.1rem; }
+.step-list p { margin: 0; color: var(--muted); }
+
+#signup { scroll-margin-top: 1rem; }

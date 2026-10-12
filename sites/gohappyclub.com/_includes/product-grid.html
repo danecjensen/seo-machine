@@ -1,0 +1,8 @@
+{% comment %}Every product page under /products/, in `order:` from their front matter. Pass skip= a URL to leave
+one out (the related-products row on a product page leaves out the page itself).{% endcomment %}
+{% assign grid_items = "/products/" | children: collections.all | sort: "data.order" %}
+<ul class="product-grid">
+  {% for item in grid_items %}{% unless item.url == include.skip %}
+  {% include product-card.html item=item level=include.level %}
+  {% endunless %}{% endfor %}
+</ul>

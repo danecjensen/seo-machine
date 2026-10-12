@@ -1,0 +1,29 @@
+---
+layout: default
+type: list
+---
+{% comment %}
+Collection page archetype (products/index.md). Sections, top to bottom:
+  1. Header        heading and lede
+  2. Grid          every product page under /products/, as cards
+  3. Guide         the page's Markdown body (how to choose)
+  4. Steps         how ordering works (_data/process.yml)
+  5. FAQ           faq: (optional)
+  6. Signup        the closing call to action
+{% endcomment %}
+<article class="collection">
+  <header class="page-head">
+    <h1>{{ heading | default: title }}</h1>
+    {% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+  </header>
+
+  {% include product-grid.html level=2 %}
+
+  <div class="section prose">
+    {{ content }}
+  </div>
+
+  {% include steps.html %}
+  {% include faq.html %}
+  {% include cta.html %}
+</article>

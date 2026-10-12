@@ -1,0 +1,10 @@
+{% comment %}One product in a grid: photo, name, one-line summary. The whole card is a link to the product page.
+level= sets the heading level (2 on the collection page, 3 under a section heading).{% endcomment %}
+{% assign card = include.item.data %}
+{% assign card_level = include.level | default: 3 %}
+{% assign card_name = card.nav_title | default: card.title %}
+<li class="product-card">
+  {% include media.html image=card.image label=card_name %}
+  <h{{ card_level }}><a href="{{ include.item.url }}">{{ card_name }}</a></h{{ card_level }}>
+  <p>{{ card.summary | default: card.description }}</p>
+</li>

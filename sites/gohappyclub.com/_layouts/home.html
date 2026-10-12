@@ -1,0 +1,49 @@
+---
+layout: default
+---
+{% comment %}
+Home page archetype. Sections, top to bottom:
+  1. Hero          heading, lede, signup button, link to products, hero image (image:)
+  2. Products      every product page under /products/, as cards
+  3. Intro         the page's Markdown body
+  4. Steps         how ordering works (_data/process.yml)
+  5. Audiences     who orders from us (audiences: [{ title, text }])
+  6. FAQ           faq: (optional)
+  7. Signup        the closing call to action
+{% endcomment %}
+<article class="home">
+  <header class="hero home-hero">
+    <div class="hero-copy">
+      <h1>{{ heading | default: title }}</h1>
+      {% if lede %}<p class="lede">{{ lede }}</p>{% endif %}
+      <p class="actions">
+        <a class="btn btn-lg" href="{{ site.goals.cta.url }}">{{ site.goals.cta.text }}</a>
+        <a class="link-arrow" href="/products/">Browse products</a>
+      </p>
+    </div>
+    {% include media.html image=image label="hero photo of Happy Club products" shape="wide" eager=true %}
+  </header>
+
+  <section class="section" aria-labelledby="products-heading">
+    <h2 id="products-heading">{{ products_heading | default: "What we make" }}</h2>
+    {% include product-grid.html level=3 %}
+  </section>
+
+  <div class="section prose">
+    {{ content }}
+  </div>
+
+  {% include steps.html %}
+
+  {% if audiences %}
+  <section class="section" aria-labelledby="audiences-heading">
+    <h2 id="audiences-heading">{{ audiences_heading | default: "Who orders from us" }}</h2>
+    <ul class="tiles">
+      {% for a in audiences %}<li><h3>{{ a.title }}</h3><p>{{ a.text }}</p></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% include faq.html %}
+  {% include cta.html %}
+</article>

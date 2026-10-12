@@ -57,6 +57,10 @@ function wrangler(args) {
 
 async function deploy(domain) {
   const site = seoSite(loadConfig(path.join(ROOT, "sites", domain)));
+  if (site.cloudflare.deploy === false) {
+    console.log(`${domain}: not deployed (cloudflare.deploy is false in _config.yml)`);
+    return;
+  }
   const project = pagesProject(site);
   if (!validProject(project)) throw new Error(`Pages project name "${project}" must be 2-58 lowercase letters, digits or hyphens`);
   const production = site.cloudflare?.productionBranch ?? "main";

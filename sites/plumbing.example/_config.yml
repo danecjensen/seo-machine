@@ -47,7 +47,9 @@ defaults:
       cta_title: Get a fixed price before we start.
 
 # Cloudflare Pages: one project per domain. These are the defaults, shown for reference.
+# deploy: false keeps this example site out of Cloudflare; remove it for a real domain.
 cloudflare:
+  deploy: false
   project: plumbing-example
   productionBranch: main
   domains: [plumbing.example]   # add www.plumbing.example and redirect it to the apex in Cloudflare

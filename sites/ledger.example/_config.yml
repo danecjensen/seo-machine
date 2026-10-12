@@ -38,3 +38,7 @@ organization:
 
 lint:
   minWords: 250
+
+# An example site: built and checked, but never deployed to Cloudflare.
+cloudflare:
+  deploy: false

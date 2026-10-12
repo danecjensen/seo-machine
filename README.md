@@ -163,6 +163,9 @@ cloudflare:
   domains: [ledger.example]   # custom domains attached on production deploys
 ```
 
+The two example sites set `deploy: false` under `cloudflare:`, so they are built and checked but
+never deployed. Remove that line for a real domain.
+
 Each build writes the files Pages reads from the output root:
 
 - `_headers`: security headers, caching for `/assets/`, and `X-Robots-Tag: noindex` on every

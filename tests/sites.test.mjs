@@ -147,12 +147,14 @@ describe("cloudflare pages", () => {
     assert.ok(!fs.existsSync(path.join(dir, "dist/ledger.example/_redirects")), "no redirects, no file");
   });
 
-  test("deploy targets one Pages project per domain", () => {
-    const run = spawnSync("node", ["scripts/deploy.mjs", "--site", "ledger.example", "--site", "plumbing.example",
+  test("deploy targets one Pages project per domain and skips example sites", () => {
+    const run = spawnSync("node", ["scripts/deploy.mjs", "--site", "gohappyclub.com", "--site", "ledger.example",
       "--branch", "main", "--dry-run"], { cwd: dir, encoding: "utf8", env: { ...process.env, GITHUB_SHA: "abc" } });
     assert.equal(run.status, 0, run.stderr);
-    assert.match(run.stdout, /pages deploy dist\/ledger\.example --project-name=ledger-example --branch=main/);
-    assert.match(run.stdout, /pages deploy dist\/plumbing\.example --project-name=plumbing-example --branch=main/);
-    assert.match(run.stdout, /would attach custom domain plumbing\.example/);
+    assert.match(run.stdout, /pages deploy dist\/gohappyclub\.com --project-name=gohappyclub-com --branch=main/);
+    assert.match(run.stdout, /would attach custom domain gohappyclub\.com/);
+    assert.match(run.stdout, /would attach custom domain www\.gohappyclub\.com/);
+    assert.match(run.stdout, /ledger\.example: not deployed/);
+    assert.doesNotMatch(run.stdout, /project-name=ledger-example/);
   });
 });

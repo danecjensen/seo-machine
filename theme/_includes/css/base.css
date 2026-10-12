@@ -78,3 +78,5 @@ h3 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
 form label { font-weight: 600; }
 input, select, textarea { font: inherit; width: 100%; max-width: 32rem; padding: .5rem .6rem; border: 1px solid #94a3b8; border-radius: .4rem; }
 .placeholder { background: #fef9c3; border-left: 4px solid #ca8a04; padding: .5rem .75rem; }
+/* A site's own CSS: sites/<domain>/_includes/css/site.css replaces the empty theme file. */
+{% include css/site.css %}

@@ -41,6 +41,7 @@ defaults:
   - scope:
       path: products
     values:
+      layout: product     # the product page archetype (_layouts/product.html)
       cta_title: Want this with your logo? Get ideas and tips by email.
       signup_form: true   # show the email signup form, not just a button
 

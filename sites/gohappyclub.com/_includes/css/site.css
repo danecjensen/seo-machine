@@ -1,0 +1,56 @@
+/* Happy Club's page archetypes. The build turns each skeleton in _archetypes/ into a layout made of
+   .wf-section > .wf-row (a 12-column grid) > .wf-col.span-N, filled by _includes/slots/. Layout only:
+   colors, fonts and corners come from the theme's custom properties, so a Claude Design import restyles it. */
+.wf-section { margin-top: 3.5rem; }
+.wf-section:first-child { margin-top: 2.5rem; }
+.wf-row { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.5rem; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; }
+.wf-col { grid-column: span 12; }
+.wf .wf-section > * + * { margin-top: 2rem; }
+@media (min-width: 48rem) {
+  .span-1 { grid-column: span 1; } .span-2 { grid-column: span 2; } .span-3 { grid-column: span 3; }
+  .span-4 { grid-column: span 4; } .span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; }
+  .span-7 { grid-column: span 7; } .span-8 { grid-column: span 8; } .span-9 { grid-column: span 9; }
+  .span-10 { grid-column: span 10; } .span-11 { grid-column: span 11; } .span-12 { grid-column: span 12; }
+}
+@media (max-width: 47.99rem) { .wf-col.span-1, .wf-col.span-2, .wf-col.span-3 { grid-column: span 6; } } /* small columns pair up on phones */
+.wf-col > :first-child, .wf-stack > :first-child, .wf-panel > :first-child { margin-top: 0; }
+.wf-col > :last-child, .wf-stack > :last-child, .wf-panel > :last-child { margin-bottom: 0; }
+.wf-panel { background: var(--soft); border-radius: var(--radius); padding: 1.25rem; }
+.wf-panel h3 { font-size: 1.1rem; margin: 0 0 .35rem; }
+.wf-panel p { margin: 0; color: var(--muted); }
+.wf .cta { margin: 0; }
+.wf .faq { margin: 0; }
+#signup { scroll-margin-top: 1rem; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.5rem; margin: 1.5rem 0 0; }
+.link-arrow { font-weight: 600; }
+.link-arrow::after { content: " →"; }
+.lede { margin-bottom: 0; }
+.highlights { margin: 1.25rem 0 0; padding-left: 1.2rem; }
+.highlights li + li { margin-top: .35rem; }
+
+/* Image slots keep the shape drawn in the wireframe, with a visible box until a photo is added. */
+.media { margin: 0; aspect-ratio: 1; border-radius: var(--radius); overflow: hidden; background: var(--soft); }
+.media.r4x3 { aspect-ratio: 4 / 3; } .media.r3x2 { aspect-ratio: 3 / 2; } .media.r16x9 { aspect-ratio: 16 / 9; }
+.media.r2x1 { aspect-ratio: 2; } .media.r3x4 { aspect-ratio: 3 / 4; } .media.r2x3 { aspect-ratio: 2 / 3; }
+.media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.media-placeholder { display: flex; align-items: center; justify-content: center; height: 100%; padding: 1rem;
+  border: 2px dashed var(--line); border-radius: inherit; color: var(--muted); font-size: .9rem; text-align: center; }
+
+/* Product cards: the whole card is the link. */
+.product-card { position: relative; }
+.product-card h2, .product-card h3 { font-size: 1.1rem; margin: .75rem 0 .25rem; }
+.product-card a { color: var(--ink); text-decoration: none; }
+.product-card a::after { content: ""; position: absolute; inset: 0; }
+.product-card:hover a, .product-card a:focus-visible { color: var(--brand); text-decoration: underline; }
+.product-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+.tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.tags li { border: 1px solid var(--line); border-radius: 999px; padding: .35rem .9rem; font-size: .95rem; }
+
+/* Ordering steps, numbered. */
+.steps { counter-reset: step; }
+.steps li { counter-increment: step; border-top: 3px solid var(--brand); padding-top: 1rem; }
+.steps li::before { content: counter(step); display: block; font-weight: 700; font-size: 1.5rem; color: var(--brand); }
+.steps h3 { margin: .25rem 0 .35rem; font-size: 1.1rem; }
+.steps p { margin: 0; color: var(--muted); }

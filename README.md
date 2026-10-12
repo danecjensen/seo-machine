@@ -62,10 +62,56 @@ npm run build -- --site ledger.example --strict --verbose
 npm run serve -- --site ledger.example          # preview at http://localhost:4000, rebuilds on save
 npm run new-site -- mysite.com "My Site"        # scaffold a site
 npm test                                        # isolation, output and unit tests
+npm run wireframe -- --site gohappyclub.com     # redraw each page archetype's wireframe image
 node scripts/deploy.mjs --site ledger.example --dry-run   # show what a deploy would do
 ```
 
 `--strict` fails a site that has SEO errors. `--verbose` also prints warnings.
+
+## Page archetypes and wireframes
+
+A site can define page archetypes: one layout per kind of page, drawn as a simple grayscale wireframe.
+gohappyclub.com has three, `home`, `product` and `collection`, in `sites/gohappyclub.com/_archetypes/`.
+Each archetype is two files that say the same thing:
+
+- `home.html`, an HTML skeleton of the page's blocks, and
+- `home.png`, the same skeleton drawn as a grayscale wireframe.
+
+The build turns each skeleton into the layout `_layouts/home.html` (pages use it with `layout: home`), so the
+wireframe dictates the page's layout. Rows become a 12-column grid that stacks on phones.
+
+**In the image**, each kind of block is one flat gray on a white page. Headings are black bars (a taller bar is
+a higher level: h1, h2, h3), buttons are dark gray, images are mid gray, text is light gray lines, and panels are
+very light gray boxes holding other blocks. Spacing groups them: the widest gaps separate sections, a medium gap
+separates groups in a section, a narrow gap separates blocks in one column, and text lines sit closer still.
+Columns snap to a 12-column grid. The image can be any size; spacing is judged relative to its width.
+
+| Block | Gray | Skeleton |
+|---|---|---|
+| Heading | `#000000` | `<h1>`, `<h2>`, `<h3>` |
+| Button | `#404040` | `<a>` |
+| Image | `#808080` | `<figure data-ratio="4:3">` |
+| Text | `#b0b0b0` | `<p data-lines="3">` |
+| Panel | `#e0e0e0` | `<div data-span="3" class="panel">` |
+| Page | `#ffffff` | |
+
+**In the skeleton**, a `<section>` holds blocks, or `<div class="row">` rows of `<div data-span="1-12">` columns.
+`data-slot="name"` says what fills a block: the build includes `_includes/slots/name.html` there. A row whose
+columns are all alike with one slot repeats for as many items as there are (one card per product), so its
+column count only sets how many fit across. A block without a slot shows a "[Placeholder]" on the page.
+
+**Converting:**
+
+```sh
+npm run wireframe -- --site gohappyclub.com                          # skeleton -> image, for every archetype
+npm run wireframe -- --site gohappyclub.com --from new-home.png home # image -> skeleton (and a clean home.png)
+npm run wireframe -- --site gohappyclub.com --check                  # does every image match its skeleton?
+npm run wireframe -- --site gohappyclub.com --layout home            # print the layout the build makes
+```
+
+Reading an image keeps the slot names of the skeleton it replaces, matching blocks of the same shape in order,
+and lists any block it couldn't name. `npm test` checks that every image matches its skeleton and that each
+archetype converts to an image and back unchanged.
 
 ## How sites stay isolated
 

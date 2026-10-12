@@ -1,0 +1,13 @@
+{% comment %}Every product page under /products/, in `order:` from their front matter, one card per column.
+skip= leaves one page out (related-card.html leaves out the page itself).{% endcomment %}
+{% assign card_items = "/products/" | children: collections.all | sort: "data.order" %}
+<ul class="wf-row cards">
+  {% for item in card_items %}{% unless item.url == include.skip %}
+  {% assign card_name = item.data.nav_title | default: item.data.title %}
+  <li class="wf-col span-{{ include.span }} product-card">
+    {% include media.html image=item.data.image label=card_name ratio=include.ratio %}
+    <h{{ include.level }}><a href="{{ item.url }}">{{ card_name }}</a></h{{ include.level }}>
+    <p>{{ item.data.summary | default: item.data.description }}</p>
+  </li>
+  {% endunless %}{% endfor %}
+</ul>

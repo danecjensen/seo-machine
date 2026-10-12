@@ -1,5 +1,5 @@
-/* Default theme. Inlined into every page, so keep it small. Sites override the
-   custom properties from [theme] in site.toml (brand = "#..." -> --brand). */
+/* Default theme. Inlined into every page, so keep it small. Sites override these custom
+   properties with `colors:` in _config.yml, or with a Claude Design import in _design/. */
 :root {
   --brand: #1d4ed8;
   --brand-ink: #ffffff;
@@ -11,6 +11,7 @@
   --radius: 10px;
   --measure: 68ch;
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-heading: var(--font);
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
@@ -41,6 +42,7 @@ a:hover { text-decoration-thickness: 2px; }
 main { padding-bottom: 3rem; }
 .page-head { padding: 2.5rem 0 1rem; max-width: var(--measure); }
 .hero { padding: 4rem 0 2rem; }
+h1, h2, h3, .brand { font-family: var(--font-heading); }
 h1 { font-size: clamp(2rem, 4vw + 1rem, 3.1rem); line-height: 1.12; letter-spacing: -.02em; margin: 0 0 1rem; }
 h2 { font-size: 1.6rem; line-height: 1.25; margin: 2.5rem 0 .75rem; }
 h3 { font-size: 1.2rem; margin: 2rem 0 .5rem; }

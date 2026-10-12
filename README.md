@@ -190,6 +190,36 @@ faq:                                      # visible FAQ + FAQPage schema
 `layout: list` shows every page one level below it: put `services/index.md` with
 `layout: list` next to `services/drain-cleaning.md` and the list builds itself.
 
+## Designs from Claude Design
+
+Each site's look comes from its own design, made in [Claude Design](https://claude.ai/design). The shared
+theme supplies the layouts and a plain default; a site's design replaces its colors, fonts and radius,
+and only that site changes.
+
+1. Design the site in Claude Design (a design system for the brand, or a page design).
+2. Get it to Claude: use **Send to Claude Code** (handoff) and ask it to apply the design to the domain,
+   or **Export** as .zip or standalone HTML and attach it in the project.
+3. Claude (or you) runs the import, previews it, and opens a PR; the Lighthouse gate checks it like any change:
+
+```sh
+npm run design -- --site gohappyclub.com --from happy-club.zip --source https://claude.ai/design/...
+npm run serve -- --site gohappyclub.com
+```
+
+`--from` takes a .zip export, a folder, a standalone .html page, a .css file or a design tokens .json.
+The import writes `sites/<domain>/_design/`:
+
+| File | What it is |
+|---|---|
+| `tokens.css` | Generated. The design's tokens and fonts, with the theme's `--brand`, `--ink`, `--bg`, `--muted`, `--soft`, `--line`, `--radius`, `--font`, `--font-heading` pointed at them. Re-import to change it. |
+| `fonts/` | Generated. The design's .woff2/.woff files, served from `/assets/fonts/`. Google Fonts are downloaded so the site hosts them itself (latin subset; `--subsets latin,latin-ext` for more). |
+| `site.css` | Yours, never touched by an import: styles the tokens can't express. |
+
+Both CSS files are inlined after the theme's CSS on every page of that site, so keep them small. For
+structural changes (a different header, a new hero), put files in the site's own `_layouts/` or
+`_includes/`; they replace the theme's for that site only. The import warns about color pairs under 4.5:1
+contrast and heavy fonts, the two things a design most often costs in Lighthouse.
+
 ## Lighthouse
 
 The Lighthouse checks run against `dist/<domain>/`, using the pages in each site's sitemap.

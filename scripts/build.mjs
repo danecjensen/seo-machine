@@ -12,7 +12,7 @@ import { readSkeleton, toLayout } from "../lib/wireframe.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const SITES = path.join(ROOT, "sites");
-const DIST = path.join(ROOT, "dist");
+const DIST = process.env.SEO_DIST_DIR ?? path.join(ROOT, "dist"); // scripts/wireframe.mjs builds elsewhere
 const WORK = path.join(ROOT, ".build");
 const ELEVENTY = path.join(ROOT, "node_modules", ".bin", "eleventy");
 const CONFIG = path.join(ROOT, "lib", "eleventy.config.mjs");
@@ -61,7 +61,7 @@ function buildArchetypes(work) {
       throw new Error(`_archetypes/${f}: ${e.message}`);
     }
     fs.mkdirSync(path.join(work, "_layouts"), { recursive: true });
-    fs.writeFileSync(path.join(work, "_layouts", f), toLayout(tree, name));
+    fs.writeFileSync(path.join(work, "_layouts", f), toLayout(tree, name, { markers: process.env.WIREFRAME_MARKERS === "1" }));
   }
   fs.rmSync(dir, { recursive: true });
 }

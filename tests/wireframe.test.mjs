@@ -4,7 +4,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 import zlib from "node:zlib";
-import { carrySlots, decodePng, encodePng, readImage, readSkeleton, renderTree, toLayout, writeSkeleton } from "../lib/wireframe.mjs";
+import { spawnSync } from "node:child_process";
+import os from "node:os";
+import { findBrowser } from "../lib/wireframe-measure.mjs";
+import { carrySlots, decodePng, encodePng, readImage, readSkeleton, renderTree, sameShape, toLayout, writeSkeleton } from "../lib/wireframe.mjs";
 
 const SITES = path.resolve(import.meta.dirname, "..", "sites");
 const archetypes = fs.readdirSync(SITES).flatMap((site) => {
@@ -22,13 +25,27 @@ test("every archetype survives skeleton -> image -> skeleton unchanged", () => {
   }
 });
 
-test("every committed wireframe image matches its skeleton", () => {
+test("every committed wireframe image reads back as its skeleton", () => {
   for (const file of archetypes) {
-    const want = renderTree(readSkeleton(fs.readFileSync(file, "utf8")));
-    const have = decodePng(fs.readFileSync(file.replace(/\.html$/, ".png")));
-    assert.deepEqual([have.width, have.height], [want.width, want.height], file);
-    assert.ok(Buffer.from(have.gray).equals(Buffer.from(want.gray)), `${file}: run npm run wireframe`);
+    const tree = readSkeleton(fs.readFileSync(file, "utf8"));
+    const back = readImage(decodePng(fs.readFileSync(file.replace(/\.html$/, ".png"))));
+    carrySlots(back, tree);
+    assert.ok(sameShape(back, tree), `${file}: run npm run wireframe`);
   }
+});
+
+test("wireframes drawn from the built pages read back as their skeletons", async (t) => {
+  if (!(await findBrowser())) return t.skip("no Chrome or Chromium to measure pages with");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "seo-machine-wf-"));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const root = path.resolve(import.meta.dirname, "..");
+  for (const item of ["package.json", "scripts", "sites", "lib", "theme"]) fs.cpSync(path.join(root, item), path.join(dir, item), { recursive: true });
+  fs.symlinkSync(path.join(root, "node_modules"), path.join(dir, "node_modules"));
+  const run = spawnSync("node", ["scripts/wireframe.mjs", "--site", "gohappyclub.com"], { cwd: dir, encoding: "utf8" });
+  assert.equal(run.status, 0, run.stdout + run.stderr);
+  assert.match(run.stdout, /home: .* measured from \/$/m);
+  const home = decodePng(fs.readFileSync(path.join(dir, "sites/gohappyclub.com/_archetypes/home.png")));
+  assert.notEqual(home.gray[0], 255, "the site header is drawn as a band across the top");
 });
 
 /** Half-size RGBA PNG with blended edges, like an image exported from a drawing tool. */

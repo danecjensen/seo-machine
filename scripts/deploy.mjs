@@ -30,7 +30,8 @@ if (!values.site?.length) {
 }
 
 const git = (...args) => spawnSync("git", args, { cwd: ROOT, encoding: "utf8" }).stdout?.trim() || undefined;
-const branch = values.branch ?? process.env.GITHUB_HEAD_REF ?? process.env.GITHUB_REF_NAME ?? git("rev-parse", "--abbrev-ref", "HEAD");
+// GITHUB_HEAD_REF is an empty string outside pull requests, so skip empty values.
+const branch = [values.branch, process.env.GITHUB_HEAD_REF, process.env.GITHUB_REF_NAME].find(Boolean) ?? git("rev-parse", "--abbrev-ref", "HEAD");
 const commit = [process.env.GITHUB_SHA, git("rev-parse", "HEAD")].find((c) => /^[0-9a-f]{40}$/.test(c ?? ""));
 const { CLOUDFLARE_API_TOKEN: token, CLOUDFLARE_ACCOUNT_ID: account } = process.env;
 if (!dryRun && (!token || !account)) {

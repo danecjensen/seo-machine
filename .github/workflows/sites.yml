@@ -50,9 +50,10 @@ jobs:
       matrix:
         site: ${{ fromJson(needs.discover.outputs.sites) }}
     name: ${{ matrix.site }}
-    # Never run two deploys of the same domain at once; a newer push wins.
+    # Never run two deploys of the same domain at once; a newer push wins. The event name keeps a
+    # pull request run (whose ref can match main once it merges) from cancelling the main deploy.
     concurrency:
-      group: site-${{ matrix.site }}-${{ github.ref }}
+      group: site-${{ matrix.site }}-${{ github.event_name }}-${{ github.ref }}
       cancel-in-progress: true
     env:
       HAS_CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' }}

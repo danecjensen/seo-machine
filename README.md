@@ -84,7 +84,9 @@ wireframe dictates the page's layout. Rows become a 12-column grid that stacks o
 a higher level: h1, h2, h3), buttons are dark gray, images are mid gray, text is light gray lines, and panels are
 very light gray boxes holding other blocks. Spacing groups them: the widest gaps separate sections, a medium gap
 separates groups in a section, a narrow gap separates blocks in one column, and text lines sit closer still.
-Columns snap to a 12-column grid. The image can be any size; spacing is judged relative to its width.
+Columns snap to a 12-column grid. The image can be any size; spacing is judged relative to its width. The
+site's header (with breadcrumbs) and footer are drawn as light gray bands across the full width at the top and
+bottom; reading an image skips bands at its top and bottom that touch its left edge, so they're context, not part of the archetype.
 
 | Block | Gray | Skeleton |
 |---|---|---|
@@ -104,14 +106,29 @@ column count only sets how many fit across. A block without a slot shows a "[Pla
 
 ```sh
 npm run wireframe -- --site gohappyclub.com                          # skeleton -> image, for every archetype
-npm run wireframe -- --site gohappyclub.com --from new-home.png home # image -> skeleton (and a clean home.png)
-npm run wireframe -- --site gohappyclub.com --check                  # does every image match its skeleton?
+npm run wireframe -- --site gohappyclub.com --from new-home.png home # image -> skeleton
+npm run wireframe -- --site gohappyclub.com --check                  # does every image read back as its skeleton?
 npm run wireframe -- --site gohappyclub.com --layout home            # print the layout the build makes
+npm run wireframe -- --site gohappyclub.com --plain                  # draw from the skeleton alone (no browser)
 ```
 
+Drawing an image builds the site and measures one page of each archetype in Chrome (found through `CHROME_PATH`,
+Playwright's download or a system install), so the wireframe has the page's real proportions: each heading as
+long as its text, each text block with as many lines as it wraps to, real image shapes and button widths, and
+one card per real item. The page is the first one using the archetype, or the one named in `_config.yml`:
+
+```yaml
+wireframes:
+  product: /products/custom-hats/
+```
+
+A block that's empty on that page, like the FAQ before any page has questions, isn't drawn; reading the image
+back keeps it in the skeleton. `--plain` draws fixed-size blocks straight from the skeleton instead.
+
 Reading an image keeps the slot names of the skeleton it replaces, matching blocks of the same shape in order,
-and lists any block it couldn't name. `npm test` checks that every image matches its skeleton and that each
-archetype converts to an image and back unchanged.
+and lists any block it couldn't name. Text line counts come from the image. A drawing that wouldn't read back
+as its skeleton isn't saved. `npm test` checks that every image reads back as its skeleton, that each archetype
+converts to an image and back unchanged, and (when Chrome is available) that drawing from the built pages works.
 
 ## How sites stay isolated
 

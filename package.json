@@ -2,7 +2,9 @@
   "name": "seo-machine",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "build": "node scripts/build.mjs",
     "wireframe": "node scripts/wireframe.mjs",
@@ -19,6 +21,7 @@
     "yaml": "2.9.1"
   },
   "devDependencies": {
+    "playwright-core": "1.56.1",
     "wrangler": "4.142.0"
   }
 }

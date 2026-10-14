@@ -12,7 +12,9 @@
     "serve": "node scripts/build.mjs --serve",
     "new-site": "node scripts/new-site.mjs",
     "design": "node scripts/design.mjs",
-    "test": "node --test \"tests/*.test.mjs\""
+    "test": "node --test \"tests/*.test.mjs\"",
+    "test:assets": "node --test \"workers/assets.gohappyclub.com/test/*.test.mjs\"",
+    "assets:dev": "wrangler dev --config workers/assets.gohappyclub.com/wrangler.toml"
   },
   "dependencies": {
     "@11ty/eleventy": "3.1.6",

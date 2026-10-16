@@ -1,0 +1,9 @@
+# Happy Club homepage: vivid color revision
+
+Created with the built-in image-generation tool by editing the 2D group portrait, with four earlier 3D monsters used only as color references. The layout, characters, and 2D style are preserved while colors become richer turquoise, violet, coral, blue, and golden yellow.
+
+Final asset: `sites/gohappyclub.com/assets/monsters/happy-club-monster-group-vivid.webp` (960 × 720). A distinct filename ensures visitors receive the revised image immediately after deployment. The homepage also uses this image for social sharing.
+
+## Edit prompt
+
+Edit target: Image 1, the Happy Club 2D monster group portrait. Images 2–5 are COLOR PALETTE REFERENCES ONLY from the earlier 3D monsters. Change ONLY the colors in Image 1 to be much richer, more saturated, and more vibrant, like the reference monsters, while keeping the exact 2D hand-drawn illustration style, dark-indigo linework, group arrangement, character silhouettes, expressions, number of eyes, ears, poses, hats, tote bags, blanket patterns, socks and smiling-sun emblems. Keep the full 4:3 landscape composition and the warm eggshell cream background. Replace pale mint with rich saturated turquoise/teal; pale lavender with strong violet/purple; washed-out peach/pink with warm vibrant coral and orange; light sky-blue with rich bright cobalt/turquoise blue; butter yellow with warm vivid golden yellow/orange. Maintain harmonious color distribution across the group, clean distinct character colors and contrasting product details. Merchandise accents should be vibrant coral, deep teal, rich blue and indigo with natural cream canvas. Keep cheeks warm coral. DO NOT change any characters or add/remove any objects. No pastels, no pale washed-out fur, no neon fluorescence, no gradients, no photorealism, no 3D rendering, no new details, no text or watermark. The goal is the SAME cute 2D group photo with the confident colorful palette of the 3D monster references.

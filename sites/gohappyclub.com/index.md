@@ -8,10 +8,10 @@ nav_title: "Home"
 lede: "Hats, tote bags, blankets and socks made with your logo, for teams, brands, schools and events."
 layout: home
 image:
-  path: /assets/monsters/happy-club-monster-group.webp
+  path: /assets/monsters/happy-club-monster-group-vivid.webp
   width: 960
   height: 720
-  alt: "A cheerful group of pastel furry monsters wearing custom hats and socks, carrying tote bags, and sharing a patterned blanket."
+  alt: "A cheerful group of colorful furry monsters wearing custom hats and socks, carrying tote bags, and sharing a patterned blanket."
 audiences:
   - title: Companies
     text: Employee welcome kits, client gifts and trade show giveaways.

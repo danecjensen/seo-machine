@@ -6,6 +6,11 @@ keyword: "custom hats"
 nav_title: "Custom hats"
 lede: "Caps, dad hats, trucker hats and beanies with your logo, embroidered or printed."
 summary: "Caps, dad hats, trucker hats and beanies with your logo embroidered or printed."
+image:
+  path: /assets/monsters/custom-hats-monster.webp
+  width: 1024
+  height: 1024
+  alt: "A cheerful teal furry monster wearing a peach cap with an embroidered smiling sun."
 order: 1
 highlights:
   - "Embroidered, printed or patch logos"

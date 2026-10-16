@@ -6,6 +6,11 @@ keyword: "custom blankets"
 nav_title: "Custom blankets"
 lede: "Woven throws, fleece blankets and stadium blankets with your logo or a full design."
 summary: "Woven, fleece and stadium blankets with your logo or a full design."
+image:
+  path: /assets/monsters/custom-blankets-monster.webp
+  width: 1024
+  height: 1024
+  alt: "A lilac furry monster wrapped in a colorful woven blanket with smiling suns and tassel fringe."
 order: 3
 highlights:
   - "Woven-in designs that can't fade or peel"

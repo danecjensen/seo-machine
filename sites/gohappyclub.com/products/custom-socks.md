@@ -6,6 +6,11 @@ keyword: "custom socks"
 nav_title: "Custom socks"
 lede: "Crew, ankle, athletic and knee-high socks in your brand colors, with your logo knit in."
 summary: "Crew, ankle, athletic and knee-high socks in your colors, with your logo knit in."
+image:
+  path: /assets/monsters/custom-socks-monster.webp
+  width: 1024
+  height: 1024
+  alt: "An orange furry monster showing off indigo and teal knit socks with smiling sun designs."
 order: 4
 highlights:
   - "Knit-in designs stay bright wash after wash"

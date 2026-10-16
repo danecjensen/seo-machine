@@ -8,9 +8,10 @@ lede: "Crew, ankle, athletic and knee-high socks in your brand colors, with your
 summary: "Crew, ankle, athletic and knee-high socks in your colors, with your logo knit in."
 image:
   path: /assets/monsters/custom-socks-monster.webp
+  animated: true
   width: 1024
   height: 1024
-  alt: "A tangerine pom-pom monster with tall feathered ears and long legs wearing patterned knit socks."
+  alt: "A cute butter-yellow monster with lavender-tipped ears dancing in colorful socks, illustrated in 2D."
 order: 4
 highlights:
   - "Knit-in designs stay bright wash after wash"

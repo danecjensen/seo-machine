@@ -8,9 +8,10 @@ lede: "Woven throws, fleece blankets and stadium blankets with your logo or a fu
 summary: "Woven, fleece and stadium blankets with your logo or a full design."
 image:
   path: /assets/monsters/custom-blankets-monster.webp
+  animated: true
   width: 1024
   height: 1024
-  alt: "A wide cobalt-blue shaggy monster with tiny eye stalks cuddling a patterned woven blanket."
+  alt: "A cute wide sky-blue furry monster cuddling a patterned blanket, illustrated in a flat 2D cartoon style."
 order: 3
 highlights:
   - "Woven-in designs that can't fade or peel"

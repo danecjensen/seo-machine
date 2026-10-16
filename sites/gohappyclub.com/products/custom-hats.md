@@ -8,9 +8,10 @@ lede: "Caps, dad hats, trucker hats and beanies with your logo, embroidered or p
 summary: "Caps, dad hats, trucker hats and beanies with your logo embroidered or printed."
 image:
   path: /assets/monsters/custom-hats-monster.webp
+  animated: true
   width: 1024
   height: 1024
-  alt: "A lime-green cyclops with oversized sideways ears tipping a peach baseball cap."
+  alt: "A cute mint-green cyclops with floppy ears wearing a peach cap, drawn in a flat 2D cartoon style."
 order: 1
 highlights:
   - "Embroidered, printed or patch logos"

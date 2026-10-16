@@ -8,6 +8,7 @@ lede: "Woven throws, fleece blankets and stadium blankets with your logo or a fu
 summary: "Woven, fleece and stadium blankets with your logo or a full design."
 image:
   path: /assets/monsters/custom-blankets-monster.webp
+  thumbnail: /assets/monsters/custom-blankets-monster-card.webp
   animated: true
   width: 1024
   height: 1024

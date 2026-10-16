@@ -8,6 +8,7 @@ lede: "Cotton and canvas totes printed with your logo, for conferences, stores a
 summary: "Cotton and canvas totes, screen printed with your logo."
 image:
   path: /assets/monsters/custom-tote-bags-monster.webp
+  thumbnail: /assets/monsters/custom-tote-bags-monster-card.webp
   animated: true
   width: 1024
   height: 1024

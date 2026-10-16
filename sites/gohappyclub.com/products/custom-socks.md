@@ -8,6 +8,7 @@ lede: "Crew, ankle, athletic and knee-high socks in your brand colors, with your
 summary: "Crew, ankle, athletic and knee-high socks in your colors, with your logo knit in."
 image:
   path: /assets/monsters/custom-socks-monster.webp
+  thumbnail: /assets/monsters/custom-socks-monster-card.webp
   animated: true
   width: 1024
   height: 1024

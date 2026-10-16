@@ -8,6 +8,7 @@ lede: "Caps, dad hats, trucker hats and beanies with your logo, embroidered or p
 summary: "Caps, dad hats, trucker hats and beanies with your logo embroidered or printed."
 image:
   path: /assets/monsters/custom-hats-monster.webp
+  thumbnail: /assets/monsters/custom-hats-monster-card.webp
   animated: true
   width: 1024
   height: 1024

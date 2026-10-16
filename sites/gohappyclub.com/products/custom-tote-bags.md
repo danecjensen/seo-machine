@@ -6,6 +6,13 @@ keyword: "custom tote bags"
 nav_title: "Custom tote bags"
 lede: "Cotton and canvas totes printed with your logo, for conferences, stores and giveaways."
 summary: "Cotton and canvas totes, screen printed with your logo."
+image:
+  path: /assets/monsters/custom-tote-bags-monster.webp
+  thumbnail: /assets/monsters/custom-tote-bags-monster-card.webp
+  animated: true
+  width: 1024
+  height: 1024
+  alt: "A cute lavender three-eyed monster with four little arms holding a smiling-sun canvas tote, drawn in 2D."
 order: 2
 highlights:
   - "Cotton, canvas and gusseted styles"

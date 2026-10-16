@@ -7,12 +7,12 @@ nav_title: "Custom blankets"
 lede: "Woven throws, fleece blankets and stadium blankets with your logo or a full design."
 summary: "Woven, fleece and stadium blankets with your logo or a full design."
 image:
-  path: /assets/monsters/custom-blankets-monster-vivid.webp
-  thumbnail: /assets/monsters/custom-blankets-monster-vivid-card.webp
+  path: /assets/monsters/custom-blankets-monster-studio.webp
+  thumbnail: /assets/monsters/custom-blankets-monster-studio-card.webp
   animated: true
   width: 1024
   height: 1024
-  alt: "A cute bright-blue furry monster cuddling a vivid coral, turquoise, and indigo patterned blanket, illustrated in 2D."
+  alt: "A relaxed cobalt-blue shaggy monster holding a woven throw with bold geometric artwork."
 order: 3
 highlights:
   - "Woven-in designs that can't fade or peel"

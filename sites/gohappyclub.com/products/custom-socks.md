@@ -7,12 +7,12 @@ nav_title: "Custom socks"
 lede: "Crew, ankle, athletic and knee-high socks in your brand colors, with your logo knit in."
 summary: "Crew, ankle, athletic and knee-high socks in your colors, with your logo knit in."
 image:
-  path: /assets/monsters/custom-socks-monster-vivid.webp
-  thumbnail: /assets/monsters/custom-socks-monster-vivid-card.webp
+  path: /assets/monsters/custom-socks-monster-studio.webp
+  thumbnail: /assets/monsters/custom-socks-monster-studio-card.webp
   animated: true
   width: 1024
   height: 1024
-  alt: "A cute golden-yellow monster with purple-tipped ears dancing in vivid turquoise and coral socks, illustrated in 2D."
+  alt: "A golden-yellow long-legged monster wearing graphic indigo and turquoise crew socks, in a relaxed editorial pose."
 order: 4
 highlights:
   - "Knit-in designs stay bright wash after wash"

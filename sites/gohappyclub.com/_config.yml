@@ -8,8 +8,8 @@ locale: en_US
 title_format: "{title} | {site}"
 logo: /assets/logo.png
 image:
-  path: /assets/monsters/happy-club-monster-group-vivid.webp
-  alt: Colorful Happy Club monsters with custom hats, tote bags, blankets and socks
+  path: /assets/monsters/happy-club-monster-group-studio.webp
+  alt: Happy Club creative collective with custom caps, canvas totes, graphic socks and woven throws
 theme_color: "#c2410c"
 colors:
   brand: "#c2410c"

@@ -58,13 +58,13 @@
 /* Transparent 2D characters: heroes move gently; product cards remain still. */
 .media.monster-art { position: relative; background: var(--eggshell, #f4f1de); }
 .monster-art img { object-fit: contain; padding: 6%; box-sizing: border-box; }
-.monster-motion img { transform-origin: 50% 85%; animation: monster-bob 3.8s ease-in-out infinite; }
+.monster-motion img { transform-origin: 50% 85%; animation: monster-bob 6s ease-in-out infinite; }
 .monster-motion:has(input:checked) img { animation-play-state: paused; }
 .monster-motion-control { position: absolute; bottom: .5rem; right: .65rem; display: flex; align-items: center; gap: .35rem; padding: .2rem .45rem; border-radius: .35rem; background: var(--eggshell, #f4f1de); color: var(--ink); font-size: .75rem; cursor: pointer; }
 .monster-motion-control input { width: 1rem; height: 1rem; margin: 0; accent-color: var(--ink); }
 @keyframes monster-bob {
-  0%, 100% { transform: translateY(0) rotate(-1deg); }
-  50% { transform: translateY(-6px) rotate(1deg); }
+  0%, 100% { transform: translateY(0) rotate(-.35deg); }
+  50% { transform: translateY(-3px) rotate(.35deg); }
 }
 @media (prefers-reduced-motion: reduce) {
   .monster-motion img { animation: none; transform: none; }

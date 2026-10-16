@@ -10,7 +10,7 @@ image:
   path: /assets/monsters/custom-hats-monster.webp
   width: 1024
   height: 1024
-  alt: "A cheerful teal furry monster wearing a peach cap with an embroidered smiling sun."
+  alt: "A lime-green cyclops with oversized sideways ears tipping a peach baseball cap."
 order: 1
 highlights:
   - "Embroidered, printed or patch logos"

@@ -10,7 +10,7 @@ image:
   path: /assets/monsters/custom-socks-monster.webp
   width: 1024
   height: 1024
-  alt: "An orange furry monster showing off indigo and teal knit socks with smiling sun designs."
+  alt: "A tangerine pom-pom monster with tall feathered ears and long legs wearing patterned knit socks."
 order: 4
 highlights:
   - "Knit-in designs stay bright wash after wash"

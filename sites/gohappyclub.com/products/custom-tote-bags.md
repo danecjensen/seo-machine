@@ -10,7 +10,7 @@ image:
   path: /assets/monsters/custom-tote-bags-monster.webp
   width: 1024
   height: 1024
-  alt: "A coral furry monster carrying a canvas tote bag printed with a smiling sun."
+  alt: "A magenta triangular monster with three eyes and four arms showing off a canvas tote bag."
 order: 2
 highlights:
   - "Cotton, canvas and gusseted styles"

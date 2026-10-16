@@ -10,7 +10,7 @@ image:
   path: /assets/monsters/custom-blankets-monster.webp
   width: 1024
   height: 1024
-  alt: "A lilac furry monster wrapped in a colorful woven blanket with smiling suns and tassel fringe."
+  alt: "A wide cobalt-blue shaggy monster with tiny eye stalks cuddling a patterned woven blanket."
 order: 3
 highlights:
   - "Woven-in designs that can't fade or peel"

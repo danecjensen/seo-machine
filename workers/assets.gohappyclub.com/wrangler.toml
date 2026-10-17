@@ -1,0 +1,14 @@
+# assets.gohappyclub.com: an upload page for media files, stored in R2 and served from this host.
+# Separate from the marketing sites: its own Worker, bucket, workflow and tests.
+# Set the upload password once in the dashboard: Workers & Pages > gohappyclub-assets >
+# Settings > Variables and Secrets > Add > Secret, name UPLOAD_PASSWORD.
+name = "gohappyclub-assets"
+main = "src/worker.mjs"
+compatibility_date = "2026-09-01"
+workers_dev = true
+
+routes = [{ pattern = "assets.gohappyclub.com", custom_domain = true }]
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "gohappyclub-assets"

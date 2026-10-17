@@ -22,6 +22,7 @@ theme/                           shared _layouts, _includes, CSS, sitemap, robot
 lib/                             the Eleventy config, SEO tag and SEO check
 scripts/                         build, deploy and new-site commands
 lighthouse/                      Lighthouse runner and default budgets
+workers/assets.gohappyclub.com/  media upload page + file host on R2 (not a site; see below)
 dist/<domain>/                   static output, one folder per site
 ```
 
@@ -326,3 +327,33 @@ optional `interest` (hats, tote bags, blankets, socks or something else). Until 
 signup page shows a yellow "[Placeholder]" note. Once it's set, the signup page and each product
 page show the form (`signup_form: true`, set for `products/` in `_config.yml` defaults); other
 pages link to the signup page.
+
+## Media assets (assets.gohappyclub.com)
+
+`workers/assets.gohappyclub.com/` is a small Cloudflare Worker, separate from the sites: its own
+bucket, workflow (`.github/workflows/assets.yml`) and tests, and no Eleventy build or Lighthouse.
+
+- **Upload:** open `https://assets.gohappyclub.com/`, sign in with the upload password (any
+  user name), and drop files on the page. Up to 100 MB each. Each file gets a Copy link button.
+- **Use:** every file is public at `https://assets.gohappyclub.com/<name>`. Names are cleaned up
+  (`Summer Hat (Final).JPG` becomes `summer-hat-final.jpg`), and a name that's taken gets `-2`,
+  `-3`... so a link never changes what it points to. That lets files be cached for a year.
+- **Delete:** in the Cloudflare dashboard, *R2 → gohappyclub-assets*. Don't re-upload different
+  content under a deleted file's name: browsers may still have the old one cached.
+
+Files live in the R2 bucket `gohappyclub-assets`. Pushes to `main` that touch the Worker deploy
+it. Run it locally with `npm run assets:dev` (local R2, put `UPLOAD_PASSWORD=...` in
+`workers/assets.gohappyclub.com/.dev.vars`) and test it with `npm run test:assets`.
+
+### One-time setup
+
+1. **Turn on R2:** dashboard → *R2 Object Storage* → *Purchase R2* / enable (the free tier
+   includes 10 GB; a payment method is required).
+2. **Create the bucket** `gohappyclub-assets` (*R2 → Create bucket*, location Automatic).
+3. **Give the deploy token two more permissions:** *My Profile → API Tokens →* edit the token in
+   `CLOUDFLARE_API_TOKEN` and add *Account → Workers Scripts → Edit* and
+   *Zone → Workers Routes → Edit* (zone `gohappyclub.com`). The first deploy then creates the
+   Worker and the `assets.gohappyclub.com` custom domain, including its DNS record.
+4. **Set the upload password:** *Workers & Pages → gohappyclub-assets → Settings → Variables and
+   Secrets → Add*, type **Secret**, name `UPLOAD_PASSWORD`. Until it's set, the upload page
+   answers "Uploads are off".

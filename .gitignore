@@ -5,3 +5,4 @@ lighthouse-reports/
 lighthouse/node_modules/
 .build/
 .wrangler/
+.dev.vars

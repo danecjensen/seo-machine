@@ -5,16 +5,14 @@ import worker from "../sites/gohappyclub.com/_worker.js";
 
 const ORIGIN = "https://gohappyclub.com";
 const env = (extra = {}) => ({
-  STUDIO_PASSWORD: "open sesame",
   QUIVERAI_API_KEY: "sk_test_123",
   ASSETS: { fetch: async (req) => new Response(`asset ${new URL(req.url).pathname}`, { headers: { "Content-Type": "text/html" } }) },
   ...extra,
 });
-const auth = (password = "open sesame") => ({ Authorization: `Basic ${btoa(`dane:${password}`)}` });
 const post = (route, body, headers = {}) =>
   new Request(`${ORIGIN}/api/studio/${route}`, {
     method: "POST",
-    headers: { ...auth(), "Content-Type": "application/json", Origin: ORIGIN, ...headers },
+    headers: { "Content-Type": "application/json", Origin: ORIGIN, ...headers },
     body: JSON.stringify(body),
   });
 
@@ -29,25 +27,16 @@ function fakeQuiver(status = 200, body = { id: "r", created: 1, data: [{ id: "a"
 }
 afterEach(() => (globalThis.fetch = realFetch));
 
-test("pages outside the studio are served as plain files, with no password", async () => {
+test("pages outside the studio are served as plain files", async () => {
   const res = await worker.fetch(new Request(`${ORIGIN}/products/custom-hats/`), env());
   assert.equal(await res.text(), "asset /products/custom-hats/");
 });
 
-test("the studio stays locked without STUDIO_PASSWORD and asks for the password otherwise", async () => {
-  assert.equal((await worker.fetch(new Request(`${ORIGIN}/studio/`), env({ STUDIO_PASSWORD: "" }))).status, 503);
+test("anyone can open the studio page, which stays out of search", async () => {
   const res = await worker.fetch(new Request(`${ORIGIN}/studio/`), env());
-  assert.equal(res.status, 401);
-  assert.match(res.headers.get("WWW-Authenticate"), /^Basic/);
-  assert.equal((await worker.fetch(new Request(`${ORIGIN}/studio/`, { headers: auth("wrong") }), env())).status, 401);
-});
-
-test("with the password the studio page is served, kept out of search and caches", async () => {
-  const res = await worker.fetch(new Request(`${ORIGIN}/studio/`, { headers: auth() }), env());
   assert.equal(res.status, 200);
   assert.equal(await res.text(), "asset /studio/");
   assert.equal(res.headers.get("X-Robots-Tag"), "noindex, nofollow");
-  assert.equal(res.headers.get("Cache-Control"), "private, no-store");
 });
 
 test("a new image goes to QuiverAI text-to-SVG with the key kept server-side", async () => {
@@ -73,6 +62,9 @@ test("bad requests never reach QuiverAI", async () => {
   assert.equal((await worker.fetch(post("generate", { prompt: "  " }), env())).status, 400);
   assert.equal((await worker.fetch(post("edit", { prompt: "x" }), env())).status, 400);
   assert.equal((await worker.fetch(post("generate", { prompt: "x" }, { Origin: "https://evil.example" }), env())).status, 403);
+  const noOrigin = post("generate", { prompt: "x" });
+  noOrigin.headers.delete("Origin");
+  assert.equal((await worker.fetch(noOrigin, env())).status, 403);
   assert.equal((await worker.fetch(post("generate", { prompt: "x" }, { "Content-Type": "text/plain" }), env())).status, 415);
   assert.equal((await worker.fetch(post("generate", { prompt: "x" }), env({ QUIVERAI_API_KEY: "" }))).status, 503);
   assert.equal((await worker.fetch(post("other", { prompt: "x" }), env())).status, 404);

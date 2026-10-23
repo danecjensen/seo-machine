@@ -79,6 +79,7 @@ async function deploy(domain) {
     if (found.status === 404) wrangler(["pages", "project", "create", project, `--production-branch=${production}`]);
     else if (!found.success) throw new Error(`Cloudflare API: ${JSON.stringify(found.errors)}`);
   }
+  await bindKv(project, site.cloudflare?.kv ?? {});
 
   wrangler(["pages", "deploy", path.relative(ROOT, out), `--project-name=${project}`, `--branch=${branch}`,
     ...(commit ? [`--commit-hash=${commit}`] : [])]);
@@ -102,6 +103,21 @@ async function deploy(domain) {
     if (!added.success) throw new Error(`could not attach ${name}: ${JSON.stringify(added.errors)}`);
     console.log(`  attached custom domain ${name} (${added.result?.status}); DNS may take a few minutes`);
   }
+}
+
+/** `cloudflare.kv: { BINDING: <namespace id> }` in _config.yml -> KV bindings on the Pages project
+ *  (production and preview), set before uploading so the new deployment gets them. Only adds or
+ *  updates the listed bindings; environment variables and secrets are left as they are. */
+async function bindKv(project, kv) {
+  const entries = Object.entries(kv);
+  if (!entries.length) return;
+  const kv_namespaces = Object.fromEntries(entries.map(([name, id]) => [name, { namespace_id: String(id) }]));
+  console.log(`  KV bindings: ${entries.map(([name, id]) => `${name} -> ${id}`).join(", ")}`);
+  if (dryRun) return;
+  const res = await api("PATCH", `/pages/projects/${project}`, {
+    deployment_configs: { production: { kv_namespaces }, preview: { kv_namespaces } },
+  });
+  if (!res.success) throw new Error(`could not set KV bindings: ${JSON.stringify(res.errors)}`);
 }
 
 const failed = [];

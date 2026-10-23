@@ -25,7 +25,8 @@ cta: false
 .svg-card { margin: 0; border: 2px solid var(--line); border-radius: var(--radius); padding: .5rem; background: #fff; }
 .svg-card.is-selected { border-color: var(--brand); }
 .svg-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; }
-.svg-card figcaption { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+.svg-card figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-top: .5rem; }
+.svg-card figcaption a { font-size: .85rem; padding: .3rem .2rem; }
 .svg-card button, .studio-bar button.link { font: inherit; font-size: .85rem; padding: .3rem .6rem; border: 1px solid var(--line); border-radius: .4rem; background: #fff; color: var(--ink); cursor: pointer; }
 .svg-card button:hover, .studio-bar button.link:hover { border-color: var(--brand); }
 .studio-form { background: var(--bg); border-top: 1px solid var(--line); padding: 1rem 0; }
@@ -178,12 +179,14 @@ cta: false
           a.click();
           setTimeout(() => URL.revokeObjectURL(a.href), 1000);
         });
-        const copy = el("button", { type: "button", textContent: "Copy SVG code" });
-        copy.addEventListener("click", async () => {
-          try { await navigator.clipboard.writeText(svg); copy.textContent = "Copied"; } catch { copy.textContent = "Couldn't copy"; }
-          setTimeout(() => (copy.textContent = "Copy SVG code"), 1500);
+        const link = msg.links?.[i];
+        const open = link ? el("a", { href: link, target: "_blank", rel: "noopener", textContent: "Open its page" }) : null;
+        const copy = link ? el("button", { type: "button", textContent: "Copy link" }) : null;
+        copy?.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(new URL(link, location.href).href); copy.textContent = "Copied"; } catch { copy.textContent = "Couldn't copy"; }
+          setTimeout(() => (copy.textContent = "Copy link"), 1500);
         });
-        return el("figure", { className: "svg-card" + (chosen ? " is-selected" : "") }, img, el("figcaption", {}, pick, dl, copy));
+        return el("figure", { className: "svg-card" + (chosen ? " is-selected" : "") }, img, el("figcaption", {}, pick, dl, open, copy));
       });
       return el("li", { className: "msg msg-bot" }, el("p", { textContent: msg.note }), el("div", { className: "svgs" }, ...cards));
     }));
@@ -228,10 +231,14 @@ cta: false
     }
     const editing = selectedSvg();
     const product = PRODUCTS[form.elements.product.value];
+    // What the image is about, shown on its own page: the first description, plus any changes.
+    const base = editing ? state.messages[state.selected.m].prompt : "";
+    const title = editing ? `${base}. Changed: ${text}` : text;
     const body = editing
-      ? { prompt: text, svg: editing, model: $("model").value, reference: ref }
+      ? { prompt: text, title, svg: editing, model: $("model").value, reference: ref }
       : {
           prompt: product ? `${text}\n\nThe product is ${product}.` : text,
+          title,
           instructions: styleBox.value.trim(),
           n: Number($("count").value),
           model: $("model").value,
@@ -255,8 +262,9 @@ cta: false
       });
       const data = await res.json().catch(() => ({ error: `The studio returned an error (${res.status}).` }));
       reply = res.ok
-        ? { role: "bot", svgs: data.svgs, prompt: text,
-            note: editing ? "Here's the changed version." : data.svgs.length > 1 ? `Here are ${data.svgs.length} options. Pick one to keep working on it.` : "Here's your image." }
+        ? { role: "bot", svgs: data.svgs, links: (data.images || []).map((i) => i.url), prompt: title,
+            note: (editing ? "Here's the changed version." : data.svgs.length > 1 ? `Here are ${data.svgs.length} options. Pick one to keep working on it.` : "Here's your image.") +
+              (data.sandbox ? " Note: the studio is using a QuiverAI test key, so these are placeholders, not real drawings. Set QUIVERAI_API_KEY in Cloudflare to a live key to get real images." : "") }
         : { role: "error", text: data.error || `The studio returned an error (${res.status}).` };
     } catch (err) {
       reply = { role: "error", text: `Couldn't reach the studio: ${err.message}` };
@@ -273,6 +281,22 @@ cta: false
   // A reload in the middle of a request leaves a placeholder behind; drop it.
   state.messages = state.messages.filter((m) => m.role !== "pending");
   render();
+
+  // /studio/?from=<id> (the "Open in the studio" link on an image's page): load that image to change it.
+  const from = new URLSearchParams(location.search).get("from");
+  if (from && /^[A-Za-z0-9]{10}$/.test(from)) {
+    history.replaceState(null, "", location.pathname);
+    fetch(`/studio/i/${from}.svg`).then(async (res) => {
+      if (!res.ok) throw new Error();
+      const svg = await res.text();
+      const pageRes = await fetch(`/studio/i/${from}/`);
+      const about = pageRes.ok ? new DOMParser().parseFromString(await pageRes.text(), "text/html").querySelector(".prompt")?.textContent : "";
+      state.messages.push({ role: "bot", svgs: [svg], links: [`/studio/i/${from}/`], prompt: about || "Product image", note: "Here's the image from your link. Say what to change." });
+      state.selected = { m: state.messages.length - 1, i: 0 };
+    }).catch(() => {
+      state.messages.push({ role: "error", text: "Couldn't load the image from that link." });
+    }).finally(() => { save(); render(); form.parentElement.scrollIntoView({ block: "end" }); promptBox.focus(); });
+  }
 })();
 </script>
 {% endraw %}

@@ -55,3 +55,6 @@ cloudflare:
   project: gohappyclub-com
   productionBranch: main
   domains: [gohappyclub.com, www.gohappyclub.com]
+  # KV namespace "gohappyclub-studio": every Product Image Studio image, so each gets its own link.
+  kv:
+    STUDIO_IMAGES: 7d521353392d4022accdb51fa57f744c

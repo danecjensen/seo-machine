@@ -11,6 +11,10 @@ cta: false
 .studio { max-width: 60rem; padding: 2rem 0 1rem; }
 .studio h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.4rem); margin-bottom: .5rem; }
 .studio-intro { color: var(--muted); margin: 0 0 1.5rem; max-width: var(--measure); }
+.studio-nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: -.75rem 0 1.5rem; font-size: .95rem; }
+.studio-nav span { color: var(--muted); overflow-wrap: anywhere; }
+.drafts { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); margin-top: .75rem; }
+.drafts img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; border-radius: .4rem; opacity: .75; }
 .studio-log { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
 .studio-log:empty { display: none; }
 .msg { border-radius: var(--radius); padding: .9rem 1rem; }
@@ -56,6 +60,7 @@ cta: false
 <div class="studio">
   <h1>Product Image Studio</h1>
   <p class="studio-intro">Describe a product and QuiverAI draws it as an SVG. Pick the option you like, then keep chatting to change it ("make the cap red", "add a small star on the side"). Download the SVG when it looks right.</p>
+  <p class="studio-nav"><a href="/studio/" id="new-chat">New chat</a> <a href="/studio/list/">All chats</a> <span id="chat-link" hidden>This chat: <a id="chat-url" href="/studio/"></a></span></p>
 
   <ol id="log" class="studio-log" aria-live="polite"></ol>
 
@@ -83,8 +88,8 @@ cta: false
         <div>
           <label for="count">Options per new image</label>
           <select id="count" name="count">
-            <option value="1">1</option>
-            <option value="2" selected>2</option>
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
           </select>
@@ -122,36 +127,36 @@ cta: false
     socks: "a pair of custom crew socks",
     other: "",
   };
+  const PHASES = { generating: "Starting", reasoning: "Planning the drawing", draft: "Drawing", content: "Finishing" };
+  const GIVE_UP_MS = 6 * 60 * 1000;
   const KEY = "happy-club-studio-v1";
   const $ = (id) => document.getElementById(id);
   const log = $("log"), form = $("composer"), promptBox = $("prompt"), send = $("send");
   const mode = $("mode"), restart = $("restart"), styleBox = $("style");
 
-  // Chat state: [{ role: "user", text, ref? } | { role: "bot", svgs: [...], note } | { role: "error", text }]
-  let state = { messages: [], selected: null }; // selected: { m: message index, i: svg index }
-  try { state = JSON.parse(localStorage.getItem(KEY)) || state; } catch {}
+  // Each chat lives on the server at /studio/c/<id>/. Messages:
+  // { role: "user", text, ref? } | { role: "bot", svgs, links, ids, prompt, note } | { role: "error", text } | { role: "pending", ... }
+  const chatInUrl = location.pathname.match(/^\/studio\/c\/([A-Za-z0-9]{10})\/?$/)?.[1] ?? null;
+  let state = { chat: chatInUrl, messages: [], selected: null }; // selected: { m: message index, i: image index }
+  try { localStorage.removeItem(KEY); } catch {} // chats used to be kept in the browser only
   try { styleBox.value = localStorage.getItem(KEY + "-style") || STYLE; } catch { styleBox.value = STYLE; }
   styleBox.addEventListener("change", () => { try { localStorage.setItem(KEY + "-style", styleBox.value); } catch {} });
 
-  function save() {
-    const copy = { ...state, messages: state.messages.map(({ ref, ...m }) => m) }; // reference images are too big to keep
-    for (;;) {
-      try { localStorage.setItem(KEY, JSON.stringify(copy)); return; } catch {
-        if (copy.messages.length < 3) return;
-        copy.messages.splice(0, 2); // full: drop the oldest exchange
-        if (copy.selected) copy.selected = copy.selected.m >= 2 ? { ...copy.selected, m: copy.selected.m - 2 } : null;
-      }
-    }
-  }
-
-  const selectedSvg = () => state.selected && state.messages[state.selected.m]?.svgs?.[state.selected.i];
-
-  function svgUrl(svg) { return URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" })); }
+  const selectedMsg = () => state.selected && state.messages[state.selected.m];
+  const selectedSvg = () => selectedMsg()?.svgs?.[state.selected.i];
+  const svgUrl = (svg) => URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+  const slug = (s = "") => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "happy-club";
 
   function el(tag, props = {}, ...children) {
     const node = Object.assign(document.createElement(tag), props);
     node.append(...children.filter((c) => c != null));
     return node;
+  }
+
+  function blobImg(svg, props) {
+    const img = el("img", { src: svgUrl(svg), ...props });
+    img.dataset.blob = "1";
+    return img;
   }
 
   function render() {
@@ -165,14 +170,17 @@ cta: false
         return el("li", { className: "msg msg-bot msg-error", role: "alert" }, el("p", { textContent: msg.text }));
       }
       if (msg.role === "pending") {
-        return el("li", { className: "msg msg-bot" }, el("p", { className: "dots", textContent: msg.text }));
+        const secs = Math.round((Date.now() - msg.started) / 1000);
+        const drafts = Object.values(msg.drafts || {});
+        return el("li", { className: "msg msg-bot" },
+          el("p", { className: "dots", textContent: `${msg.text} (${secs}s)` }),
+          drafts.length ? el("div", { className: "drafts" }, ...drafts.map((svg) => blobImg(svg, { alt: "Draft in progress", width: 200, height: 200 }))) : null);
       }
       const cards = msg.svgs.map((svg, i) => {
         const chosen = state.selected?.m === m && state.selected?.i === i;
-        const img = el("img", { src: svgUrl(svg), alt: `Option ${i + 1} for: ${msg.prompt ?? "product image"}`, width: 400, height: 400 });
-        img.dataset.blob = "1";
+        const img = blobImg(svg, { alt: `Option ${i + 1} for: ${msg.prompt ?? "product image"}`, width: 400, height: 400 });
         const pick = el("button", { type: "button", textContent: chosen ? "Working on this" : "Keep working on this" });
-        pick.addEventListener("click", () => { state.selected = { m, i }; save(); render(); promptBox.focus(); });
+        pick.addEventListener("click", () => { state.selected = { m, i }; render(); promptBox.focus(); });
         const dl = el("button", { type: "button", textContent: "Download SVG" });
         dl.addEventListener("click", () => {
           const a = el("a", { href: svgUrl(svg), download: `${slug(msg.prompt)}-${i + 1}.svg` });
@@ -194,11 +202,30 @@ cta: false
     mode.textContent = editing ? "Changing the highlighted image. Say what to change." : "New image";
     $("products").hidden = !!editing;
     promptBox.placeholder = editing ? "Make the cap red and add a small star on the side" : "A navy dad hat with a smiling yellow sun embroidered on the front";
-    restart.hidden = !editing && !state.messages.length;
-    restart.textContent = editing ? "Start a new image" : "Clear chat";
+    restart.hidden = !editing;
+    restart.textContent = "Start a new image";
+    $("chat-link").hidden = !state.chat;
+    if (state.chat) {
+      $("chat-url").href = `/studio/c/${state.chat}/`;
+      $("chat-url").textContent = new URL(`/studio/c/${state.chat}/`, location.href).href;
+    }
   }
 
-  const slug = (s = "") => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "happy-club";
+  const botMessage = (d) => ({
+    role: "bot",
+    svgs: d.svgs,
+    links: (d.images || []).map((i) => i.url),
+    ids: (d.images || []).map((i) => i.id),
+    prompt: d.prompt,
+    note: d.note + (d.sandbox ? " Note: the studio is using a QuiverAI test key, so these are placeholders, not real drawings. Set QUIVERAI_API_KEY in Cloudflare to a live key to get real images." : ""),
+  });
+
+  function selectLatestSingle() {
+    const last = state.messages.length - 1;
+    if (state.messages[last]?.role === "bot" && state.messages[last].svgs.length === 1) state.selected = { m: last, i: 0 };
+  }
+
+  const scrollDown = () => form.parentElement.scrollIntoView({ block: "end", behavior: "smooth" });
 
   function readFile(file) {
     return new Promise((resolve, reject) => {
@@ -209,15 +236,51 @@ cta: false
     });
   }
 
-  restart.addEventListener("click", () => {
-    if (selectedSvg()) state.selected = null;
-    else state = { messages: [], selected: null };
-    save(); render(); promptBox.focus();
-  });
-
+  restart.addEventListener("click", () => { state.selected = null; render(); promptBox.focus(); });
   promptBox.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
   });
+  window.addEventListener("popstate", () => location.reload());
+
+  /** POST to the studio API and follow its streamed progress. Resolves with the final result. */
+  async function run(url, body, pending) {
+    const controller = new AbortController();
+    const giveUp = setTimeout(() => controller.abort(), GIVE_UP_MS);
+    const tick = setInterval(render, 1000);
+    try {
+      const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: controller.signal });
+      const type = res.headers.get("Content-Type") || "";
+      if (!type.includes("ndjson")) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `The studio returned an error (${res.status}). Try again.`);
+      }
+      const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+      let buffer = "";
+      for (;;) {
+        const { value, done } = await reader.read();
+        buffer += value || "";
+        let nl;
+        while ((nl = buffer.indexOf("\n")) >= 0) {
+          const line = buffer.slice(0, nl).trim();
+          buffer = buffer.slice(nl + 1);
+          if (!line) continue;
+          const event = JSON.parse(line);
+          if (event.type === "done") return event;
+          if (event.type === "error") throw new Error(event.error || "Something went wrong. Try again.");
+          if (event.type === "progress") pending.text = PHASES[event.phase] || pending.text;
+          if (event.type === "draft") pending.drafts = { ...pending.drafts, [event.index ?? 0]: event.svg };
+          render();
+        }
+        if (done) throw new Error("The connection closed before the image was finished. Try again.");
+      }
+    } catch (err) {
+      if (err.name === "AbortError") throw new Error("QuiverAI took more than 6 minutes, so the studio stopped waiting. Try again, maybe with fewer options.");
+      throw err;
+    } finally {
+      clearTimeout(giveUp);
+      clearInterval(tick);
+    }
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -232,71 +295,77 @@ cta: false
     const editing = selectedSvg();
     const product = PRODUCTS[form.elements.product.value];
     // What the image is about, shown on its own page: the first description, plus any changes.
-    const base = editing ? state.messages[state.selected.m].prompt : "";
-    const title = editing ? `${base}. Changed: ${text}` : text;
+    const title = editing ? `${selectedMsg().prompt}. Changed: ${text}` : text;
+    const common = { message: text, title, chat: state.chat, model: $("model").value, reference: ref };
     const body = editing
-      ? { prompt: text, title, svg: editing, model: $("model").value, reference: ref }
-      : {
-          prompt: product ? `${text}\n\nThe product is ${product}.` : text,
-          title,
-          instructions: styleBox.value.trim(),
-          n: Number($("count").value),
-          model: $("model").value,
-          reference: ref,
-        };
+      ? { ...common, prompt: text, svg: editing, source: state.chat ? undefined : selectedMsg().ids?.[state.selected.i] }
+      : { ...common, prompt: product ? `${text}\n\nThe product is ${product}.` : text, instructions: styleBox.value.trim(), n: Number($("count").value) };
 
-    state.messages.push({ role: "user", text, ref: ref || undefined });
-    state.messages.push({ role: "pending", text: editing ? "Changing the image" : "Drawing" });
+    const pending = { role: "pending", text: "Starting", started: Date.now(), drafts: {} };
+    state.messages.push({ role: "user", text, ref: ref || undefined }, pending);
     promptBox.value = "";
     $("reference").value = "";
     send.disabled = true;
     render();
-    form.parentElement.scrollIntoView({ block: "end", behavior: "smooth" });
+    scrollDown();
 
     let reply;
     try {
-      const res = await fetch(editing ? "/api/studio/edit" : "/api/studio/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json().catch(() => ({ error: `The studio returned an error (${res.status}).` }));
-      reply = res.ok
-        ? { role: "bot", svgs: data.svgs, links: (data.images || []).map((i) => i.url), prompt: title,
-            note: (editing ? "Here's the changed version." : data.svgs.length > 1 ? `Here are ${data.svgs.length} options. Pick one to keep working on it.` : "Here's your image.") +
-              (data.sandbox ? " Note: the studio is using a QuiverAI test key, so these are placeholders, not real drawings. Set QUIVERAI_API_KEY in Cloudflare to a live key to get real images." : "") }
-        : { role: "error", text: data.error || `The studio returned an error (${res.status}).` };
+      const done = await run(editing ? "/api/studio/edit" : "/api/studio/generate", body, pending);
+      reply = botMessage({ ...done, prompt: title });
+      if (done.chat && done.chat !== state.chat) {
+        state.chat = done.chat;
+        history.pushState(null, "", `/studio/c/${done.chat}/`); // this chat's own URL
+      }
     } catch (err) {
-      reply = { role: "error", text: `Couldn't reach the studio: ${err.message}` };
+      reply = { role: "error", text: err.message.startsWith("Failed to fetch") ? "Couldn't reach the studio. Check your connection and try again." : err.message };
     }
-    state.messages.pop(); // the "Drawing…" placeholder
-    state.messages.push(reply);
+    state.messages.splice(state.messages.indexOf(pending), 1, reply);
     if (reply.role === "bot" && reply.svgs.length === 1) state.selected = { m: state.messages.length - 1, i: 0 };
     send.disabled = false;
-    save(); render();
-    form.parentElement.scrollIntoView({ block: "end", behavior: "smooth" });
+    render();
+    scrollDown();
     promptBox.focus();
   });
 
-  // A reload in the middle of a request leaves a placeholder behind; drop it.
-  state.messages = state.messages.filter((m) => m.role !== "pending");
-  render();
-
-  // /studio/?from=<id> (the "Open in the studio" link on an image's page): load that image to change it.
-  const from = new URLSearchParams(location.search).get("from");
-  if (from && /^[A-Za-z0-9]{10}$/.test(from)) {
-    history.replaceState(null, "", location.pathname);
-    fetch(`/studio/i/${from}.svg`).then(async (res) => {
-      if (!res.ok) throw new Error();
-      const svg = await res.text();
-      const pageRes = await fetch(`/studio/i/${from}/`);
-      const about = pageRes.ok ? new DOMParser().parseFromString(await pageRes.text(), "text/html").querySelector(".prompt")?.textContent : "";
-      state.messages.push({ role: "bot", svgs: [svg], links: [`/studio/i/${from}/`], prompt: about || "Product image", note: "Here's the image from your link. Say what to change." });
-      state.selected = { m: state.messages.length - 1, i: 0 };
-    }).catch(() => {
-      state.messages.push({ role: "error", text: "Couldn't load the image from that link." });
-    }).finally(() => { save(); render(); form.parentElement.scrollIntoView({ block: "end" }); promptBox.focus(); });
+  async function start() {
+    if (state.chat) {
+      // /studio/c/<id>/: load the saved chat.
+      try {
+        const res = await fetch(`/api/studio/chat/${state.chat}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        state.messages = data.messages.map((m) => (m.role === "bot"
+          ? botMessage({ ...m, svgs: m.images.map((i) => i.svg), images: m.images })
+          : { role: "user", text: m.text }));
+        selectLatestSingle();
+      } catch (err) {
+        state.messages = [{ role: "error", text: `Couldn't load this chat. ${err.message || ""}`.trim() }];
+      }
+    } else {
+      // /studio/?from=<image id> (the "Open in the studio" link on an image's page): start a new chat from that image.
+      const from = new URLSearchParams(location.search).get("from");
+      if (from && /^[A-Za-z0-9]{10}$/.test(from)) {
+        history.replaceState(null, "", location.pathname);
+        try {
+          const res = await fetch(`/studio/i/${from}.svg`);
+          if (!res.ok) throw new Error();
+          const svg = await res.text();
+          const pageRes = await fetch(`/studio/i/${from}/`);
+          const about = pageRes.ok ? new DOMParser().parseFromString(await pageRes.text(), "text/html").querySelector(".prompt")?.textContent : "";
+          state.messages.push({ role: "bot", svgs: [svg], links: [`/studio/i/${from}/`], ids: [from], prompt: about || "Product image", note: "Here's the image from your link. Say what to change." });
+          selectLatestSingle();
+        } catch {
+          state.messages.push({ role: "error", text: "Couldn't load the image from that link." });
+        }
+      }
+    }
+    render();
+    if (state.messages.length) scrollDown();
   }
+
+  render();
+  start();
 })();
 </script>
 {% endraw %}

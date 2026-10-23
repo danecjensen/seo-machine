@@ -333,8 +333,7 @@ pages link to the signup page.
 A chat page, open to anyone, for making product images as SVGs with [QuiverAI](https://quiver.ai/).
 Describe a product ("a navy dad hat with a smiling sun on the front"), pick one of the options
 QuiverAI draws, then keep chatting to change it ("make the brim white"). Each image can be
-downloaded as an `.svg` or copied as code. The chat is kept in the browser, so a reload doesn't
-lose it.
+downloaded as an `.svg` or copied as code.
 
 - New images use QuiverAI's text-to-SVG endpoint (`/v1/svgs/generations`) with a style guide you
   can edit under *Options*; follow-up messages use its SVG edit endpoint (`/v1/svgs/edits`) on the
@@ -351,6 +350,14 @@ lose it.
   `cloudflare.kv` in `_config.yml` binds to the Pages project as `STUDIO_IMAGES` on every deploy.
   `studio-image.html` is the page template. The SVG files are served with a strict
   Content-Security-Policy, so they can't run scripts on the site.
+- Every chat gets its own URL, `/studio/c/<id>/`: the page moves there when a new chat's first
+  image arrives, and opening that URL later (or reloading) shows the whole chat. Chats are saved in
+  the same KV namespace. `/studio/list/` lists every chat, newest first (template:
+  `studio-list.html`), and each image page links back to its chat.
+- Real drawings can take minutes, so the worker asks QuiverAI to stream and passes progress to the
+  page as it arrives (one JSON object per line: `progress`, `draft`, then `done` or `error`). The
+  page shows the drawing phase, rough previews, and any error as a message in the chat. It gives up
+  after 6 minutes.
 - With a `sk_test_` key QuiverAI returns "SANDBOX RESULT" placeholders; the chat says so.
 - It stays out of search: `noindex`, left out of the sitemap (so Lighthouse doesn't audit it),
   and not linked from the site.

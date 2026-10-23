@@ -1,0 +1,30 @@
+---
+title: All Studio Chats
+description: "Every chat from the Happy Club Product Image Studio, newest first, with the latest product image from each and a link back to the chat."
+permalink: /studio/list/
+layout: default
+noindex: true
+sitemap: false
+cta: false
+---
+{% comment %}
+  _worker.js fills in STUDIO_LIST_ITEMS (one <li> per saved chat, newest first) and STUDIO_LIST_MORE.
+{% endcomment %}
+<style>
+.studio-list { max-width: 48rem; padding: 2rem 0 1rem; }
+.studio-list h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.4rem); margin-bottom: .5rem; }
+.studio-list .intro { color: var(--muted); margin: 0 0 1.5rem; }
+.chat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+.chat-row { display: flex; align-items: center; gap: 1rem; padding: .75rem; border: 1px solid var(--line); border-radius: var(--radius); color: var(--ink); text-decoration: none; background: var(--bg); }
+.chat-row:hover { border-color: var(--brand); }
+.chat-row img, .chat-thumb-empty { flex: none; width: 72px; height: 72px; object-fit: contain; background: #fff; border-radius: .4rem; display: block; }
+.chat-row strong { display: block; font-weight: 600; overflow-wrap: anywhere; }
+.chat-row small { color: var(--muted); }
+.chat-more { margin-top: 1.25rem; }
+</style>
+<div class="studio-list">
+  <h1>All studio chats</h1>
+  <p class="intro">Every chat from the <a href="/studio/">Product Image Studio</a>, newest first. Open one to see its images or keep changing them.</p>
+  <ol class="chat-list">STUDIO_LIST_ITEMS</ol>
+  <p class="chat-more">STUDIO_LIST_MORE</p>
+</div>

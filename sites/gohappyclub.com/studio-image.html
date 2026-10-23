@@ -1,0 +1,34 @@
+---
+title: Product Image from the Studio
+description: "A product image made in the Happy Club studio with QuiverAI. Download it as an SVG file or open it in the studio to keep changing it."
+permalink: /studio/image/
+layout: default
+noindex: true
+sitemap: false
+cta: false
+---
+{% comment %}
+  Template for one saved studio image. _worker.js serves it at /studio/i/<id>/ and fills in the
+  STUDIO_* placeholders; the template's own URL (/studio/image/) is not served.
+{% endcomment %}
+<style>
+.studio-image { max-width: 44rem; padding: 2rem 0 1rem; }
+.studio-image h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.4rem); margin-bottom: .5rem; }
+.studio-image .prompt { color: var(--muted); margin: 0 0 1.25rem; white-space: pre-wrap; }
+.studio-image figure { margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; padding: 1rem; }
+.studio-image figure img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; }
+.studio-image .actions { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; margin: 1.25rem 0 0; }
+.studio-image .meta { margin-top: 1rem; }
+</style>
+<div class="studio-image">
+  <h1>Product image</h1>
+  <p class="prompt">STUDIO_PROMPT</p>
+  <figure>
+    <img src="STUDIO_SVG_URL" alt="STUDIO_ALT" width="600" height="600">
+  </figure>
+  <p class="actions">
+    <a class="btn" href="STUDIO_SVG_URL" download="STUDIO_FILENAME">Download SVG</a>
+    <a href="/studio/?from=STUDIO_ID">Open in the studio to change it</a>
+  </p>
+  <p class="meta">Made with the <a href="/studio/">Happy Club Product Image Studio</a> on STUDIO_DATE.</p>
+</div>

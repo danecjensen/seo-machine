@@ -254,6 +254,7 @@ cloudflare:
   project: ledger-example
   productionBranch: main
   domains: [ledger.example]   # custom domains attached on production deploys
+  kv: { MY_KV: <namespace id> } # optional KV bindings, set on the project before each deploy
 ```
 
 The two example sites set `deploy: false` under `cloudflare:`, so they are built and checked but
@@ -344,6 +345,13 @@ lose it.
   served as a plain static file, exactly as before.
 - Anyone with the link can use it, and every image spends QuiverAI credits. The API only answers
   requests from the studio page itself, so other websites can't borrow the key.
+- Every image gets its own link: `/studio/i/<id>/` is a page with the image, its prompt, a
+  download button and "Open in the studio to change it"; `/studio/i/<id>.svg` is the file itself.
+  Images are kept in the Cloudflare KV namespace `gohappyclub-studio`, which
+  `cloudflare.kv` in `_config.yml` binds to the Pages project as `STUDIO_IMAGES` on every deploy.
+  `studio-image.html` is the page template. The SVG files are served with a strict
+  Content-Security-Policy, so they can't run scripts on the site.
+- With a `sk_test_` key QuiverAI returns "SANDBOX RESULT" placeholders; the chat says so.
 - It stays out of search: `noindex`, left out of the sitemap (so Lighthouse doesn't audit it),
   and not linked from the site.
 

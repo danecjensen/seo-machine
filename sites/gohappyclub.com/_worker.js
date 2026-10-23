@@ -8,12 +8,23 @@
 // The studio is open to anyone. Secret on the Cloudflare Pages project gohappyclub-com
 // (Settings > Variables and Secrets):
 //   QUIVERAI_API_KEY  QuiverAI API key (sk_live_... or a free sk_test_... sandbox key).
+//
+// Every image the studio makes is saved in the KV namespace bound as STUDIO_IMAGES (set up by
+// scripts/deploy.mjs from `cloudflare.kv` in _config.yml) and gets its own link:
+//   /studio/i/<id>/     a page with the image, its prompt, a download button and "change it"
+//   /studio/i/<id>.svg  the SVG file itself
 
 const QUIVER = "https://api.quiver.ai/v1";
 const MODELS = ["arrow-2", "arrow-2-telos"];
 const MAX_REFERENCE_CHARS = 8_000_000; // ~6 MB image as base64
 const MAX_SVG_CHARS = 200_000; // QuiverAI's edit limit
 const NO_INDEX = { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" };
+
+const IMAGE_PAGE = /^\/studio\/i\/([A-Za-z0-9]{10})\/?$/;
+const IMAGE_FILE = /^\/studio\/i\/([A-Za-z0-9]{10})\.svg$/;
+const TEMPLATE = "/studio/image/"; // studio-image.html, filled in for each saved image
+// The SVGs come from QuiverAI, but never let one run scripts or load anything on this domain.
+const SVG_CSP = "default-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:; sandbox";
 
 const isStudio = (path) => path === "/studio" || path.startsWith("/studio/") || path.startsWith("/api/studio/");
 
@@ -28,6 +39,16 @@ export default {
       } catch (e) {
         return json(500, { error: `Something went wrong: ${e.message}` });
       }
+    }
+
+    if (request.method === "GET" || request.method === "HEAD") {
+      let m;
+      if ((m = url.pathname.match(IMAGE_FILE))) return imageFile(env, m[1]);
+      if ((m = url.pathname.match(IMAGE_PAGE))) {
+        if (!url.pathname.endsWith("/")) return Response.redirect(`${url.origin}${url.pathname}/`, 301);
+        return imagePage(request, env, url, m[1]);
+      }
+      if (url.pathname === TEMPLATE || url.pathname === TEMPLATE.slice(0, -1)) return notFound(request, env, url);
     }
 
     const page = await env.ASSETS.fetch(request);
@@ -70,7 +91,72 @@ async function api(request, env, url) {
 
   const svgs = (data.data ?? []).map((d) => d.svg).filter((s) => typeof s === "string" && s.includes("<svg"));
   if (!svgs.length) return json(502, { error: "QuiverAI didn't return an SVG. Try again." });
-  return json(200, { svgs, credits: data.credits, usage: data.usage });
+  const about = clean(body.title, 300) || clean(body.prompt, 300);
+  const images = await Promise.all(svgs.map((svg) => save(env, svg, about)));
+  // A sk_test_ key gets QuiverAI's free "SANDBOX RESULT" placeholders, not real drawings.
+  const sandbox = env.QUIVERAI_API_KEY.startsWith("sk_test_");
+  return json(200, { svgs, images, sandbox, credits: data.credits, usage: data.usage });
+}
+
+/** Store one SVG under a new random id. Returns { id, url } (or nulls when storage isn't set up). */
+async function save(env, svg, prompt) {
+  if (!env.STUDIO_IMAGES) return { id: null, url: null };
+  const id = newId();
+  await env.STUDIO_IMAGES.put(`svg:${id}`, svg, { metadata: { prompt, created: new Date().toISOString() } });
+  return { id, url: `/studio/i/${id}/` };
+}
+
+function newId() {
+  const abc = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"; // no look-alike characters
+  return [...crypto.getRandomValues(new Uint8Array(10))].map((b) => abc[b % abc.length]).join("");
+}
+
+async function load(env, id) {
+  if (!env.STUDIO_IMAGES) return null;
+  const { value, metadata } = await env.STUDIO_IMAGES.getWithMetadata(`svg:${id}`);
+  return value == null ? null : { svg: value, ...(metadata ?? {}) };
+}
+
+async function imageFile(env, id) {
+  const image = await load(env, id);
+  if (!image) return new Response("Not found.", { status: 404, headers: { ...NO_INDEX, "Content-Type": "text/plain; charset=utf-8" } });
+  return new Response(image.svg, {
+    headers: {
+      "Content-Type": "image/svg+xml; charset=utf-8",
+      "Content-Security-Policy": SVG_CSP,
+      "X-Content-Type-Options": "nosniff",
+      "X-Robots-Tag": "noindex",
+      "Cache-Control": "public, max-age=31536000, immutable", // a saved image never changes
+    },
+  });
+}
+
+async function imagePage(request, env, url, id) {
+  const image = await load(env, id);
+  if (!image) return notFound(request, env, url);
+  const template = await env.ASSETS.fetch(new Request(new URL(TEMPLATE, url.origin), { headers: request.headers }));
+  if (!template.ok) return template;
+  const prompt = image.prompt || "Product image";
+  const date = image.created ? new Date(image.created).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" }) : "an earlier day";
+  const fill = {
+    STUDIO_SVG_URL: `/studio/i/${id}.svg`,
+    STUDIO_FILENAME: `${slug(prompt)}.svg`,
+    STUDIO_PROMPT: escapeHtml(prompt),
+    STUDIO_ALT: escapeHtml(`Product image: ${prompt}`),
+    STUDIO_DATE: escapeHtml(date),
+    STUDIO_ID: id,
+  };
+  const html = (await template.text())
+    .replaceAll(TEMPLATE, `/studio/i/${id}/`)
+    .replace(/STUDIO_[A-Z_]+/g, (k) => fill[k] ?? k)
+    .replace(' loading="lazy"', "");
+  return new Response(html, { headers: { ...NO_INDEX, "Content-Type": "text/html; charset=utf-8" } });
+}
+
+async function notFound(request, env, url) {
+  // Pages answers any path it has no file for with the site's 404 page.
+  const page = await env.ASSETS.fetch(new Request(new URL("/studio/i/not-found/", url.origin), { headers: request.headers }));
+  return new Response(page.status === 404 || page.ok ? page.body : "Not found.", { status: 404, headers: { ...NO_INDEX, "Content-Type": "text/html; charset=utf-8" } });
 }
 
 /** Chat message -> POST /v1/svgs/generations. */
@@ -119,6 +205,8 @@ function quiverError(status, data) {
   return known[status] ?? data.message ?? `QuiverAI returned an error (${status}).`;
 }
 
+const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "happy-club";
+const escapeHtml = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const clean = (s, max) => (typeof s === "string" ? s.trim().slice(0, max) : "");
 const json = (status, body) =>
   new Response(JSON.stringify(body), { status, headers: { ...NO_INDEX, "Content-Type": "application/json; charset=utf-8" } });

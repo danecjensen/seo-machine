@@ -329,7 +329,7 @@ pages link to the signup page.
 
 ### Product Image Studio (gohappyclub.com/studio/)
 
-A private chat page for making product images as SVGs with [QuiverAI](https://quiver.ai/).
+A chat page, open to anyone, for making product images as SVGs with [QuiverAI](https://quiver.ai/).
 Describe a product ("a navy dad hat with a smiling sun on the front"), pick one of the options
 QuiverAI draws, then keep chatting to change it ("make the brim white"). Each image can be
 downloaded as an `.svg` or copied as code. The chat is kept in the browser, so a reload doesn't
@@ -342,17 +342,17 @@ lose it.
   `sites/gohappyclub.com/_worker.js`, a Pages worker, so the API key never reaches the browser.
   `_routes.json` runs that worker only for `/studio/` and `/api/studio/*`; every other page is
   served as a plain static file, exactly as before.
+- Anyone with the link can use it, and every image spends QuiverAI credits. The API only answers
+  requests from the studio page itself, so other websites can't borrow the key.
 - It stays out of search: `noindex`, left out of the sitemap (so Lighthouse doesn't audit it),
-  not linked from the site, and password protected.
+  and not linked from the site.
 
 **Setup (once):** in Cloudflare open *Workers & Pages → gohappyclub-com → Settings → Variables
-and Secrets* and add two **secrets** for Production (and Preview, if you want the studio on
+and Secrets* and add this **secret** for Production (and Preview, if you want the studio on
 preview URLs too):
 
-- `STUDIO_PASSWORD`: the studio's password. The browser asks for it; any username works. Until
-  it's set, the studio answers "locked".
 - `QUIVERAI_API_KEY`: an API key from QuiverAI. A `sk_test_...` sandbox key returns fixed
   sample images for free, which is handy for a first check.
 
 Secrets apply from the next deploy, so push to `main` (or re-run the latest `sites` workflow) after
-adding them. Tests for the worker, with QuiverAI faked, are in `tests/studio.test.mjs`.
+adding it. Tests for the worker, with QuiverAI faked, are in `tests/studio.test.mjs`.

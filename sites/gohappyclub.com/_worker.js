@@ -5,15 +5,15 @@
 // The studio is a small chat that turns product descriptions into SVGs with QuiverAI
 // (https://docs.quiver.ai/api-reference). The API key stays here on the server.
 //
-// Secrets on the Cloudflare Pages project gohappyclub-com (Settings > Variables and Secrets):
-//   STUDIO_PASSWORD   password for the studio (any username). Unset = studio stays locked.
+// The studio is open to anyone. Secret on the Cloudflare Pages project gohappyclub-com
+// (Settings > Variables and Secrets):
 //   QUIVERAI_API_KEY  QuiverAI API key (sk_live_... or a free sk_test_... sandbox key).
 
 const QUIVER = "https://api.quiver.ai/v1";
 const MODELS = ["arrow-2", "arrow-2-telos"];
 const MAX_REFERENCE_CHARS = 8_000_000; // ~6 MB image as base64
 const MAX_SVG_CHARS = 200_000; // QuiverAI's edit limit
-const PRIVATE = { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "private, no-store" };
+const NO_INDEX = { "X-Robots-Tag": "noindex, nofollow", "Cache-Control": "no-store" };
 
 const isStudio = (path) => path === "/studio" || path.startsWith("/studio/") || path.startsWith("/api/studio/");
 
@@ -21,16 +21,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (!isStudio(url.pathname)) return env.ASSETS.fetch(request);
-
-    if (!env.STUDIO_PASSWORD) {
-      return text(503, "The studio is locked until STUDIO_PASSWORD is set on the Cloudflare Pages project.");
-    }
-    if (!(await authorized(request, env.STUDIO_PASSWORD))) {
-      return new Response("Password required.", {
-        status: 401,
-        headers: { ...PRIVATE, "WWW-Authenticate": 'Basic realm="Happy Club studio", charset="UTF-8"' },
-      });
-    }
 
     if (url.pathname.startsWith("/api/studio/")) {
       try {
@@ -42,17 +32,16 @@ export default {
 
     const page = await env.ASSETS.fetch(request);
     const res = new Response(page.body, page);
-    for (const [k, v] of Object.entries(PRIVATE)) res.headers.set(k, v);
+    for (const [k, v] of Object.entries(NO_INDEX)) res.headers.set(k, v);
     return res;
   },
 };
 
 async function api(request, env, url) {
   if (request.method !== "POST") return json(405, { error: "Use POST." });
-  // The browser sends the saved password with every request, so only accept calls made by the
-  // studio page itself (same origin, JSON body) and not by forms on other sites.
-  const origin = request.headers.get("Origin");
-  if (origin && origin !== url.origin) return json(403, { error: "Cross-site requests are not allowed." });
+  // Only the studio page itself may call this (browsers always send Origin on a POST), so other
+  // websites can't use it as a free QuiverAI proxy.
+  if (request.headers.get("Origin") !== url.origin) return json(403, { error: "Only the studio page can use this." });
   if (!(request.headers.get("Content-Type") ?? "").includes("application/json")) {
     return json(415, { error: "Send JSON." });
   }
@@ -130,29 +119,6 @@ function quiverError(status, data) {
   return known[status] ?? data.message ?? `QuiverAI returned an error (${status}).`;
 }
 
-async function authorized(request, password) {
-  const header = request.headers.get("Authorization") ?? "";
-  if (!header.startsWith("Basic ")) return false;
-  let decoded;
-  try {
-    decoded = atob(header.slice(6).trim());
-  } catch {
-    return false;
-  }
-  const given = decoded.slice(decoded.indexOf(":") + 1); // any username works
-  return sameSecret(given, password);
-}
-
-/** Constant-time comparison of two strings (compares their SHA-256 hashes). */
-async function sameSecret(a, b) {
-  const hash = async (s) => new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
-  const [x, y] = await Promise.all([hash(a), hash(b)]);
-  let diff = 0;
-  for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
-  return diff === 0;
-}
-
 const clean = (s, max) => (typeof s === "string" ? s.trim().slice(0, max) : "");
 const json = (status, body) =>
-  new Response(JSON.stringify(body), { status, headers: { ...PRIVATE, "Content-Type": "application/json; charset=utf-8" } });
-const text = (status, body) => new Response(body, { status, headers: { ...PRIVATE, "Content-Type": "text/plain; charset=utf-8" } });
+  new Response(JSON.stringify(body), { status, headers: { ...NO_INDEX, "Content-Type": "application/json; charset=utf-8" } });

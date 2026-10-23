@@ -1,0 +1,278 @@
+---
+title: Product Image Studio
+description: "Private Happy Club tool: describe a custom hat, tote bag, blanket or pair of socks and get product images back as editable SVG files."
+permalink: /studio/
+layout: default
+noindex: true
+sitemap: false
+cta: false
+---
+<style>
+.studio { max-width: 60rem; padding: 2rem 0 1rem; }
+.studio h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.4rem); margin-bottom: .5rem; }
+.studio-intro { color: var(--muted); margin: 0 0 1.5rem; max-width: var(--measure); }
+.studio-log { list-style: none; margin: 0 0 1.5rem; padding: 0; display: grid; gap: 1rem; }
+.studio-log:empty { display: none; }
+.msg { border-radius: var(--radius); padding: .9rem 1rem; }
+.msg-user { background: var(--soft); justify-self: end; max-width: 42rem; }
+.msg-user p { margin: 0; white-space: pre-wrap; }
+.msg-user img { display: block; max-height: 6rem; width: auto; margin-top: .5rem; border-radius: .4rem; }
+.msg-bot { border: 1px solid var(--line); }
+.msg-bot > p { margin: 0 0 .75rem; color: var(--muted); font-size: .95rem; }
+.msg-error { border-color: #b91c1c; color: #7f1d1d; }
+.msg-error > p { color: inherit; margin: 0; }
+.svgs { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); }
+.svg-card { margin: 0; border: 2px solid var(--line); border-radius: var(--radius); padding: .5rem; background: #fff; }
+.svg-card.is-selected { border-color: var(--brand); }
+.svg-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; }
+.svg-card figcaption { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .5rem; }
+.svg-card button, .studio-bar button.link { font: inherit; font-size: .85rem; padding: .3rem .6rem; border: 1px solid var(--line); border-radius: .4rem; background: #fff; color: var(--ink); cursor: pointer; }
+.svg-card button:hover, .studio-bar button.link:hover { border-color: var(--brand); }
+.studio-form { background: var(--bg); border-top: 1px solid var(--line); padding: 1rem 0; }
+@media (min-height: 50rem) and (min-width: 48rem) { .studio-form { position: sticky; bottom: 0; } }
+.studio-form textarea { max-width: none; resize: vertical; }
+.studio-form label { display: block; margin-bottom: .35rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 .75rem; padding: 0; border: 0; }
+.chips legend { font-weight: 600; margin-bottom: .35rem; }
+.chips[hidden] { display: none; }
+.chips label { display: inline-flex; align-items: center; gap: .3rem; margin: 0; font-weight: 400; border: 1px solid var(--line); border-radius: 999px; padding: .25rem .8rem; cursor: pointer; }
+.chips input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.chips label:has(input:focus-visible) { outline: 3px solid var(--brand); outline-offset: 2px; }
+.chips label:has(input:checked) { border-color: var(--brand); background: var(--soft); font-weight: 600; }
+.studio-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-top: .75rem; }
+.studio-mode { font-size: .95rem; color: var(--muted); }
+.studio-bar .btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+.studio-bar .btn[disabled] { opacity: .6; cursor: wait; }
+.studio-options { margin-top: .75rem; }
+.studio-options summary { cursor: pointer; font-weight: 600; }
+.studio-options .grid { display: grid; gap: .75rem 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); margin-top: .75rem; }
+.studio-options .wide { grid-column: 1 / -1; }
+.dots::after { content: "…"; animation: dots 1.2s steps(4) infinite; display: inline-block; width: 1.2em; overflow: hidden; vertical-align: bottom; }
+@keyframes dots { from { width: 0 } to { width: 1.2em } }
+@media (prefers-reduced-motion: reduce) { .dots::after { animation: none; } }
+</style>
+
+<div class="studio">
+  <h1>Product Image Studio</h1>
+  <p class="studio-intro">Describe a product and QuiverAI draws it as an SVG. Pick the option you like, then keep chatting to change it ("make the cap red", "add a small star on the side"). Download the SVG when it looks right.</p>
+
+  <ol id="log" class="studio-log" aria-live="polite"></ol>
+
+  <form id="composer" class="studio-form">
+    <fieldset class="chips" id="products">
+      <legend>Product</legend>
+      <label><input type="radio" name="product" value="hat" checked> Hat</label>
+      <label><input type="radio" name="product" value="tote"> Tote bag</label>
+      <label><input type="radio" name="product" value="blanket"> Blanket</label>
+      <label><input type="radio" name="product" value="socks"> Socks</label>
+      <label><input type="radio" name="product" value="other"> Anything else</label>
+    </fieldset>
+    <label for="prompt">Your message</label>
+    <textarea id="prompt" name="prompt" rows="3" required placeholder="A navy dad hat with a smiling yellow sun embroidered on the front"></textarea>
+    <div class="studio-bar">
+      <span id="mode" class="studio-mode">New image</span>
+      <span>
+        <button type="button" id="restart" class="link" hidden>Start a new image</button>
+        <button type="submit" id="send" class="btn">Send</button>
+      </span>
+    </div>
+    <details class="studio-options">
+      <summary>Options</summary>
+      <div class="grid">
+        <div>
+          <label for="count">Options per new image</label>
+          <select id="count" name="count">
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        <div>
+          <label for="model">QuiverAI model</label>
+          <select id="model" name="model">
+            <option value="arrow-2" selected>Arrow 2</option>
+            <option value="arrow-2-telos">Arrow 2 Telos</option>
+          </select>
+        </div>
+        <div>
+          <label for="reference">Reference image (optional)</label>
+          <input id="reference" name="reference" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml">
+        </div>
+        <div class="wide">
+          <label for="style">Style guide sent with every new image</label>
+          <textarea id="style" name="style" rows="3"></textarea>
+        </div>
+      </div>
+    </details>
+  </form>
+</div>
+
+{% raw %}
+<script>
+(() => {
+  const STYLE = "Product illustration for the Happy Club online store. Show the product alone, centered, " +
+    "in a friendly three-quarter view with flat colors and soft simple shading. Plain or transparent background, " +
+    "no scene, no mockup frame, and no words unless the message asks for them.";
+  const PRODUCTS = {
+    hat: "a custom baseball cap (dad hat style)",
+    tote: "a custom canvas tote bag",
+    blanket: "a custom woven throw blanket, folded or draped",
+    socks: "a pair of custom crew socks",
+    other: "",
+  };
+  const KEY = "happy-club-studio-v1";
+  const $ = (id) => document.getElementById(id);
+  const log = $("log"), form = $("composer"), promptBox = $("prompt"), send = $("send");
+  const mode = $("mode"), restart = $("restart"), styleBox = $("style");
+
+  // Chat state: [{ role: "user", text, ref? } | { role: "bot", svgs: [...], note } | { role: "error", text }]
+  let state = { messages: [], selected: null }; // selected: { m: message index, i: svg index }
+  try { state = JSON.parse(localStorage.getItem(KEY)) || state; } catch {}
+  try { styleBox.value = localStorage.getItem(KEY + "-style") || STYLE; } catch { styleBox.value = STYLE; }
+  styleBox.addEventListener("change", () => { try { localStorage.setItem(KEY + "-style", styleBox.value); } catch {} });
+
+  function save() {
+    const copy = { ...state, messages: state.messages.map(({ ref, ...m }) => m) }; // reference images are too big to keep
+    for (;;) {
+      try { localStorage.setItem(KEY, JSON.stringify(copy)); return; } catch {
+        if (copy.messages.length < 3) return;
+        copy.messages.splice(0, 2); // full: drop the oldest exchange
+        if (copy.selected) copy.selected = copy.selected.m >= 2 ? { ...copy.selected, m: copy.selected.m - 2 } : null;
+      }
+    }
+  }
+
+  const selectedSvg = () => state.selected && state.messages[state.selected.m]?.svgs?.[state.selected.i];
+
+  function svgUrl(svg) { return URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" })); }
+
+  function el(tag, props = {}, ...children) {
+    const node = Object.assign(document.createElement(tag), props);
+    node.append(...children.filter((c) => c != null));
+    return node;
+  }
+
+  function render() {
+    for (const img of log.querySelectorAll("img[data-blob]")) URL.revokeObjectURL(img.src);
+    log.replaceChildren(...state.messages.map((msg, m) => {
+      if (msg.role === "user") {
+        return el("li", { className: "msg msg-user" }, el("p", { textContent: msg.text }),
+          msg.ref ? el("img", { src: msg.ref, alt: "Reference image" }) : null);
+      }
+      if (msg.role === "error") {
+        return el("li", { className: "msg msg-bot msg-error", role: "alert" }, el("p", { textContent: msg.text }));
+      }
+      if (msg.role === "pending") {
+        return el("li", { className: "msg msg-bot" }, el("p", { className: "dots", textContent: msg.text }));
+      }
+      const cards = msg.svgs.map((svg, i) => {
+        const chosen = state.selected?.m === m && state.selected?.i === i;
+        const img = el("img", { src: svgUrl(svg), alt: `Option ${i + 1} for: ${msg.prompt ?? "product image"}`, width: 400, height: 400 });
+        img.dataset.blob = "1";
+        const pick = el("button", { type: "button", textContent: chosen ? "Working on this" : "Keep working on this" });
+        pick.addEventListener("click", () => { state.selected = { m, i }; save(); render(); promptBox.focus(); });
+        const dl = el("button", { type: "button", textContent: "Download SVG" });
+        dl.addEventListener("click", () => {
+          const a = el("a", { href: svgUrl(svg), download: `${slug(msg.prompt)}-${i + 1}.svg` });
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        });
+        const copy = el("button", { type: "button", textContent: "Copy SVG code" });
+        copy.addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(svg); copy.textContent = "Copied"; } catch { copy.textContent = "Couldn't copy"; }
+          setTimeout(() => (copy.textContent = "Copy SVG code"), 1500);
+        });
+        return el("figure", { className: "svg-card" + (chosen ? " is-selected" : "") }, img, el("figcaption", {}, pick, dl, copy));
+      });
+      return el("li", { className: "msg msg-bot" }, el("p", { textContent: msg.note }), el("div", { className: "svgs" }, ...cards));
+    }));
+    const editing = selectedSvg();
+    mode.textContent = editing ? "Changing the highlighted image. Say what to change." : "New image";
+    $("products").hidden = !!editing;
+    promptBox.placeholder = editing ? "Make the cap red and add a small star on the side" : "A navy dad hat with a smiling yellow sun embroidered on the front";
+    restart.hidden = !editing && !state.messages.length;
+    restart.textContent = editing ? "Start a new image" : "Clear chat";
+  }
+
+  const slug = (s = "") => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 50) || "happy-club";
+
+  function readFile(file) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+      r.readAsDataURL(file);
+    });
+  }
+
+  restart.addEventListener("click", () => {
+    if (selectedSvg()) state.selected = null;
+    else state = { messages: [], selected: null };
+    save(); render(); promptBox.focus();
+  });
+
+  promptBox.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = promptBox.value.trim();
+    if (!text || send.disabled) return;
+    const file = $("reference").files[0];
+    let ref = "";
+    if (file) {
+      if (file.size > 6e6) { state.messages.push({ role: "error", text: "That reference image is over 6 MB. Try a smaller one." }); render(); return; }
+      ref = await readFile(file);
+    }
+    const editing = selectedSvg();
+    const product = PRODUCTS[form.elements.product.value];
+    const body = editing
+      ? { prompt: text, svg: editing, model: $("model").value, reference: ref }
+      : {
+          prompt: product ? `${text}\n\nThe product is ${product}.` : text,
+          instructions: styleBox.value.trim(),
+          n: Number($("count").value),
+          model: $("model").value,
+          reference: ref,
+        };
+
+    state.messages.push({ role: "user", text, ref: ref || undefined });
+    state.messages.push({ role: "pending", text: editing ? "Changing the image" : "Drawing" });
+    promptBox.value = "";
+    $("reference").value = "";
+    send.disabled = true;
+    render();
+    form.parentElement.scrollIntoView({ block: "end", behavior: "smooth" });
+
+    let reply;
+    try {
+      const res = await fetch(editing ? "/api/studio/edit" : "/api/studio/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({ error: `The studio returned an error (${res.status}).` }));
+      reply = res.ok
+        ? { role: "bot", svgs: data.svgs, prompt: text,
+            note: editing ? "Here's the changed version." : data.svgs.length > 1 ? `Here are ${data.svgs.length} options. Pick one to keep working on it.` : "Here's your image." }
+        : { role: "error", text: data.error || `The studio returned an error (${res.status}).` };
+    } catch (err) {
+      reply = { role: "error", text: `Couldn't reach the studio: ${err.message}` };
+    }
+    state.messages.pop(); // the "Drawing…" placeholder
+    state.messages.push(reply);
+    if (reply.role === "bot" && reply.svgs.length === 1) state.selected = { m: state.messages.length - 1, i: 0 };
+    send.disabled = false;
+    save(); render();
+    form.parentElement.scrollIntoView({ block: "end", behavior: "smooth" });
+    promptBox.focus();
+  });
+
+  // A reload in the middle of a request leaves a placeholder behind; drop it.
+  state.messages = state.messages.filter((m) => m.role !== "pending");
+  render();
+})();
+</script>
+{% endraw %}

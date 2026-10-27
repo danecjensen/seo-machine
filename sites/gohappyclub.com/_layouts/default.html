@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preload" href="/assets/fonts/Yq6W-LOTXCb04q32xlpwu8ZfvRIkSQ.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/_Xms-HUzqDCFdgfMm4S9DaRvzig.woff2" as="font" type="font/woff2" crossorigin>
+{% seo %}
+<meta name="theme-color" content="{{ site.theme_color | default: '#ffffff' }}">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+{% if collections.posts.size > 0 %}<link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="/feed.xml">{% endif %}
+{% capture css %}{% include css/base.css %}{% endcapture %}
+<style>{{ css | cssmin }}{% if site.colors %}:root{ {{- site.colors | css_vars -}} }{% endif %}{{ design.css }}</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+{% include header.html %}
+{% include breadcrumbs.html %}
+<main id="main" class="wrap">
+{{ content }}
+</main>
+{% include footer.html %}
+</body>
+</html>

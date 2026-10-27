@@ -10,9 +10,9 @@ logo: /assets/logo.png
 image:
   path: /assets/monsters/happy-club-monster-group-studio.webp
   alt: Happy Club creative collective with custom caps, canvas totes, graphic socks and woven throws
-theme_color: "#c2410c"
+theme_color: "#FF6620"
 colors:
-  brand: "#c2410c"
+  brand: "#FF6620"
 
 goals:
   primary: Email signups from people interested in creating custom products

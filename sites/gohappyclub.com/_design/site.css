@@ -1,0 +1,88 @@
+/* Clover v4: flat blocks, square edges, black outlines, wide capitals. */
+body { font-size:16px; line-height:1.5; }
+a { color:var(--ink); }
+:focus-visible { outline:3px solid var(--ink); outline-offset:5px; }
+.wrap { max-width:1280px; padding-inline:32px; }
+h1,h2,h3 { letter-spacing:0; }
+h1,h2 { text-transform:uppercase; font-weight:800; overflow-wrap:anywhere; }
+h1 { font-size:clamp(32px,4.5vw,64px); line-height:.95; }
+h2 { font-size:clamp(24px,3vw,44px); line-height:1; margin-bottom:32px; }
+h3 { font-family:var(--font); font-size:18px; font-weight:700; }
+.site-header { border-bottom:2px solid var(--ink); background:var(--bg); }
+.bar { min-height:104px; gap:24px; }
+.site-header .brand { padding:0!important; display:block; flex:none; }
+.brand-logo { display:block; width:142px; height:auto; }
+.site-header ul { gap:24px; }
+.site-header nav a { font-weight:700; }
+.site-header a[aria-current] { color:var(--ink); text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:6px; }
+.btn { border:2px solid var(--ink); border-radius:0; color:var(--ink); font-family:var(--font); font-size:15px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:12px 20px; cursor:pointer; transition:transform 140ms cubic-bezier(.2,.9,.3,1.2),background 140ms; }
+.btn:hover { filter:none; background:#E8550F; transform:translate(2px,2px); }
+.lede { font-size:18px; line-height:1.5; max-width:48ch; }
+.wf-section { margin-top:80px; }
+.wf-section:first-child { margin-top:0; padding-block:64px; border-bottom:2px solid var(--ink); }
+.wf-section:first-child > .wf-row { align-items:center; gap:32px; }
+.wf-section:first-child h1::before { content:'GOOD THINGS. YOUR LOGO.'; display:block; font-size:11px; line-height:1.4; letter-spacing:1px; margin-bottom:24px; }
+.wf-section:first-child .media { border:2px solid var(--ink); background:var(--mint); }
+.wf-section:first-child .wf-col:last-child { position:relative; }
+.club-rings { display:flex; margin:0 0 20px; height:42px; padding-left:2px; pointer-events:none; }
+.club-rings i { display:block; width:66px; height:42px; border:3px solid var(--ink); border-radius:50%; margin-left:-2px; }
+.club-rings i + i { margin-left:-22px; }
+.media { border-radius:0; background:var(--aqua); }
+.media.monster-art { background:var(--aqua); }
+.monster-motion img { animation:none; }
+.monster-motion-control { display:none; }
+.cards { gap:0; }
+.product-card { border:2px solid var(--ink); background:var(--surface); padding:16px; height:100%; }
+.product-card + .product-card { border-left:0; }
+.product-card h2,.product-card h3 { font:700 18px/1.25 var(--font); text-transform:none; margin:20px 0 8px; }
+.product-card p { font-size:15px; }
+.product-card a::before { content:'↗'; float:right; font-size:22px; }
+.product-card:hover a { color:var(--ink); }
+.product-card:hover .media { background:var(--mint); }
+.wf-panel,.card { border:2px solid var(--ink); border-radius:0; padding:24px; background:var(--aqua); }
+.wf-panel h3 { font:700 18px/1.25 var(--font); }
+.tags li { border:2px solid var(--ink); font:700 12px/1.4 var(--font-heading); padding:8px 12px; }
+.steps { gap:0; }
+.steps li { border:2px solid var(--ink); padding:24px; background:var(--sunshine); height:100%; }
+.steps li + li { border-left:0; }
+.steps li::before { font:800 28px/1 var(--font-heading); color:var(--ink); margin-bottom:24px; }
+.steps h3 { margin-bottom:12px; }
+.cta { background:var(--mint); border:0; border-radius:0; padding:32px; max-width:none; }
+.cta-title { font:700 clamp(20px,2.6vw,28px)/1.15 var(--font-heading); text-transform:uppercase; }
+.wf-panel:has(.cta) { padding:0; border:2px solid var(--ink); background:var(--mint); }
+.faq { max-width:800px; }
+.faq details { border-bottom:2px solid var(--ink); padding:20px 0; }
+.faq summary { font-size:18px; }
+input,select,textarea { border:2px solid var(--ink); border-radius:0; background:white; color:var(--ink); padding:12px 14px; }
+.page-head { max-width:100%; padding-top:64px; }
+.prose { max-width:76ch; }
+.site-footer { margin-top:80px; padding:32px 0; border-top:2px solid var(--ink); background:var(--brand); color:var(--ink); }
+.site-footer a { color:var(--ink); }
+.footer-top { display:flex; align-items:end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:40px; }
+.footer-wordmark { font:800 clamp(28px,5vw,64px)/1 var(--font-heading); text-transform:uppercase; margin:0; }
+.footer-tagline { max-width:28ch; margin:0; }
+@media(max-width:767px) {
+ .wrap { padding-inline:20px; } .bar { padding-block:20px; } .brand-logo { width:110px; }
+ .site-header nav { width:100%; } .site-header ul { gap:12px 20px; justify-content:space-between; }
+ .site-header nav .btn { font-size:12px; padding:10px 12px; }
+ .wf-section { margin-top:48px; } .wf-section:first-child { padding-block:40px; }
+ .product-card + .product-card { border-left:2px solid var(--ink); }
+ .cards { gap:16px; } .steps { gap:16px; } .steps li + li { border-left:2px solid var(--ink); }
+ .wf-col.span-3 { grid-column:span 12; } .cta { padding:24px; }
+ .site-footer { margin-top:48px; }
+}
+@media(prefers-reduced-motion:reduce) { .btn { transition:none; } }
+
+/* Compact signature keeps navigation and the first headline visible on phones. */
+.site-header a.brand { display:flex; align-items:center; gap:12px; }
+.brand-logo { width:72px; height:72px; }
+.brand span { font:800 14px/1.15 var(--font-heading); }
+@media(max-width:767px) {
+ .bar { gap:16px; }
+ .brand-logo { width:56px; height:56px; }
+ .brand span { font-size:12px; }
+ .site-header nav { width:100%; }
+ .site-header ul { gap:12px; }
+ .site-header nav a { font-size:13px; }
+ .site-header nav .btn { font-size:10px; padding:10px; }
+}

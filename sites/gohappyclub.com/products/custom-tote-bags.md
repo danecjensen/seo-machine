@@ -7,12 +7,12 @@ nav_title: "Custom tote bags"
 lede: "Cotton and canvas totes printed with your logo, for conferences, stores and giveaways."
 summary: "Cotton and canvas totes, screen printed with your logo."
 image:
-  path: /assets/monsters/custom-tote-bags-monster-studio.webp
-  thumbnail: /assets/monsters/custom-tote-bags-monster-studio-card.webp
+  path: /assets/monsters/custom-tote-bags-monster-logo.webp
+  thumbnail: /assets/monsters/custom-tote-bags-monster-logo-card.webp
   animated: true
   width: 1024
   height: 1024
-  alt: "A composed violet three-eyed monster carrying a cream canvas tote with an abstract graphic mark."
+  alt: "An orange three-eyed monster carrying a white canvas tote with a bold black asterisk."
 order: 2
 highlights:
   - "Cotton, canvas and gusseted styles"

@@ -7,12 +7,12 @@ nav_title: "Custom hats"
 lede: "Caps, dad hats, trucker hats and beanies with your logo, embroidered or printed."
 summary: "Caps, dad hats, trucker hats and beanies with your logo embroidered or printed."
 image:
-  path: /assets/monsters/custom-hats-monster-studio.webp
-  thumbnail: /assets/monsters/custom-hats-monster-studio-card.webp
+  path: /assets/monsters/custom-hats-monster-logo.webp
+  thumbnail: /assets/monsters/custom-hats-monster-logo-card.webp
   animated: true
   width: 1024
   height: 1024
-  alt: "A confident turquoise cyclops in a coral embroidered cap, illustrated in a refined 2D editorial style."
+  alt: "A confident green cyclops wearing an orange cap with a white embroidered asterisk."
 order: 1
 highlights:
   - "Embroidered, printed or patch logos"

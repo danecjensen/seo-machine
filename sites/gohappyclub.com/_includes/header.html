@@ -1,0 +1,6 @@
+<header class="site-header">
+ <div class="wrap bar">
+  <a class="brand" href="/" aria-label="Happy Club home"><img class="brand-logo" src="/assets/logo.png" width="72" height="72" alt=""><span>GO HAPPY<br>CLUB</span></a>
+  <nav aria-label="Main"><ul>{% for item in navigation %}<li><a href="{{ item.url }}"{% if item.url == page.url %} aria-current="page"{% endif %}>{{ item.title }}</a></li>{% endfor %}<li><a class="btn" href="{{ site.goals.cta.url }}">{{ site.goals.cta.text }}</a></li></ul></nav>
+ </div>
+</header>

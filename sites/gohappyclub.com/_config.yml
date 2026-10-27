@@ -8,7 +8,7 @@ locale: en_US
 title_format: "{title} | {site}"
 logo: /assets/logo.png
 image:
-  path: /assets/monsters/happy-club-monster-group-logo.webp
+  path: /assets/monsters/happy-club-monster-group-studio.webp
   alt: Happy Club creative collective with custom caps, canvas totes, graphic socks and woven throws
 theme_color: "#c2410c"
 colors:

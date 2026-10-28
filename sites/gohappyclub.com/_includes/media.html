@@ -5,7 +5,7 @@ eager=true for the first image on screen, which must not lazy-load.{% endcomment
 {% if include.thumbnail and include.image.thumbnail %}{% assign media_src = include.image.thumbnail %}{% endif %}
 {% assign media_alt = include.image.alt | default: include.alt | default: include.label %}
 <figure class="media r{{ include.ratio | default: '1x1' }}{% if include.image.animated %} monster-art{% if include.eager %} monster-motion{% endif %}{% endif %}">
-  {% if media_src %}<img src="{{ media_src }}" alt="{{ media_alt }}"{% if include.image.width and include.image.height %} width="{{ include.image.width }}" height="{{ include.image.height }}"{% endif %}{% if include.eager or include.priority %} fetchpriority="high"{% endif %}>
+  {% if media_src %}<img src="{{ media_src }}" alt="{{ media_alt }}"{% if include.image.srcset %} srcset="{{ include.image.srcset }}" sizes="{{ include.image.sizes }}"{% endif %}{% if include.image.width and include.image.height %} width="{{ include.image.width }}" height="{{ include.image.height }}"{% endif %}{% if include.eager or include.priority %} fetchpriority="high"{% endif %}>
   {% else %}<span class="media-placeholder">[Placeholder: {{ include.label }}]</span>{% endif %}
   {% if include.image.animated and include.eager %}<label class="monster-motion-control"><input type="checkbox"> Pause animation</label>{% endif %}
 </figure>

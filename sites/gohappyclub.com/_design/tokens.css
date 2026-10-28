@@ -1,6 +1,6 @@
 /* Clover v4. Self-hosted latin variable fonts; licenses alongside this file. */
 @font-face { font-family:'Figtree';font-style:normal;font-weight:400 800;font-display:optional;src:url('/assets/fonts/_Xms-HUzqDCFdgfMm4S9DaRvzig.woff2') format('woff2'); }
-@font-face { font-family:'Unbounded';font-style:normal;font-weight:700 800;font-display:optional;src:url('/assets/fonts/Yq6W-LOTXCb04q32xlpwu8ZfvRIkSQ.woff2') format('woff2'); }
+@font-face { font-family:'Unbounded';font-style:normal;font-weight:700 800;font-display:optional;src:url('/assets/fonts/unbounded-club.woff2') format('woff2'); }
 /* Clover v4 — Club. Source: clover-v4.md. Fonts are self-hosted. */
 :root {
  --bg:#F5F1EA; --surface:#fff; --ink:#111111; --muted:#4A4A45;

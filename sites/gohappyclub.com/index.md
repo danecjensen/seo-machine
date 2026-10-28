@@ -9,6 +9,8 @@ lede: "Hats, tote bags, blankets and socks made with your logo, for teams, brand
 layout: home
 image:
   path: /assets/monsters/happy-club-monster-group-studio.webp
+  srcset: "/assets/monsters/happy-club-monster-group-studio-480.webp 480w, /assets/monsters/happy-club-monster-group-studio-720.webp 720w, /assets/monsters/happy-club-monster-group-studio.webp 960w"
+  sizes: "(min-width: 1280px) 488px, (min-width: 768px) 40vw, calc(100vw - 44px)"
   width: 960
   height: 720
   alt: "A creative collective of colorful monsters showing custom caps, canvas totes, graphic socks, and a geometric woven throw."

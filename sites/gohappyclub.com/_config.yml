@@ -49,6 +49,10 @@ defaults:
 wireframes:
   product: /products/custom-hats/
 
+# IndexNow: production deploys tell Bing (and DuckDuckGo, Copilot), Yandex and others which pages
+# changed. Public key, published at /<key>.txt. See lib/indexnow.mjs.
+indexnow_key: 1257c312a493fca042d79e477e8cea71
+
 # Cloudflare Pages project gohappyclub-com. Both domains are attached on production deploys;
 # www is redirected to the bare domain with a Cloudflare Redirect Rule (see README).
 cloudflare:

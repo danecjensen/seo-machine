@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { pagesProject, validProject } from "../lib/cloudflare.mjs";
+import { ENDPOINT, payload, sitemapUrls } from "../lib/indexnow.mjs";
 import { loadConfig, seoSite } from "../lib/site.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
@@ -102,6 +103,28 @@ async function deploy(domain) {
     const added = await api("POST", `/pages/projects/${project}/domains`, { name });
     if (!added.success) throw new Error(`could not attach ${name}: ${JSON.stringify(added.errors)}`);
     console.log(`  attached custom domain ${name} (${added.result?.status}); DNS may take a few minutes`);
+  }
+  await pingIndexNow(site, out);
+}
+
+/** Production only: tell IndexNow search engines about every page in the sitemap.
+ *  Best effort, so a slow or failing ping never fails the deploy. */
+async function pingIndexNow(site, out) {
+  if (!site.indexnow) return;
+  const body = payload(site.baseUrl, site.indexnow, sitemapUrls(fs.readFileSync(path.join(out, "sitemap.xml"), "utf8")));
+  console.log(`  IndexNow: ${body.urlList.length} URLs`);
+  if (dryRun) return;
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(15000),
+    });
+    // 200/202 = accepted; 403 = key file not reachable yet; 422 = URLs don't match the host.
+    console.log(`  IndexNow: HTTP ${res.status}${res.ok ? "" : ` ${(await res.text()).slice(0, 200)}`}`);
+  } catch (e) {
+    console.log(`  IndexNow: ping failed (${e.message}); the next deploy will try again`);
   }
 }
 

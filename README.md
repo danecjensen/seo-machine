@@ -158,6 +158,12 @@ clean trailing-slash URLs, `sitemap.xml` (with `<lastmod>` from `last_modified_a
 date or the file's last git commit), `robots.txt`, `feed.xml` when the site has posts, and a
 `404.html`.
 
+Add `indexnow_key:` (8-128 letters, digits or hyphens, e.g. `openssl rand -hex 16`) to a site's
+`_config.yml` and every production deploy pings [IndexNow](https://www.indexnow.org) with the
+sitemap's URLs, so Bing, DuckDuckGo, Copilot and Yandex crawl changes within hours. The build
+publishes the key at `/<key>.txt`; it isn't a secret. Google doesn't use IndexNow, so submit the
+sitemap in Google Search Console too.
+
 Pages ship no JavaScript, use a system font stack, and inline one small stylesheet, so nothing
 blocks rendering. Images with a `/path` get their `width` and `height` filled in from the file,
 plus `loading="lazy"`. A typical page is about 9 KB.

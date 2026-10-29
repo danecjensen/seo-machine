@@ -1,0 +1,10 @@
+{% comment %}Image slot. Pass image= (a path, or { path, alt }), label= (what the photo should show) and ratio= (from the
+archetype, e.g. "4x3"). With no image it shows a visible "[Placeholder]" frame of the same shape, so the layout holds.
+eager=true for the first image on screen, which must not lazy-load.{% endcomment %}
+{% assign media_src = include.image.path | default: include.image %}
+{% if include.thumbnail and include.image.thumbnail %}{% assign media_src = include.image.thumbnail %}{% endif %}
+{% assign media_alt = include.image.alt | default: include.alt | default: include.label %}
+<figure class="media r{{ include.ratio | default: '1x1' }}">
+  {% if media_src %}<img src="{{ media_src }}" alt="{{ media_alt }}"{% if include.image.srcset %} srcset="{{ include.image.srcset }}" sizes="{{ include.image.sizes }}"{% endif %}{% if include.image.width and include.image.height %} width="{{ include.image.width }}" height="{{ include.image.height }}"{% endif %}{% if include.eager or include.priority %} fetchpriority="high"{% else %} loading="lazy" decoding="async"{% endif %}>
+  {% else %}<span class="media-placeholder"><span class="media-placeholder-tag">Photo coming soon</span>[Placeholder: {% if include.work %}past order, {% endif %}{{ include.label }}]</span>{% endif %}
+</figure>

@@ -1,0 +1,3 @@
+<ul class="wf-row tiles">
+  {% for s in styles %}<li class="wf-col span-{{ include.span }} wf-panel"><h{{ include.level }}>{{ s.name }}</h{{ include.level }}><p>{{ s.text }}</p></li>{% endfor %}
+</ul>

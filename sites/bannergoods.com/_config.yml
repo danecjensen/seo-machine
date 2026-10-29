@@ -1,0 +1,57 @@
+# Banner Goods: custom promotional products (hats, tote bags, blankets, socks).
+# Goal: email signups from people interested in creating custom products.
+# Design: Craft v2 design system (_design/craft-v2.md), applied to this site only.
+title: Banner Goods
+description: "Custom hats, tote bags, blankets and socks made with your logo, for businesses, teams, schools, nonprofits and events. Banner Goods makes branded merch to order."
+url: https://bannergoods.com
+lang: en
+locale: en_US
+title_format: "{title} | {site}"
+logo: /assets/logo.png
+image:
+  path: /assets/og.png
+  alt: Banner Goods, custom promotional products made with your logo
+theme_color: "#FCF7F4"
+
+goals:
+  primary: Email signups from people interested in creating custom products
+  audience: Businesses, schools, teams, nonprofits and event organizers ordering branded merch
+  keywords: [custom branded merchandise, custom logo hats, custom printed tote bags, custom logo blankets, custom logo socks]
+  cta:
+    text: Start a project
+    title: Planning custom merch? Get ideas and tips by email.
+    url: /signup/
+
+# PLACEHOLDERS: fill these in before launch. Nothing here has been invented.
+contact:
+  form_action: https://formspree.io/f/xojvgbjq   # Formspree form that stores signups (shared with gohappyclub.com for now).
+                     # The form submits in the background and sends people to /thanks/ on this site,
+                     # so the Formspree redirect setting doesn't matter. Empty = signup page shows a placeholder.
+
+# Add telephone, email and address here once they're confirmed, e.g.
+#   telephone: "+1-555-555-5555"
+#   email: hello@bannergoods.com
+organization:
+  type: Organization
+
+defaults:
+  - scope:
+      path: products
+    values:
+      layout: product     # the product page archetype (_layouts/product.html)
+      cta_title: Want this with your logo? Get ideas and tips by email.
+      signup_form: true   # show the email signup form, not just a button
+
+# The page each archetype's wireframe is measured from (npm run wireframe); default: the first page using it.
+wireframes:
+  product: /products/custom-hats/
+
+# IndexNow: production deploys tell Bing, Yandex and others which pages changed. Public key, published at /<key>.txt.
+indexnow_key: de56b8ed7ce94897c00de648b676af53
+
+# Cloudflare Pages project bannergoods-com. Both domains are attached on production deploys;
+# www should redirect to the bare domain with a Cloudflare Redirect Rule (see README).
+cloudflare:
+  project: bannergoods-com
+  productionBranch: main
+  domains: [bannergoods.com, www.bannergoods.com]

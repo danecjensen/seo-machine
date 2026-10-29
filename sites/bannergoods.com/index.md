@@ -10,8 +10,18 @@ lede: "Hats, tote bags, blankets and socks with your logo, made to order for tea
 layout: home
 page_key: home
 products_heading: "What we make"
-work_heading: "Recent work"
-content_image_label: "photo of a Banner Goods order being packed"
+work_heading: "Custom merch, illustrated"
+image:
+  path: /assets/illustrations/merch-collection.svg
+  alt: Illustration of Banner Goods custom hats, totes, blankets and socks arranged together
+  width: 1200
+  height: 900
+content_image:
+  path: /assets/illustrations/order-packing.svg
+  alt: Illustration of a Banner Goods order being packed in a shipping box
+  width: 1200
+  height: 900
+content_image_label: "a Banner Goods order being packed"
 audiences_heading: "Who it's for"
 audiences:
   - title: Businesses

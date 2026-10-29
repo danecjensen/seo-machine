@@ -1,51 +1,90 @@
-# Photos of past Banner Goods orders, shown in the "work" image slots on the home page, the products
-# page and each product page. Every entry is an empty frame until a photo is added:
-#   image: /assets/work/<file>.webp   (put the file in assets/work/; roughly 1200px wide is plenty)
-#   alt: what the photo shows, for screen readers and image search
-#   caption: optional short line under the photo. Only real details (who it was for, with permission).
-# product: which product page shows it (hats, tote-bags, blankets, socks).
-# show: other pages that also show it (home, products).
+# Illustrated product examples. These are design concepts, not customer photographs.
+# product: product page; show: additional pages that display the example.
 - product: hats
   label: embroidered baseball caps
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/embroidered-baseball-caps.svg
+  alt: Illustration of embroidered baseball caps
 - product: tote-bags
   label: screen printed canvas totes
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/screen-printed-canvas-totes.svg
+  alt: Illustration of screen printed canvas totes
 - product: blankets
   label: a woven blanket with a full design
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/woven-design-blanket.svg
+  alt: Illustration of a woven blanket with a full design
 - product: socks
   label: knit crew socks in brand colors
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/brand-color-crew-socks.svg
+  alt: Illustration of knit crew socks in brand colors
 - product: hats
   label: trucker hats with a patch logo
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/patch-trucker-hats.svg
+  alt: Illustration of trucker hats with a patch logo
 - product: tote-bags
   label: cotton conference totes
-  show: [home]
+  show:
+    - home
+  image: /assets/illustrations/cotton-conference-totes.svg
+  alt: Illustration of cotton conference totes
 - product: hats
   label: knit beanies with a woven label
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/woven-label-beanies.svg
+  alt: Illustration of knit beanies with a woven label
 - product: blankets
   label: embroidered fleece blankets
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/embroidered-fleece-blankets.svg
+  alt: Illustration of embroidered fleece blankets
 - product: socks
   label: athletic team socks
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/athletic-team-socks.svg
+  alt: Illustration of athletic team socks
 - product: tote-bags
   label: colored totes with a light print
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/colored-printed-totes.svg
+  alt: Illustration of colored totes with a light print
 - product: blankets
   label: stadium blankets folded with a logo tag
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/logo-tag-stadium-blankets.svg
+  alt: Illustration of stadium blankets folded with a logo tag
 - product: socks
   label: patterned socks packed for a welcome kit
-  show: [products]
+  show:
+    - products
+  image: /assets/illustrations/welcome-kit-socks.svg
+  alt: Illustration of patterned socks packed for a welcome kit
 - product: hats
   label: dad hats with a printed logo
+  image: /assets/illustrations/printed-logo-dad-hats.svg
+  alt: Illustration of dad hats with a printed logo
 - product: tote-bags
   label: gusseted totes used as event bags
+  image: /assets/illustrations/gusseted-event-totes.svg
+  alt: Illustration of gusseted totes used as event bags
 - product: blankets
   label: a throw blanket gift box
+  image: /assets/illustrations/throw-blanket-gift-box.svg
+  alt: Illustration of a throw blanket gift box
 - product: socks
   label: knee-high socks for a team uniform
+  image: /assets/illustrations/knee-high-uniform-socks.svg
+  alt: Illustration of knee-high socks for a team uniform

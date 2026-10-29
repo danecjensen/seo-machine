@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Embroidered fleece blankets</title>
+  <desc id="desc">Generate an SVG of embroidered fleece blankets. Use Banner Goods' Craft palette, a warm paper background, clean dark navy outlines, tactile woven details and an editorial product illustration style. Keep the subject centered with safe margins for square and 4:3 crops. Use only native SVG vectors with no embedded raster images or external resources.</desc>
+  <defs>
+    <pattern id="weave" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M0 2H9M2 0V9" fill="none" stroke="#083C4C" stroke-width=".8" opacity=".11"/></pattern>
+    <pattern id="mesh" width="14" height="14" patternUnits="userSpaceOnUse"><path d="M0 0L14 14M14 0L0 14" stroke="#083C4C" stroke-width="1" opacity=".45"/></pattern>
+    <pattern id="paper" width="29" height="31" patternUnits="userSpaceOnUse"><circle cx="4" cy="8" r="0.9" fill="#083C4C" opacity=".08"/><circle cx="20" cy="24" r="0.7" fill="#083C4C" opacity=".06"/></pattern>
+  </defs>
+  <rect x="0" y="0" width="1200" height="900" rx="0" fill="#E5F0D5" /><rect x="0" y="0" width="1200" height="900" rx="0" fill="url(#paper)" />
+  <path d="M205 735Q600 654 995 735" fill="none" stroke="#083C4C" stroke-width="2" opacity=".10"/>
+  <g transform="translate(225 165) rotate(0) scale(0.525)"><path d="M0-40L10-11 40 0 11 10 0 40-10 11-40 0-11-10Z" fill="#C7A1B6"/></g><circle cx="981" cy="728" r="9" fill="#56ABB9" /><ellipse cx="600" cy="757" rx="302" ry="34" fill="#083C4C" opacity=".10"/><g transform="translate(662 354) rotate(8) scale(1.02)"><defs><clipPath id="blanket-20"><rect x="-232" y="-102.5" width="464" height="205" rx="12" fill="white" /></clipPath></defs>
+    <rect x="-232" y="-102.5" width="464" height="205" rx="12" fill="#083C4C" stroke="#083C4C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <g clip-path="url(#blanket-20)"><rect x="-240" y="-102.5" width="480" height="205" rx="0" fill="url(#weave)" /></g>
+    <g transform="translate(107 4) rotate(0) scale(0.95)"><path d="M0-40L10-11 40 0 11 10 0 40-10 11-40 0-11-10Z" fill="#FCF7F4"/></g>
+    <path d="M-224 73.5L223 73.5" fill="none" stroke="#083C4C" stroke-width="3" opacity=".3"/>
+    <rect x="151" y="53.5" width="61" height="35" rx="3" fill="#FCF7F4" stroke="#083C4C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><text x="181" y="78.5" fill="#083C4C" font-family="sans-serif" font-size="22" font-weight="700" text-anchor="middle" >B</text></g><g transform="translate(532 596) rotate(-9) scale(1.13)"><defs><clipPath id="blanket-21"><rect x="-232" y="-102.5" width="464" height="205" rx="12" fill="white" /></clipPath></defs>
+    <rect x="-232" y="-102.5" width="464" height="205" rx="12" fill="#4AA25E" stroke="#083C4C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <g clip-path="url(#blanket-21)"><rect x="-240" y="-102.5" width="480" height="205" rx="0" fill="url(#weave)" /></g>
+    <g transform="translate(107 4) rotate(0) scale(0.95)"><path d="M0-40L10-11 40 0 11 10 0 40-10 11-40 0-11-10Z" fill="#FCF7F4"/></g>
+    <path d="M-224 73.5L223 73.5" fill="none" stroke="#083C4C" stroke-width="3" opacity=".3"/>
+    <rect x="151" y="53.5" width="61" height="35" rx="3" fill="#FCF7F4" stroke="#083C4C" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><text x="181" y="78.5" fill="#083C4C" font-family="sans-serif" font-size="22" font-weight="700" text-anchor="middle" >B</text></g>
+</svg>

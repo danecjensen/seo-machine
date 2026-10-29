@@ -7,7 +7,12 @@ nav_title: "Custom blankets"
 lede: "Woven throws, fleece and stadium blankets with your logo or a full design."
 summary: "Woven, fleece and stadium blankets with your logo or a full design."
 work_product: blankets
-work_heading: "Custom blankets we've made"
+work_heading: "Custom blanket design ideas"
+image:
+  path: /assets/illustrations/custom-blankets.svg
+  alt: Illustration of custom woven throws and a folded fleece blanket
+  width: 1200
+  height: 900
 order: 3
 highlights:
   - "Woven designs that won't fade or peel"

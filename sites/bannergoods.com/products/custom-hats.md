@@ -7,7 +7,12 @@ nav_title: "Custom hats"
 lede: "Baseball caps, dad hats, trucker hats and beanies, with your logo embroidered, printed or on a patch."
 summary: "Caps, dad hats, trucker hats and beanies with your logo embroidered, printed or patched."
 work_product: hats
-work_heading: "Custom hats we've made"
+work_heading: "Custom hat design ideas"
+image:
+  path: /assets/illustrations/custom-hats.svg
+  alt: Illustration of custom embroidered caps and a cuffed beanie
+  width: 1200
+  height: 900
 order: 1
 highlights:
   - "Embroidery, print or patch, matched to your logo"

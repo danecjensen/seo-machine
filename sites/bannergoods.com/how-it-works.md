@@ -15,7 +15,7 @@ faq:
 
 Ordering custom merch from Banner Goods happens in three steps, and you'll see a proof of exactly what you're getting before anything is made.
 
-{% include work-strip.html label1="a logo proof on a cap" label2="products laid out for approval" label3="a finished order ready to ship" %}
+{% include work-strip.html image1="/assets/illustrations/cap-logo-proof.svg" alt1="Illustration of a logo proof on a cap" label1="a logo proof on a cap" image2="/assets/illustrations/product-approval.svg" alt2="Illustration of products laid out for approval" label2="products laid out for approval" image3="/assets/illustrations/ready-to-ship.svg" alt3="Illustration of a finished order ready to ship" label3="a finished order ready to ship" %}
 
 ## 1. Share your idea
 

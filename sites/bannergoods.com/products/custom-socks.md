@@ -7,7 +7,12 @@ nav_title: "Custom socks"
 lede: "Crew, ankle, athletic and knee-high socks in your brand colors, with your logo knit right in."
 summary: "Crew, ankle, athletic and knee-high socks with your logo knit in."
 work_product: socks
-work_heading: "Custom socks we've made"
+work_heading: "Custom sock design ideas"
+image:
+  path: /assets/illustrations/custom-socks.svg
+  alt: Illustration of custom knit crew and athletic socks in brand colors
+  width: 1200
+  height: 900
 order: 4
 highlights:
   - "Knit-in designs that stay bright"

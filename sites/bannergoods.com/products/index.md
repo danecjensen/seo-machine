@@ -7,7 +7,7 @@ description: "Browse Banner Goods custom products: embroidered logo hats, printe
 nav_title: "Products"
 lede: "Everything we make, finished with your logo and colors."
 page_key: products
-work_heading: "From past orders"
+work_heading: "Ideas for your next order"
 signup_form: false
 cta_title: "Planning custom merch? Get ideas and tips by email."
 ---

@@ -7,7 +7,12 @@ nav_title: "Custom tote bags"
 lede: "Cotton and canvas totes printed with your logo, for conferences, shops, welcome kits and giveaways."
 summary: "Cotton and canvas totes, screen printed with your logo."
 work_product: tote-bags
-work_heading: "Custom totes we've made"
+work_heading: "Custom tote design ideas"
+image:
+  path: /assets/illustrations/custom-tote-bags.svg
+  alt: Illustration of custom printed canvas tote bags with bold graphic designs
+  width: 1200
+  height: 900
 order: 2
 highlights:
   - "Cotton, canvas and gusseted styles"

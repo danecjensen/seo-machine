@@ -1,0 +1,7 @@
+{% comment %}Three photo frames in a row, for use inside a page's Markdown:
+{% include work-strip.html label1="..." label2="..." label3="..." %} (add image1=, alt1= ... once photos exist).{% endcomment %}
+<ul class="wf-row work work-strip">
+  <li class="wf-col span-4">{% include media.html image=include.image1 alt=include.alt1 label=include.label1 ratio="4x3" %}</li>
+  <li class="wf-col span-4">{% include media.html image=include.image2 alt=include.alt2 label=include.label2 ratio="4x3" %}</li>
+  <li class="wf-col span-4">{% include media.html image=include.image3 alt=include.alt3 label=include.label3 ratio="4x3" %}</li>
+</ul>

@@ -1,0 +1,2 @@
+Fraunces and Hanken Grotesk are self-hosted from Google Fonts (latin subset) by `npm run design`.
+Both are licensed under the SIL Open Font License 1.1: https://openfontlicense.org

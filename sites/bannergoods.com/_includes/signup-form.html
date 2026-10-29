@@ -1,0 +1,29 @@
+{% comment %}Email signup form, used by the closing call to action and the /signup/ page.
+Pass id="..." so each form on a page gets unique field ids. Posts to contact.form_action in _config.yml.
+The script sends the form in the background and then opens /thanks/ on this site, so it never matters where
+the Formspree form's own redirect points. Without JavaScript the form still posts normally.{% endcomment %}
+<form class="signup-form" action="{{ site.contact.form_action }}" method="post" data-thanks="/thanks/">
+  <p><label for="{{ include.id }}-email">Email</label><br><input id="{{ include.id }}-email" name="email" type="email" autocomplete="email" required></p>
+  <p><label for="{{ include.id }}-interest">What would you like to make? (optional)</label><br>
+    <select id="{{ include.id }}-interest" name="interest">
+      <option value="">Choose one</option><option>Hats</option><option>Tote bags</option><option>Blankets</option><option>Socks</option><option>Something else</option>
+    </select></p>
+  <input type="hidden" name="_subject" value="New bannergoods.com signup">
+  <input type="hidden" name="site" value="bannergoods.com">
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
+  <p><button class="btn btn-lg" type="submit">{{ site.goals.cta.text }}</button></p>
+  <p class="form-status" role="status" aria-live="polite"></p>
+</form>
+<script>
+document.querySelectorAll("form[data-thanks]:not([data-ready])").forEach(function (f) {
+  f.dataset.ready = "1";
+  f.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var b = f.querySelector("button"), s = f.querySelector(".form-status");
+    b.disabled = true; s.textContent = "Sending...";
+    fetch(f.action, { method: "POST", body: new FormData(f), headers: { Accept: "application/json" } })
+      .then(function (r) { if (!r.ok) throw r; location.href = f.dataset.thanks; })
+      .catch(function () { b.disabled = false; s.textContent = "Something went wrong. Please try again."; });
+  });
+});
+</script>

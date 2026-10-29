@@ -1,0 +1,10 @@
+{% comment %}Photos of past orders from _data/past_work.yml. On a product page: that product's photos
+(work_product: in its front matter). Elsewhere: the photos whose show: list names this page (home, products).{% endcomment %}
+{% assign work_page = page_key | default: "home" %}
+<ul class="wf-row work">
+  {% for item in past_work %}{% if work_product %}{% if item.product == work_product %}{% assign work_show = true %}{% else %}{% assign work_show = false %}{% endif %}{% elsif item.show contains work_page %}{% assign work_show = true %}{% else %}{% assign work_show = false %}{% endif %}
+  {% if work_show %}<li class="wf-col span-{{ include.span }}">
+    {% include media.html image=item.image alt=item.alt label=item.label ratio=include.ratio work=true %}
+    <p class="work-caption">{% if item.caption %}{{ item.caption }}{% else %}<span class="work-tag">{{ item.product | replace: "-", " " }}</span> {{ item.label | capitalize }}{% endif %}</p>
+  </li>{% endif %}{% endfor %}
+</ul>

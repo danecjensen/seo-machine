@@ -1,0 +1,157 @@
+/* Banner Goods in Craft v2 (craft-v2.md): warm paper, crayon-box pale tints, 1px ink outlines, navy pill
+   buttons, folder cards, photo prints held on with washi tape. Hand-written; tokens.css is generated. */
+body { font-size: 16px; line-height: 1.55; }
+a { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1200px; padding-inline: 32px; }
+h1, h2 { font-family: var(--font-display); font-weight: 400; }
+h1 { font-size: clamp(40px, 5.4vw, 72px); line-height: 1; letter-spacing: -1.5px; }
+h1 em, h2 em { font-style: italic; }
+h2 { font-size: clamp(32px, 3.6vw, 48px); line-height: 1.05; letter-spacing: -1px; margin-bottom: 24px; }
+h3 { font-family: var(--font); font-size: 18px; font-weight: 600; line-height: 1.25; }
+.lede { font-size: 19px; line-height: 1.5; color: var(--muted); max-width: 46ch; }
+
+/* Paper grain on large color areas. */
+.grain, .site-footer, .cta, .steps li, .wf-section:first-child { position: relative; isolation: isolate; }
+.grain::after, .site-footer::after, .cta::after, .steps li::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; opacity: .35;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Header: wordmark in the serif with an italic second word, pill nav button. */
+.site-header { border-bottom: 1px solid var(--line); background: var(--bg); }
+.bar { min-height: 80px; gap: 20px; }
+.site-header a.brand { display: flex; align-items: center; gap: 10px; padding: 0 !important; }
+.brand-logo { display: block; width: 40px; height: 40px; }
+.brand span { font: 400 26px/1 var(--font-display); letter-spacing: -.5px; }
+.brand em { font-style: italic; }
+.site-header ul { gap: 8px 24px; }
+.site-header nav a:not(.btn) { font-weight: 500; }
+.site-header a[aria-current] { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent-purple); text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+/* Buttons: navy pill (primary), white outlined pill (secondary). */
+.btn { border: 0; border-radius: 9999px; background: var(--primary); color: var(--on-primary); font: 600 15px/1.2 var(--font); padding: 10px 20px; cursor: pointer; transition: background 160ms, transform 300ms var(--ease-paper); }
+.btn:hover { filter: none; background: var(--primary-pressed); transform: translateY(-1px); }
+.btn-lg { padding: 14px 26px; font-size: 16px; }
+.link-arrow { font-weight: 600; text-decoration: none; border: 1px solid var(--ink); border-radius: 9999px; padding: 13px 24px; background: var(--surface); }
+.link-arrow:hover { background: var(--paper-lilac); }
+
+/* Hero: a sky-paper band with a taped photo print. */
+.wf-section { margin-top: 96px; }
+.wf-section:first-child { margin-top: 0; padding-block: 64px 72px; }
+.wf-section:first-child > .wf-row { align-items: center; gap: 40px; }
+.wf-home .wf-section:first-child h1::before, .wf-collection .wf-section:first-child h1::before { content: "CUSTOM MERCH · MADE TO ORDER"; display: block; width: max-content; margin-bottom: 20px; padding: 3px 12px; border-radius: 9999px; background: var(--paper-butter); font: 500 13px/1.4 var(--font-mono); letter-spacing: 0; }
+
+/* Photo frames: white paper prints with a strip of washi tape, tilting a little on hover. */
+.media { position: relative; border-radius: 4px; overflow: visible; background: var(--surface); padding: 10px; box-shadow: var(--shadow-paper); border: 1px solid var(--line); }
+.media img, .media-placeholder { border-radius: 2px; }
+.media img { height: 100%; }
+.media::before { content: ""; position: absolute; z-index: 1; top: -10px; left: 50%; width: 76px; height: 20px; translate: -50% 0; rotate: -3deg; background: color-mix(in srgb, var(--accent-purple) 70%, transparent); }
+.media-placeholder { flex-direction: column; gap: 6px; border: 1px dashed #A8A097; background: var(--paper-sky); color: var(--ink); font-size: 13px; }
+.media-placeholder-tag { white-space: nowrap; font: 500 12px/1.3 var(--font-mono); background: var(--surface); border: 1px solid var(--ink); border-radius: 9999px; padding: 2px 10px; }
+.wf-section:first-child .media { box-shadow: var(--shadow-panel); rotate: 1.5deg; }
+.wf-section:first-child .media-placeholder { background: var(--paper-lilac); }
+
+/* Past work gallery: prints in pale tints, each tilted its own way. */
+.work { row-gap: 40px; }
+.work li:nth-child(4n+1) .media-placeholder { background: var(--paper-butter); }
+.work li:nth-child(4n+2) .media-placeholder { background: var(--paper-lime); }
+.work li:nth-child(4n+3) .media-placeholder { background: var(--paper-blush); }
+.work li:nth-child(4n+4) .media-placeholder { background: var(--paper-apricot); }
+.work li:nth-child(odd) .media { rotate: -1deg; }
+.work li:nth-child(even) .media { rotate: .8deg; }
+.work li:nth-child(3n) .media::before { background: color-mix(in srgb, var(--secondary-teal) 60%, transparent); }
+.work li:nth-child(3n+2) .media::before { background: color-mix(in srgb, var(--tertiary-yellow) 75%, transparent); }
+.work .media { transition: rotate 300ms var(--ease-paper); }
+.work li:hover .media { rotate: 0deg; }
+.work-caption { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
+.work-tag { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 9999px; background: var(--paper-butter); color: var(--ink); font: 500 12px/1.5 var(--font-mono); }
+.prose .work-strip { margin: 40px 0; padding: 0; }
+.prose .work-strip li { margin: 0; }
+
+/* Product cards are file folders: a tab top left, 1px ink outline, square corners, pale fill. */
+.cards { gap: 40px 24px; }
+.product-card { margin-top: 18px; border: 1px solid var(--ink); background: var(--paper-sky); padding: 14px 14px 18px; height: calc(100% - 18px); transition: rotate 300ms var(--ease-paper); }
+.product-card::before { content: ""; position: absolute; top: -18px; left: -1px; width: 42%; height: 18px; background: inherit; border: 1px solid var(--ink); border-bottom: 0; border-radius: 6px 10px 0 0; }
+.product-card:nth-child(4n+2) { background: var(--paper-lime); }
+.product-card:nth-child(4n+3) { background: var(--paper-lilac); }
+.product-card:nth-child(4n+4) { background: var(--paper-apricot); }
+.product-card:hover { rotate: -1.5deg; }
+.product-card .media { box-shadow: none; padding: 0; border-color: var(--ink); background: var(--surface); }
+.product-card .media::before { display: none; }
+.product-card .media-placeholder { background: var(--surface); }
+.product-card h2, .product-card h3 { font: 600 18px/1.25 var(--font); margin: 16px 0 6px; }
+.product-card p { font-size: 14px; color: var(--ink); }
+.product-card h2 a::before, .product-card h3 a::before { content: "→"; float: right; margin-left: 8px; }
+.product-card:hover a { color: var(--ink); }
+
+/* Panels and tiles: white, soft corners, hairline border. */
+.wf-panel, .card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); padding: 20px; }
+.wf-panel h3 { font: 600 18px/1.25 var(--font); }
+.wf-panel p { color: var(--muted); }
+.tiles .wf-panel:nth-child(4n+1) { background: var(--paper-butter); border-color: transparent; }
+.tiles .wf-panel:nth-child(4n+2) { background: var(--paper-sky); border-color: transparent; }
+.tiles .wf-panel:nth-child(4n+3) { background: var(--paper-blush); border-color: transparent; }
+.tiles .wf-panel:nth-child(4n+4) { background: var(--paper-lime); border-color: transparent; }
+.tiles .wf-panel p { color: var(--ink); }
+
+/* Uses as butter badges in mono. */
+.tags li { border: 1px solid var(--ink); background: var(--paper-butter); font: 500 13px/1.4 var(--font-mono); padding: 4px 12px; }
+.highlights { list-style: none; padding: 0; }
+.highlights li { padding-left: 28px; position: relative; }
+.highlights li::before { content: "✓"; position: absolute; left: 0; top: 1px; width: 20px; height: 20px; border-radius: 50%; background: var(--accent-purple); font-size: 12px; line-height: 20px; text-align: center; }
+
+/* Ordering steps: colored paper sheets with big serif numbers. */
+.steps li { border: 1px solid var(--ink); border-radius: 0; padding: 24px; background: var(--paper-sky); height: 100%; }
+.steps li:nth-child(2) { background: var(--paper-butter); }
+.steps li:nth-child(3) { background: var(--paper-lime); }
+.steps li::before { font: italic 400 44px/1 var(--font-display); color: var(--ink); margin-bottom: 16px; }
+.steps p { color: var(--ink); }
+
+/* Call to action: white panel floating on lilac paper. */
+.cta { background: var(--paper-lilac); border-radius: var(--radius-panel); padding: 40px; max-width: none; box-shadow: var(--shadow-panel); }
+.cta-title { font: 400 clamp(26px, 3vw, 36px)/1.1 var(--font-display); letter-spacing: -.5px; }
+.wf-panel:has(.cta) { padding: 0; border: 0; background: none; }
+.signup-form { max-width: 34rem; }
+.form-status { min-height: 1.4em; margin: 0; font-size: 14px; }
+input, select, textarea { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink); padding: 10px 14px; }
+input:focus-visible, select:focus-visible { outline: 2px solid var(--primary); }
+
+/* FAQ, prose, page heads. */
+.faq { max-width: 800px; }
+.faq details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+.faq summary { font-size: 18px; }
+.page-head { padding-top: 56px; }
+.prose { max-width: 70ch; }
+.prose h2 { font-size: clamp(28px, 3vw, 36px); margin-top: 48px; }
+.placeholder { background: var(--paper-butter); border-left: 0; border-radius: var(--radius); padding: 12px 16px; }
+
+/* Wavy paper strip above the footer, then a navy-free sky footer with ink text. */
+.site-footer { margin-top: 96px; padding: 48px 0 32px; border-top: 0; background: var(--paper-sky); color: var(--ink); font-size: 15px; }
+.site-footer::before { content: ""; position: absolute; left: 0; right: 0; top: -11px; height: 12px; background: radial-gradient(circle at 10px 12px, var(--paper-sky) 10px, transparent 10.5px) 0 0 / 20px 12px repeat-x; }
+.site-footer a { color: var(--ink); }
+.footer-top { display: flex; align-items: end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+.footer-wordmark { font: 400 clamp(36px, 5vw, 64px)/1 var(--font-display); letter-spacing: -1px; margin: 0; }
+.footer-wordmark em { font-style: italic; }
+.footer-tagline { max-width: 30ch; margin: 0; }
+
+@media (max-width: 767px) {
+  .wrap { padding-inline: 16px; }
+  .bar { padding-block: 14px; gap: 12px; }
+  .site-header nav { width: 100%; }
+  .site-header ul { gap: 8px 16px; }
+  .site-header nav a { font-size: 14px; }
+  .site-header nav .btn { padding: 8px 14px; }
+  .wf-section { margin-top: 64px; }
+  .wf-section:first-child { padding-block: 32px 40px; }
+  .wf-section:first-child > .wf-row { column-gap: 16px; row-gap: 40px; }
+  .wf-col.span-3 { grid-column: span 12; }
+  .cta { padding: 24px; }
+  .site-footer { margin-top: 64px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .work .media, .product-card { transition: none; }
+}
+
+/* Full-bleed sky paper behind each page's first section. */
+.wf-section:first-child { background: var(--paper-sky); box-shadow: 0 0 0 100vmax var(--paper-sky); clip-path: inset(0 -100vmax); }

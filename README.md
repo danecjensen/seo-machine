@@ -18,6 +18,7 @@ sites/
     lighthouse.json              optional Lighthouse budget overrides
   plumbing.example/              a local business site; goal: phone calls and bookings
   gohappyclub.com/               Happy Club, custom promotional wearables; goal: email signups
+  bannergoods.com/               Banner Goods, custom merch (Craft v2 design, past-work photo slots); goal: email signups
 theme/                           shared _layouts, _includes, CSS, sitemap, robots, feed, 404
 lib/                             the Eleventy config, SEO tag and SEO check
 scripts/                         build, deploy and new-site commands

@@ -1,0 +1,3 @@
+<ul class="wf-row tiles">
+  {% for a in audiences %}<li class="wf-col span-{{ include.span }} wf-panel"><h{{ include.level }}>{{ a.title }}</h{{ include.level }}><p>{{ a.text }}</p></li>{% endfor %}
+</ul>

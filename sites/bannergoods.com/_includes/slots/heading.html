@@ -1,0 +1,2 @@
+{% assign heading_text = heading | default: title %}{% if heading_em %}{% capture heading_em_html %}<em>{{ heading_em }}</em>{% endcapture %}{% assign heading_text = heading_text | replace: heading_em, heading_em_html %}{% endif %}
+<h{{ include.level | default: 1 }}>{{ heading_text }}</h{{ include.level | default: 1 }}>

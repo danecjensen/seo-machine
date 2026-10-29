@@ -1,0 +1,6 @@
+{% comment %}The ordering steps from _data/process.yml.{% endcomment %}
+<ol class="wf-row steps">
+  {% for step in process %}
+  <li class="wf-col span-{{ include.span }}"><h{{ include.level }}>{{ step.title }}</h{{ include.level }}><p>{{ step.text }}</p></li>
+  {% endfor %}
+</ol>

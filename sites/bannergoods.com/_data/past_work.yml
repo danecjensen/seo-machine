@@ -1,0 +1,51 @@
+# Photos of past Banner Goods orders, shown in the "work" image slots on the home page, the products
+# page and each product page. Every entry is an empty frame until a photo is added:
+#   image: /assets/work/<file>.webp   (put the file in assets/work/; roughly 1200px wide is plenty)
+#   alt: what the photo shows, for screen readers and image search
+#   caption: optional short line under the photo. Only real details (who it was for, with permission).
+# product: which product page shows it (hats, tote-bags, blankets, socks).
+# show: other pages that also show it (home, products).
+- product: hats
+  label: embroidered baseball caps
+  show: [home]
+- product: tote-bags
+  label: screen printed canvas totes
+  show: [home]
+- product: blankets
+  label: a woven blanket with a full design
+  show: [home]
+- product: socks
+  label: knit crew socks in brand colors
+  show: [home]
+- product: hats
+  label: trucker hats with a patch logo
+  show: [home]
+- product: tote-bags
+  label: cotton conference totes
+  show: [home]
+- product: hats
+  label: knit beanies with a woven label
+  show: [products]
+- product: blankets
+  label: embroidered fleece blankets
+  show: [products]
+- product: socks
+  label: athletic team socks
+  show: [products]
+- product: tote-bags
+  label: colored totes with a light print
+  show: [products]
+- product: blankets
+  label: stadium blankets folded with a logo tag
+  show: [products]
+- product: socks
+  label: patterned socks packed for a welcome kit
+  show: [products]
+- product: hats
+  label: dad hats with a printed logo
+- product: tote-bags
+  label: gusseted totes used as event bags
+- product: blankets
+  label: a throw blanket gift box
+- product: socks
+  label: knee-high socks for a team uniform

@@ -35,7 +35,7 @@ uses:
   - "Premium event giveaways"
 ---
 
-A custom blanket is premium merch that people hold on to. It ends up on the couch, in the car or wrapped around someone at a game, with your logo front and center for years.
+A custom blanket is premium merch that people hold on to. It ends up on the couch, in the car or wrapped around someone at a game, with your logo front and center for years. Blankets have been part of what we make since 2010.
 
 ## Designing your blanket
 

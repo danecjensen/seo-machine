@@ -2,7 +2,7 @@
 # Goal: email signups from people interested in creating custom products.
 # Design: Craft v2 design system (_design/craft-v2.md), applied to this site only.
 title: Banner Goods
-description: "Custom hats, tote bags, blankets and socks made with your logo, for businesses, teams, schools, nonprofits and events. Banner Goods makes branded merch to order."
+description: "Since 2010, Banner Goods has made custom hats, tote bags, blankets and socks with your logo for businesses, teams, schools, nonprofits and events."
 url: https://bannergoods.com
 lang: en
 locale: en_US
@@ -12,6 +12,7 @@ image:
   path: /assets/og.png
   alt: Banner Goods, custom promotional products made with your logo
 theme_color: "#FCF7F4"
+founded: 2010
 
 goals:
   primary: Email signups from people interested in creating custom products
@@ -33,6 +34,7 @@ contact:
 #   email: hello@bannergoods.com
 organization:
   type: Organization
+  foundingDate: "2010"
 
 defaults:
   - scope:

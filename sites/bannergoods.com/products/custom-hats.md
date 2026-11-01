@@ -38,7 +38,7 @@ uses:
   - "Merch to sell"
 ---
 
-A hat is one of the most-worn pieces of branded merch you can give. A good cap becomes the one people grab on the way out the door, season after season, with your logo right up front.
+A hat is one of the most-worn pieces of branded merch you can give. A good cap becomes the one people grab on the way out the door, season after season, with your logo right up front. Hats have been part of what we make since 2010.
 
 ## Choosing how your logo goes on
 

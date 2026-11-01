@@ -1,0 +1,10 @@
+{% comment %}Round "Est. 2010" seal, drawn inline so it uses the site's fonts. Pass class= to place it.{% endcomment %}
+<svg class="seal {{ include.class }}" viewBox="0 0 160 160" role="img" aria-label="Banner Goods, established {{ site.founded }}">
+  <defs><path id="seal-ring{{ include.id }}" d="M80 80m-58 0a58 58 0 1 1 116 0a58 58 0 1 1-116 0"/></defs>
+  <circle cx="80" cy="80" r="78" class="seal-fill"/>
+  <circle cx="80" cy="80" r="72" class="seal-line"/>
+  <circle cx="80" cy="80" r="44" class="seal-line"/>
+  <text class="seal-ring"><textPath href="#seal-ring{{ include.id }}" startOffset="0" textLength="356" lengthAdjust="spacing">BANNER GOODS · CUSTOM MERCH · MADE TO ORDER ·</textPath></text>
+  <text x="80" y="74" class="seal-est" text-anchor="middle">EST.</text>
+  <text x="80" y="102" class="seal-year" text-anchor="middle">{{ site.founded }}</text>
+</svg>

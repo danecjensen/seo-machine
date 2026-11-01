@@ -5,7 +5,7 @@ title: "Custom Logo Products"
 heading: "Custom products with your logo"
 description: "Browse Banner Goods custom products: embroidered logo hats, printed tote bags, custom blankets and knit logo socks, all made to order for your brand."
 nav_title: "Products"
-lede: "Everything we make, finished with your logo and colors."
+lede: "The four products we've made since 2010, each finished with your logo and colors."
 page_key: products
 work_heading: "Ideas for your next order"
 signup_form: false

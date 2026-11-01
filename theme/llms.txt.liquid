@@ -1,0 +1,16 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# {{ site.title }}
+
+> {{ site.description | strip_newlines }}
+{% assign pages = collections.all | in_sitemap %}
+## Pages
+{% for p in pages %}{% unless p.inputPath contains "/_posts/" %}
+- [{{ p.data.title | default: site.title }}]({{ p.url | absolute_url }}){% if p.data.description %}: {{ p.data.description | strip_newlines }}{% endif %}{% endunless %}{% endfor %}
+{% if collections.posts.size > 0 %}
+## Posts
+{% for p in collections.posts %}{% unless p.data.noindex %}
+- [{{ p.data.title }}]({{ p.url | absolute_url }}){% if p.data.description %}: {{ p.data.description | strip_newlines }}{% endif %}{% endunless %}{% endfor %}
+{% endif %}

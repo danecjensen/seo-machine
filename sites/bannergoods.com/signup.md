@@ -8,7 +8,7 @@ cta: false
 redirect_from: ["/quote/"]
 ---
 
-Planning a custom merch project with your logo? Leave your email and tell us what you'd like to make. We'll send ideas for custom hats, tote bags, blankets and socks, and walk you through getting started.
+Planning a custom merch project with your logo? Leave your email and tell us what you'd like to make. We'll send ideas for custom hats, tote bags, blankets and socks drawn from more than fifteen years of making them, and walk you through getting started.
 
 {% if site.contact.form_action != "" and site.contact.form_action %}
 {% include signup-form.html id="signup" %}

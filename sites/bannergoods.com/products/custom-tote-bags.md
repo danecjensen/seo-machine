@@ -35,7 +35,7 @@ uses:
   - "Client gift bags"
 ---
 
-People use a good tote bag constantly. It goes to the store, the gym, the beach and the office, and your logo goes along every time.
+People use a good tote bag constantly. It goes to the store, the gym, the beach and the office, and your logo goes along every time. Tote bags have been part of what we make since 2010.
 
 ## How your logo is printed
 

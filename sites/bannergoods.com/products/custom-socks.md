@@ -37,7 +37,7 @@ uses:
   - "Merch for bands and creators"
 ---
 
-Custom socks are the merch people don't expect, and that's why they work. Everyone wears socks, they fit nearly everyone, and a pair in your colors starts conversations. They're light and pack flat too, so they're easy to mail to a remote team or add to a welcome box.
+Custom socks are the merch people don't expect, and that's why they work. Everyone wears socks, they fit nearly everyone, and a pair in your colors starts conversations. They're light and pack flat too, so they're easy to mail to a remote team or add to a welcome box. Socks have been part of what we make since 2010.
 
 ## How the design is made
 

@@ -40,16 +40,16 @@ h3 { font-family: var(--font); font-size: 18px; font-weight: 600; line-height: 1
 .wf-section { margin-top: 96px; }
 .wf-section:first-child { margin-top: 0; padding-block: 64px 72px; }
 .wf-section:first-child > .wf-row { align-items: center; gap: 40px; }
-.wf-home .wf-section:first-child h1::before, .wf-collection .wf-section:first-child h1::before { content: "CUSTOM MERCH · MADE TO ORDER"; display: block; width: max-content; margin-bottom: 20px; padding: 3px 12px; border-radius: 9999px; background: var(--paper-butter); font: 500 13px/1.4 var(--font-mono); letter-spacing: 0; }
+.wf-home .wf-section:first-child h1::before, .wf-collection .wf-section:first-child h1::before { content: "EST. 2010 · CUSTOM MERCH MADE TO ORDER"; display: flex; align-items: center; gap: 12px; max-width: 30rem; margin-bottom: 24px; font: 600 12px/1.4 var(--font); letter-spacing: 2px; color: var(--primary); }
 
 /* Photo frames: white paper prints with a strip of washi tape, tilting a little on hover. */
 .media { position: relative; border-radius: 4px; overflow: visible; background: var(--surface); padding: 10px; box-shadow: var(--shadow-paper); border: 1px solid var(--line); }
 .media img, .media-placeholder { border-radius: 2px; }
 .media img { height: 100%; }
-.media::before { content: ""; position: absolute; z-index: 1; top: -10px; left: 50%; width: 76px; height: 20px; translate: -50% 0; rotate: -3deg; background: color-mix(in srgb, var(--accent-purple) 70%, transparent); }
+.media::before { content: ""; position: absolute; z-index: 1; top: -8px; left: 50%; width: 64px; height: 16px; translate: -50% 0; rotate: -2deg; background: color-mix(in srgb, var(--stone) 85%, transparent); border: 1px solid color-mix(in srgb, var(--hairline) 70%, transparent); }
 .media-placeholder { flex-direction: column; gap: 6px; border: 1px dashed #A8A097; background: var(--paper-sky); color: var(--ink); font-size: 13px; }
 .media-placeholder-tag { white-space: nowrap; font: 500 12px/1.3 var(--font-mono); background: var(--surface); border: 1px solid var(--ink); border-radius: 9999px; padding: 2px 10px; }
-.wf-section:first-child .media { box-shadow: var(--shadow-panel); rotate: 1.5deg; }
+.wf-section:first-child .media { box-shadow: var(--shadow-panel); }
 .wf-section:first-child .media-placeholder { background: var(--paper-lilac); }
 
 /* Past work gallery: prints in pale tints, each tilted its own way. */
@@ -58,12 +58,6 @@ h3 { font-family: var(--font); font-size: 18px; font-weight: 600; line-height: 1
 .work li:nth-child(4n+2) .media-placeholder { background: var(--paper-lime); }
 .work li:nth-child(4n+3) .media-placeholder { background: var(--paper-blush); }
 .work li:nth-child(4n+4) .media-placeholder { background: var(--paper-apricot); }
-.work li:nth-child(odd) .media { rotate: -1deg; }
-.work li:nth-child(even) .media { rotate: .8deg; }
-.work li:nth-child(3n) .media::before { background: color-mix(in srgb, var(--secondary-teal) 60%, transparent); }
-.work li:nth-child(3n+2) .media::before { background: color-mix(in srgb, var(--tertiary-yellow) 75%, transparent); }
-.work .media { transition: rotate 300ms var(--ease-paper); }
-.work li:hover .media { rotate: 0deg; }
 .work-caption { margin: 14px 0 0; font-size: 14px; color: var(--muted); }
 .work-tag { display: inline-block; margin-right: 6px; padding: 1px 8px; border-radius: 9999px; background: var(--paper-butter); color: var(--ink); font: 500 12px/1.5 var(--font-mono); }
 .prose .work-strip { margin: 40px 0; padding: 0; }
@@ -76,7 +70,6 @@ h3 { font-family: var(--font); font-size: 18px; font-weight: 600; line-height: 1
 .product-card:nth-child(4n+2) { background: var(--paper-lime); }
 .product-card:nth-child(4n+3) { background: var(--paper-lilac); }
 .product-card:nth-child(4n+4) { background: var(--paper-apricot); }
-.product-card:hover { rotate: -1.5deg; }
 .product-card .media { box-shadow: none; padding: 0; border-color: var(--ink); background: var(--surface); }
 .product-card .media::before { display: none; }
 .product-card .media-placeholder { background: var(--surface); }
@@ -105,7 +98,7 @@ h3 { font-family: var(--font); font-size: 18px; font-weight: 600; line-height: 1
 .steps li { border: 1px solid var(--ink); border-radius: 0; padding: 24px; background: var(--paper-sky); height: 100%; }
 .steps li:nth-child(2) { background: var(--paper-butter); }
 .steps li:nth-child(3) { background: var(--paper-lime); }
-.steps li::before { font: italic 400 44px/1 var(--font-display); color: var(--ink); margin-bottom: 16px; }
+.steps li::before { content: "No. " counter(step); font: italic 400 36px/1 var(--font-display); color: var(--ink); margin-bottom: 16px; }
 .steps p { color: var(--ink); }
 
 /* Call to action: white panel floating on lilac paper. */
@@ -155,3 +148,38 @@ input:focus-visible, select:focus-visible { outline: 2px solid var(--primary); }
 
 /* Full-bleed sky paper behind each page's first section. */
 .wf-section:first-child { background: var(--paper-sky); box-shadow: 0 0 0 100vmax var(--paper-sky); clip-path: inset(0 -100vmax); }
+
+/* Established-brand touches (since 2010): a top line, an Est. stamp in the wordmark, catalog-style double
+   rules over section headings, and a round Est. 2010 seal in the hero, the heritage band and the footer. */
+.topline { background: var(--primary); color: var(--on-primary); font: 500 13px/1.4 var(--font); letter-spacing: .3px; }
+.topline .wrap { display: flex; justify-content: space-between; gap: 16px; padding-block: 8px; }
+.topline a { color: var(--on-primary); text-decoration: none; font-weight: 600; }
+.topline a:hover { text-decoration: underline; }
+.brand-name { display: grid; line-height: 1; }
+.brand-name small { margin-top: 5px; font: 600 12px/1 var(--font); letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+.wf-home .wf-section:first-child h1::after, .wf-collection .wf-section:first-child h1::after { content: none; }
+.wf-home .wf-section:first-child h1::before, .wf-collection .wf-section:first-child h1::before { border-bottom: 3px double var(--ink); padding-bottom: 10px; width: fit-content; }
+.wf-section:not(:first-child) > .wf-stack > h2:first-child { border-top: 3px double var(--ink); padding-top: 20px; }
+.hero-art { position: relative; }
+.seal { display: block; }
+.seal-fill { fill: var(--surface); stroke: var(--ink); stroke-width: 1; }
+.seal-line { fill: none; stroke: var(--ink); stroke-width: .75; }
+.seal-ring { font: 600 12px var(--font); fill: var(--ink); }
+.seal-est { font: 600 12px var(--font); letter-spacing: 3px; fill: var(--muted); }
+.seal-year { font: italic 400 30px var(--font-display); fill: var(--primary); }
+.seal-hero { position: absolute; z-index: 2; width: 128px; height: 128px; left: -36px; bottom: -36px; rotate: -8deg; filter: drop-shadow(0 6px 10px rgba(21,21,21,.14)); }
+.heritage { display: grid; grid-template-columns: 112px 1fr; gap: 24px; align-items: center; margin: 32px 0; padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.heritage .seal { width: 112px; height: 112px; }
+.principles { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.principles li { margin: 0; padding-left: 0; }
+.principles strong { display: block; font: italic 400 20px/1.2 var(--font-display); }
+.seal-footer { width: 120px; height: 120px; flex: none; }
+.seal-footer .seal-fill { fill: var(--bg); }
+@media (max-width: 767px) {
+  .topline .wrap { font-size: 12px; }
+  .topline a { display: none; }
+  .seal-hero { width: 96px; height: 96px; left: auto; right: -6px; bottom: -28px; }
+  .heritage { grid-template-columns: 1fr; justify-items: start; }
+  .heritage .seal { width: 96px; height: 96px; }
+  .seal-footer { width: 96px; height: 96px; }
+}

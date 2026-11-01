@@ -9,11 +9,13 @@ faq:
     a: "A vector file (AI, EPS, SVG or PDF) gives the sharpest result, and a large PNG also works. If all you have is a small image, send it and we'll go over what's possible."
   - q: "Do I get to see the design before production?"
     a: "Yes. You'll get a digital proof of your logo on the product, and production only starts after you approve it."
+  - q: "How long has Banner Goods been making custom merch?"
+    a: "Since 2010. Custom hats, tote bags, blankets and socks with our customers' logos are what we do."
   - q: "Does a quote cost anything?"
     a: "No. Quotes are free and you're under no obligation to order."
 ---
 
-Ordering custom merch from Banner Goods happens in three steps, and you'll see a proof of exactly what you're getting before anything is made.
+Ordering custom merch from Banner Goods takes three steps. It's the same process we've refined since 2010, and you'll see a proof of exactly what you're getting before anything is made.
 
 {% include work-strip.html image1="/assets/illustrations/cap-logo-proof.svg" alt1="Illustration of a logo proof on a cap" label1="a logo proof on a cap" image2="/assets/illustrations/product-approval.svg" alt2="Illustration of products laid out for approval" label2="products laid out for approval" image3="/assets/illustrations/ready-to-ship.svg" alt3="Illustration of a finished order ready to ship" label3="a finished order ready to ship" %}
 

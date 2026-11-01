@@ -58,3 +58,6 @@ cloudflare:
 robots:
   disallow: []
   block_agents: []
+  # AI crawlers (ChatGPT, Claude, Perplexity, Gemini...) are welcome by default.
+  # ai_training: false   # block only bots that train models
+  # ai_crawlers: false   # block every AI crawler

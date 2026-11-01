@@ -115,6 +115,12 @@ describe("output", () => {
 
   test("robots.txt, sitemap and feed", () => {
     assert.match(read(dir, "plumbing.example/robots.txt"), /Sitemap: https:\/\/plumbing\.example\/sitemap\.xml/);
+    assert.match(read(dir, "plumbing.example/robots.txt"), /User-agent: ClaudeBot\nUser-agent: PerplexityBot[\s\S]*?Allow: \//);
+    const llms = read(dir, "plumbing.example/llms.txt");
+    assert.match(llms, /^# Northside Plumbing\n\n> /);
+    assert.match(llms, /- \[Drain Cleaning in Austin\]\(https:\/\/plumbing\.example\/services\/drain-cleaning\/\): /);
+    assert.ok(!llms.includes("/thank-you/"), "noindex pages stay out of llms.txt");
+    assert.match(read(dir, "ledger.example/llms.txt"), /## Posts\n\n- \[Quarterly Estimated Taxes/);
     const sitemap = read(dir, "plumbing.example/sitemap.xml");
     assert.match(sitemap, /<loc>https:\/\/plumbing\.example\/services\/drain-cleaning\/<\/loc>/);
     assert.ok(!sitemap.includes("/thank-you/"), "noindex pages stay out of the sitemap");

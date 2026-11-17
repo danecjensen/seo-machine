@@ -159,6 +159,34 @@ clean trailing-slash URLs, `sitemap.xml` (with `<lastmod>` from `last_modified_a
 date or the file's last git commit), `robots.txt`, `feed.xml` when the site has posts, and a
 `404.html`.
 
+### AI crawlers and llms.txt
+
+Every site's `robots.txt` welcomes AI crawlers by name, so ChatGPT, Claude, Perplexity, Gemini
+and other assistants can find, quote and link to the site: OpenAI (`OAI-SearchBot`,
+`ChatGPT-User`, `GPTBot`), Anthropic (`Claude-SearchBot`, `Claude-User`, `ClaudeBot`),
+Perplexity, Google-Extended, Applebot-Extended, Meta, Amazon, DuckDuckGo, Mistral and Common
+Crawl. The list lives in `lib/robots.mjs`; add new bots there and every site picks them up on its
+next build. Named groups repeat the site's `Disallow:` lines, because a crawler that finds its
+own name ignores the `User-agent: *` group.
+
+Each site can change this under `robots:` in `_config.yml`:
+
+```yaml
+robots:
+  disallow: [/private/]   # applies to every crawler, AI ones included
+  ai_training: false      # block bots that train models, keep AI search and assistants
+  ai_crawlers: false      # block every AI crawler
+  block_agents: [AhrefsBot]  # block any bot by name
+```
+
+The build also writes `/llms.txt` ([llmstxt.org](https://llmstxt.org)): the site's title,
+description and every indexable page and post with its description. Set `llms_txt: false` to
+leave it out.
+
+Cloudflare can block AI bots before they reach `robots.txt`. In the Cloudflare dashboard, keep
+**AI Crawl Control** (or "Block AI bots") off for these sites, and don't turn on Cloudflare's
+managed `robots.txt`.
+
 Add `indexnow_key:` (8-128 letters, digits or hyphens, e.g. `openssl rand -hex 16`) to a site's
 `_config.yml` and every production deploy pings [IndexNow](https://www.indexnow.org) with the
 sitemap's URLs, so Bing, DuckDuckGo, Copilot and Yandex crawl changes within hours. The build

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 import { pagesProject, redirectLines } from "../lib/cloudflare.mjs";
 import { imageSize, minifyCss } from "../lib/html.mjs";
+import { robotsTxt } from "../lib/robots.mjs";
 import { breadcrumbs, pageTitle } from "../lib/seo.mjs";
 import { seoSite } from "../lib/site.mjs";
 
@@ -55,5 +56,47 @@ describe("indexnow", async () => {
     assert.ok(!validKey("short"));
     assert.ok(!validKey("has/slash1"));
     assert.ok(!validKey(undefined));
+  });
+});
+
+describe("robots.txt", () => {
+  const SITEMAP = "https://acme.example/sitemap.xml";
+  // The rules each user agent gets: a crawler obeys only the most specific group naming it.
+  const rulesFor = (txt, agent) => {
+    const group = txt.split("\n\n").find((g) => g.split("\n").includes(`User-agent: ${agent}`));
+    return group?.split("\n").filter((l) => /^(Allow|Disallow):/.test(l));
+  };
+
+  test("AI crawlers from OpenAI, Anthropic, Perplexity and Google are welcome by default", () => {
+    const txt = robotsTxt({}, SITEMAP);
+    for (const agent of ["GPTBot", "OAI-SearchBot", "ChatGPT-User", "ClaudeBot", "Claude-SearchBot",
+      "Claude-User", "PerplexityBot", "Perplexity-User", "Google-Extended", "*"]) {
+      assert.deepEqual(rulesFor(txt, agent), ["Allow: /"], agent);
+    }
+    assert.ok(txt.endsWith(`Sitemap: ${SITEMAP}\n`));
+  });
+
+  test("AI crawlers get the site's Disallow lines too", () => {
+    const txt = robotsTxt({ disallow: ["/private/"] }, SITEMAP);
+    assert.deepEqual(rulesFor(txt, "*"), ["Disallow: /private/"]);
+    assert.deepEqual(rulesFor(txt, "ClaudeBot"), ["Disallow: /private/"]);
+  });
+
+  test("a site can opt out of AI training but keep AI search, or opt out of AI entirely", () => {
+    const noTraining = robotsTxt({ ai_training: false }, SITEMAP);
+    assert.deepEqual(rulesFor(noTraining, "GPTBot"), ["Disallow: /"]);
+    assert.deepEqual(rulesFor(noTraining, "Google-Extended"), ["Disallow: /"]);
+    assert.deepEqual(rulesFor(noTraining, "OAI-SearchBot"), ["Allow: /"]);
+    assert.deepEqual(rulesFor(noTraining, "Claude-User"), ["Allow: /"]);
+    const none = robotsTxt({ ai_crawlers: false }, SITEMAP);
+    assert.deepEqual(rulesFor(none, "Claude-SearchBot"), ["Disallow: /"]);
+    assert.deepEqual(rulesFor(none, "*"), ["Allow: /"]);
+  });
+
+  test("block_agents blocks any bot, AI or not, once", () => {
+    const txt = robotsTxt({ block_agents: ["ccbot", "AhrefsBot"] }, SITEMAP);
+    assert.deepEqual(rulesFor(txt, "CCBot"), ["Disallow: /"]);
+    assert.deepEqual(rulesFor(txt, "AhrefsBot"), ["Disallow: /"]);
+    assert.equal(txt.match(/CCBot/gi).length, 1);
   });
 });

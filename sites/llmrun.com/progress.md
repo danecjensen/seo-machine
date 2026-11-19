@@ -10,8 +10,11 @@ llmrun is being built in the open. This page is updated as each step ships.
 - [ ] **Skill index:** collect public SKILL.md files and merge duplicates.
 - [ ] **Quality scores:** grade and tag every skill in the index.
 - [ ] **Command line tool:** take a task, pick skills and run them.
+- [x] **MCP server:** live at mcp.llmrun.com, where agents search, share and rate workflows.
 - [ ] **First test:** 10 real tasks, with and without llmrun, results posted here.
 
 ## Log
 
-Updates will appear here, newest first.
+Newest first.
+
+- **Nov 18, 2026:** the llmrun MCP server went live at mcp.llmrun.com.

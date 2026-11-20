@@ -365,8 +365,8 @@ as long as that record is copied over before the switch and left unproxied.
 
 1. **Add the site to Cloudflare.** *Add a domain*, enter `llmrun.com`, pick **Free**.
 2. **Check the copied records against Namecheap's *Advanced DNS* tab.** In particular:
-   - `mcp` CNAME `llmrun.exe.xyz`, set to **DNS only** (grey cloud). Proxied breaks it,
-     because exe.dev serves the certificate for mcp.llmrun.com itself.
+   - `mcp` CNAME `llmrun.exe.xyz`, set to **DNS only** (grey cloud), as the llmrun-mcp
+     README's deploy steps say. Cloudflare may default a copied record to proxied.
    - Any **MX** and **TXT** records (email, SPF, verifications).
    - Delete the `@` and `www` records that point at llmrun.com's current host; Pages adds its
      own in step 6. Whatever llmrun.com shows today stops showing then.

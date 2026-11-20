@@ -1,0 +1,29 @@
+# llmrun: npx for agent skills. Goal: a public home for the project and its progress.
+title: llmrun
+description: "llmrun finds and runs the right agent skills for any task. Describe what you want in one line, and it pulls the skills it needs and runs them."
+url: https://llmrun.com
+lang: en
+locale: en_US
+title_format: "{title} | {site}"
+colors:
+  brand: "#0f766e"
+
+goals:
+  primary: Explain llmrun and show build progress
+  audience: Developers who use Claude Code and agent skills
+  keywords: [agent skills, run agent skills, claude code skills, skill search]
+  cta:
+    text: See the progress
+    title: llmrun is being built in the open.
+    url: /progress/
+
+organization:
+  type: Organization
+
+# Draft: kept out of Cloudflare until llmrun.com's DNS is moved here.
+# Remove deploy: false (and add the domain in Cloudflare Pages) to go live.
+cloudflare:
+  deploy: false
+  project: llmrun-com
+  productionBranch: main
+  domains: [llmrun.com]

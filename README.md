@@ -355,6 +355,31 @@ to Cloudflare while the registration stays at Namecheap.
    Check it with `curl -sI https://www.gohappyclub.com/products/`, which should return a 301
    to `https://gohappyclub.com/products/`.
 
+### Going live with llmrun.com (DNS at Namecheap, MCP server on exe.dev)
+
+`sites/llmrun.com` deploys to the Pages project `llmrun-com`, but `cloudflare.deploy` is
+`false` until the page is approved. A bare domain can only point at Pages when Cloudflare runs
+its DNS, so llmrun.com's nameservers have to move to Cloudflare (the registration stays at
+Namecheap). `mcp.llmrun.com` is a CNAME to the exe.dev VM (`llmrun.exe.xyz`) and keeps working
+as long as that record is copied over before the switch and left unproxied.
+
+1. **Add the site to Cloudflare.** *Add a domain*, enter `llmrun.com`, pick **Free**.
+2. **Check the copied records against Namecheap's *Advanced DNS* tab.** In particular:
+   - `mcp` CNAME `llmrun.exe.xyz`, set to **DNS only** (grey cloud). Proxied breaks it,
+     because exe.dev serves the certificate for mcp.llmrun.com itself.
+   - Any **MX** and **TXT** records (email, SPF, verifications).
+   - Delete the `@` and `www` records that point at llmrun.com's current host; Pages adds its
+     own in step 6. Whatever llmrun.com shows today stops showing then.
+3. **Turn off DNSSEC at Namecheap** if it's on.
+4. **Switch nameservers at Namecheap:** *Domain List → Manage → Nameservers → Custom DNS*,
+   then the two Cloudflare nameservers. Resolvers see either the old or new nameservers for a
+   while; both answer the same `mcp` CNAME, so the MCP server doesn't go down.
+5. **Wait for Cloudflare to show the domain as Active**, then check the MCP server:
+   `curl https://mcp.llmrun.com/healthz` should print `ok`.
+6. **Deploy the page.** Set `cloudflare.deploy: true` in `sites/llmrun.com/_config.yml`
+   and merge to `main`. The deploy attaches `llmrun.com` to `llmrun-com` and Cloudflare creates
+   the record and certificate.
+
 Signups go to a Formspree form: `contact.form_action` in `sites/gohappyclub.com/_config.yml` is
 its endpoint. The form is plain HTML (no JavaScript), with Formspree's `_gotcha` spam trap and a
 `_subject` line; set the form's redirect in Formspree to `https://gohappyclub.com/thanks/`. The form posts `email` and an
